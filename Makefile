@@ -5,14 +5,14 @@ NAME					= 	ft_ping
 CC						= 	clang
 
 CFLAGS					= 	-Wall -Wextra -Werror -I includes/ \
-							-I libft/includes/ -I libftprintf/includes/ \
+							-I libft/includes/ \
 
 BONUS_FLAG				= 	0
 
 TESTER_FLAG				= 	0
 
-INC_LIB						= 	-I libft -I libftprintf
-LIB							= 	-L libft -lft -L libftprintf -lftprintf
+INC_LIB						= 	-I libft
+LIB							= 	-L libft -lft
 
 
 
@@ -66,7 +66,6 @@ all: $(OBJS) $(SRCS) $(NAME)
 
 $(NAME): $(OBJS) $(SRCS)
 	@ make -C libft/
-	@ make -C libftprintf/
 	@ $(CC) $(CFLAGS) $(HDIR) $(OBJS) $(INC_LIB) $(LIB) -o $@
 
 
@@ -76,12 +75,10 @@ $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 
 clean:
 	make clean -C libft/
-	make clean -C libftprintf/
 	rm -rf $(OBJS_DIR)
 
 fclean:
 	make fclean -C libft/
-	make fclean -C libftprintf/
 	rm -f $(NAME)
 	rm -rf $(OBJS_DIR)
 
