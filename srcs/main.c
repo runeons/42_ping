@@ -2,11 +2,40 @@
 
 typedef struct s_data
 {
-    char    *param;
-    char    flags[2];
-    char    *ip;
-    char    *hostname;
+    char        *param;
+    char        flags[2];
+    char        *ip;
+    char        *hostname;
+    int         socket;
+    struct sockaddr_in address;
 }					t_data;
+
+void init_data(t_data *dt)
+{
+    dt->param = "";
+    dt->flags[0] = ' ';
+    dt->flags[1] = ' ';
+    dt->ip = "";
+    dt->hostname = "";
+    dt->socket = 0;
+    dt->address.sin_family = AF_INET;
+    dt->address.sin_port = 80;
+    dt->address.sin_addr.s_addr = INADDR_ANY;
+    // address not initialized ?
+}
+
+void print_data(t_data dt)
+{
+    printf("dt.param : %s\n", dt.param);
+    printf("dt.flags[0] : %c\n", dt.flags[0]);
+    printf("dt.flags[1] : %c\n", dt.flags[1]);
+    printf("dt.ip : %s\n", dt.ip);
+    printf("dt.hostname : %s\n", dt.hostname);
+    printf("dt.socket : %d\n", dt.socket);
+    printf("dt.address.sin_family : %hu\n", dt.address.sin_family);
+    printf("dt.address.sin_port : %d\n", dt.address.sin_port);
+    printf("dt.address.sin_addr.s_addr : %u\n", dt.address.sin_addr.s_addr);
+}
 
 void    exit_error(char *msg)
 {
@@ -60,22 +89,30 @@ void    parse_params(int ac, char **av, t_data *dt)
 
 }
 
-void init_data(t_data *dt)
+void check_address(t_data *dt)
 {
-    dt->param = "";
-    dt->flags[0] = ' ';
-    dt->flags[1] = ' ';
-    dt->ip = "";
-    dt->hostname = "";
+    if (inet_aton(dt->ip, &(dt->address.sin_addr)) <= 0)
+        exit_error("address error: Invalid IPv4 address.");
 }
 
-void print_data(t_data dt)
+void open_socket(t_data *dt)
 {
-    printf("dt.param : %s\n", dt.param);
-    printf("dt.flags : %c\n", dt.flags[0]);
-    printf("dt.flags : %c\n", dt.flags[1]);
-    printf("dt.ip : %s\n", dt.ip);
-    printf("dt.hostname : %s\n", dt.hostname);
+    dt->socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
+    if (dt->socket < 0)
+    {
+        exit_error("socket error: Check that you have the correct rights.");
+    }
+}
+
+void    print_statistics()
+{
+    return;
+}
+
+void    quit_program(int err)
+{
+    print_statistics();
+    exit(err);
 }
 
 int main(int ac, char **av)
@@ -86,7 +123,13 @@ int main(int ac, char **av)
         exit_error("usage error: Destination address required");
     init_data(&dt);
     parse_params(ac, av, &dt);
+    // parse address && hostname
+        // for now, I will pretend that I have a correctly-formated IP
+    dt.ip = av[1];
+    check_address(&dt);
+    open_socket(&dt);
+    signal(SIGINT, quit_program);
+    // ping
     print_data(dt);
-    printf("av[1]: %s\n", av[1]);
     return (0);
 }
