@@ -9,6 +9,7 @@
 # include <sys/time.h>
 # include <sys/socket.h>
 # include <arpa/inet.h>
+#include <netdb.h>
 
 # include <libft.h>
 # include <color_shell.h>

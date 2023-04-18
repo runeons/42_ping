@@ -26,6 +26,7 @@ void init_data(t_data *dt)
 
 void print_data(t_data dt)
 {
+    printf("\n");
     printf("dt.param : %s\n", dt.param);
     printf("dt.flags[0] : %c\n", dt.flags[0]);
     printf("dt.flags[1] : %c\n", dt.flags[1]);
@@ -86,13 +87,25 @@ void    parse_params(int ac, char **av, t_data *dt)
         }
         i++;
     }
-
 }
+
+// (struct sockaddr*)&
 
 void check_address(t_data *dt)
 {
+    char    host[10000]; // what is the maximum size I can use ?
+    int     res;
+
     if (inet_aton(dt->ip, &(dt->address.sin_addr)) <= 0)
         exit_error("address error: Invalid IPv4 address.");
+    res = getnameinfo((struct sockaddr*)&dt->address, sizeof(dt->address), host, sizeof(host), NULL, 0, 0);
+    if (res != 0)
+        exit_error("address error: The hostname could not be resolved.");
+    else
+    {
+        dt->hostname = host; // need strdup ?
+        printf("dt->hostname: %s\n", dt->hostname);
+    }
 }
 
 void open_socket(t_data *dt)
