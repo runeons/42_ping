@@ -87,25 +87,66 @@ void    parse_params(int ac, char **av, t_data *dt)
         }
         i++;
     }
+    dt->ip = av[1];
+    dt->hostname = av[1];
 }
-
-// (struct sockaddr*)&
 
 void check_address(t_data *dt)
 {
     char    host[10000]; // what is the maximum size I can use ?
-    int     res;
+    int     r;
 
     if (inet_aton(dt->ip, &(dt->address.sin_addr)) <= 0)
         exit_error("address error: Invalid IPv4 address.");
-    res = getnameinfo((struct sockaddr*)&dt->address, sizeof(dt->address), host, sizeof(host), NULL, 0, 0);
-    if (res != 0)
+    r = getnameinfo((struct sockaddr*)&dt->address, sizeof(dt->address), host, sizeof(host), NULL, 0, 0);
+    if (r != 0)
         exit_error("address error: The hostname could not be resolved.");
     else
     {
         dt->hostname = host; // need strdup ?
-        printf("dt->hostname: %s\n", dt->hostname);
     }
+}
+
+// int getaddrinfo(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res);
+
+void    init_hints(struct addrinfo *hints)
+{
+    memset(hints, 0, sizeof(*hints));
+	hints->ai_family = AF_INET;
+	hints->ai_socktype = SOCK_RAW;
+	hints->ai_protocol = IPPROTO_ICMP;
+}
+
+void    print_addrinfo(struct addrinfo *ai)
+{
+    printf("\n");
+    printf("ai_family: %d\n", ai->ai_family);
+    printf("ai_socktype: %d\n", ai->ai_socktype);
+    printf("ai_addr: %s\n", inet_ntoa(((struct sockaddr_in *)ai->ai_addr)->sin_addr));
+}
+
+void check_hostname(t_data *dt)
+{
+    int                 r;
+    struct addrinfo     hints;
+    struct addrinfo     *res;
+    struct addrinfo     *tmp;
+
+    init_hints(&hints);
+    r = getaddrinfo(dt->param, NULL, &hints, &res);
+    // print_addrinfo(res);
+    if (r != 0)
+    {
+        dprintf(2, "getaddrinfo: %s\n", gai_strerror(r));
+        exit_error("address error: The ip address could not be resolved.");
+    }
+    tmp = res;
+    while (tmp != NULL)
+    {
+        dt->ip = strdup(inet_ntoa(((struct sockaddr_in *)tmp->ai_addr)->sin_addr));
+        tmp = tmp->ai_next;
+    }
+    freeaddrinfo(res);
 }
 
 void open_socket(t_data *dt)
@@ -136,9 +177,8 @@ int main(int ac, char **av)
         exit_error("usage error: Destination address required");
     init_data(&dt);
     parse_params(ac, av, &dt);
-    // parse address && hostname
-        // for now, I will pretend that I have a correctly-formated IP
-    dt.ip = av[1];
+    print_data(dt);
+    check_hostname(&dt);
     check_address(&dt);
     open_socket(&dt);
     signal(SIGINT, quit_program);
