@@ -1,5 +1,8 @@
 #include "ft_ping.h"
 
+#define MAX_IP_LEN          16
+#define MAX_HOSTNAME_LEN    100
+
 typedef struct s_data
 {
     char        *param;
@@ -10,12 +13,19 @@ typedef struct s_data
     struct sockaddr_in address;
 }					t_data;
 
+void    exit_error(char *msg)
+{
+    dprintf(2, "%s\n", msg);
+    exit(1);
+}
+
 void init_data(t_data *dt)
 {
     dt->param = "";
     dt->flags[0] = ' ';
     dt->flags[1] = ' ';
-    dt->ip = "";
+    if ((dt->ip = (char *)malloc(sizeof(char) * 16 + 1)) == NULL)
+        exit_error("Malloc error.");
     dt->hostname = "";
     dt->socket = 0;
     dt->address.sin_family = AF_INET;
@@ -36,12 +46,6 @@ void print_data(t_data dt)
     printf("dt.address.sin_family : %hu\n", dt.address.sin_family);
     printf("dt.address.sin_port : %d\n", dt.address.sin_port);
     printf("dt.address.sin_addr.s_addr : %u\n", dt.address.sin_addr.s_addr);
-}
-
-void    exit_error(char *msg)
-{
-    dprintf(2, "%s\n", msg);
-    exit(1);
 }
 
 void    add_flag(t_data *dt, char flag)
@@ -143,7 +147,7 @@ void check_hostname(t_data *dt)
     tmp = res;
     while (tmp != NULL)
     {
-        dt->ip = strdup(inet_ntoa(((struct sockaddr_in *)tmp->ai_addr)->sin_addr));
+        dt->ip = ft_strdup(inet_ntoa(((struct sockaddr_in *)tmp->ai_addr)->sin_addr));
         tmp = tmp->ai_next;
     }
     freeaddrinfo(res);
