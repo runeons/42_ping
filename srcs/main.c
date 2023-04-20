@@ -210,14 +210,14 @@ void open_socket(t_data *dt)
 	tv_out.tv_sec = 1;
 	tv_out.tv_usec = 0;
 
-    r = setsockopt(dt->socket, IPPROTO_IP, IP_TTL, &ttl_value, sizeof(ttl_value)); // IPPROTO_IP or SOL_SOCKET ?
+    r = setsockopt(dt->socket, IPPROTO_IP, IP_TTL, &ttl_value, sizeof(ttl_value)); // IPPROTO_IP or SOL_IP orSOL_SOCKET ?
     if (r != 0)
     {
 
         dprintf(2, "setsockopt1: %s\n", strerror(-1));
         exit_error("socket error: Exiting program.");
     }
-    r = setsockopt(dt->socket, IPPROTO_IP, SO_RCVTIMEO, &tv_out, sizeof tv_out);
+    r = setsockopt(dt->socket, SOL_SOCKET, SO_RCVTIMEO, &tv_out, sizeof(tv_out));
     if (r != 0)
     {
 
@@ -280,14 +280,19 @@ void send_and_receive_packet(t_data *dt)
     r = 0;
     r = sendto(dt->socket, &dt->packet, sizeof(dt->packet), 0, (struct sockaddr*)&dt->address, sizeof(dt->address));
     printf("errno: %d\n", errno);
-    if (r != 0)
+    printf(TEST);
+    if (r <= 0)
     {
+        printf(TEST);
+        printf("r: %d\n", r);
         dprintf(2, "packet sending failure: %s\n", strerror(r));
     }
     else
     {
+        printf(TEST);
         r = recvmsg(dt->socket, &buf, 0);
-        if (r != 0)
+        printf(TEST);
+        if (r < 0)
             dprintf(2, "packet receiving failure: %s\n", strerror(r));
         else
         {
