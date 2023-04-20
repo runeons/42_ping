@@ -10,6 +10,7 @@
 # include <sys/socket.h>
 # include <arpa/inet.h>
 #include <netdb.h>
+#include <netinet/ip_icmp.h>
 
 # include <libft.h>
 # include <color_shell.h>

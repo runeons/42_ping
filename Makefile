@@ -70,27 +70,19 @@ OBJS					=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
 all: $(OBJS) $(SRCS) $(NAME)
 
 $(NAME): $(OBJS) $(SRCS)
-	@ echo NAME
 	@ make -C libft/
-	@ echo NAME compile
 	@ $(CC) $(CFLAGS) $(HDIR) $(OBJS) $(INC_LIB) $(LIB) -o $@
 
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
-	@ echo OBJS_DIR
 	@ mkdir -p $(dir $@)
-	@ echo OBJS_DIR compile
 	@ $(CC) $(CFLAGS) $(HDIR) -D BONUS=$(BONUS_FLAG) $(INC_LIB) -c -o $@ $<
 
 fsan:  $(OBJS) $(SRCS)
-	@ echo FSAN
 	@ make -C libft/
-	@ echo FSAN compile
-	@ $(CC) $(CFLAGS) $(FFLAGS) $(HDIR) $(OBJS) $(INC_LIB) $(LIB) -o $(NAME)
+	@ $(CC) $(CFLAGS) $(FFLAGS) $(HDIR) $(OBJS) $(INC_LIB) $(LIB) -llsan -o $(NAME)
 
 leak:  $(OBJS) $(SRCS)
-	@ echo FSAN
 	@ make -C libft/
-	@ echo FSAN compile
 	@ $(CC) $(CFLAGS) $(LFLAGS) $(HDIR) $(OBJS) $(INC_LIB) $(LIB) -o $(NAME)
 
 clean:
