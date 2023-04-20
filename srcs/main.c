@@ -24,7 +24,7 @@ void init_data(t_data *dt)
     dt->param = "";
     dt->flags[0] = ' ';
     dt->flags[1] = ' ';
-    if ((dt->ip = (char *)malloc(sizeof(char) * 16 + 1)) == NULL)
+    if ((dt->ip = (char *)mmalloc(sizeof(char) * 16 + 1)) == NULL)
         exit_error("Malloc error.");
     dt->hostname = "";
     dt->socket = 0;
@@ -107,7 +107,7 @@ void check_address(t_data *dt)
         exit_error("address error: The hostname could not be resolved.");
     else
     {
-        dt->hostname = host; // need strdup ?
+        dt->hostname = ft_strdup(host); // need strdup ?
     }
 }
 

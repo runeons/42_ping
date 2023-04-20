@@ -4,8 +4,13 @@ NAME					= 	ft_ping
 
 CC						= 	clang
 
+FFLAGS					=   -fsanitize=address -g3
+
+LFLAGS					=   -fsanitize=leak -g3
+
 CFLAGS					= 	-Wall -Wextra -Werror -I includes/ \
 							-I libft/includes/ \
+							
 
 BONUS_FLAG				= 	0
 
@@ -65,22 +70,37 @@ OBJS					=	$(addprefix $(OBJS_DIR), $(OBJS_LIST))
 all: $(OBJS) $(SRCS) $(NAME)
 
 $(NAME): $(OBJS) $(SRCS)
+	@ echo NAME
 	@ make -C libft/
+	@ echo NAME compile
 	@ $(CC) $(CFLAGS) $(HDIR) $(OBJS) $(INC_LIB) $(LIB) -o $@
 
-
 $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
+	@ echo OBJS_DIR
 	@ mkdir -p $(dir $@)
+	@ echo OBJS_DIR compile
 	@ $(CC) $(CFLAGS) $(HDIR) -D BONUS=$(BONUS_FLAG) $(INC_LIB) -c -o $@ $<
 
+fsan:  $(OBJS) $(SRCS)
+	@ echo FSAN
+	@ make -C libft/
+	@ echo FSAN compile
+	@ $(CC) $(CFLAGS) $(FFLAGS) $(HDIR) $(OBJS) $(INC_LIB) $(LIB) -o $(NAME)
+
+leak:  $(OBJS) $(SRCS)
+	@ echo FSAN
+	@ make -C libft/
+	@ echo FSAN compile
+	@ $(CC) $(CFLAGS) $(LFLAGS) $(HDIR) $(OBJS) $(INC_LIB) $(LIB) -o $(NAME)
+
 clean:
-	make clean -C libft/
-	rm -rf $(OBJS_DIR)
+	@ make clean -C libft/
+	@ rm -rf $(OBJS_DIR)
 
 fclean:
-	make fclean -C libft/
-	rm -f $(NAME)
-	rm -rf $(OBJS_DIR)
+	@ make fclean -C libft/
+	@ rm -f $(NAME)
+	@ rm -rf $(OBJS_DIR)
 
 re: fclean all
 
@@ -88,4 +108,5 @@ bonus:
 	make fclean
 	make -j BONUS_FLAG=1
 
-.PHONY: all clean fclean re bonus
+
+.PHONY: all clean fclean re bonus fsan fsanre
