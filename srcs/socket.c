@@ -10,7 +10,6 @@ void open_socket(t_data *dt)
     dt->socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (dt->socket < 0)
     {
-
         exit_error("socket error: Check that you have the correct rights.");
     }
 
@@ -21,14 +20,12 @@ void open_socket(t_data *dt)
     r = setsockopt(dt->socket, IPPROTO_IP, IP_TTL, &ttl_value, sizeof(ttl_value)); // IPPROTO_IP or SOL_IP orSOL_SOCKET ?
     if (r != 0)
     {
-
         dprintf(2, "setsockopt1: %s\n", strerror(-1));
         exit_error("socket error: Exiting program.");
     }
     r = setsockopt(dt->socket, SOL_SOCKET, SO_RCVTIMEO, &tv_out, sizeof(tv_out));
     if (r != 0)
     {
-
         dprintf(2, "setsockopt2: %s\n", strerror(-1));
         exit_error("socket error: Exiting program.");
     }

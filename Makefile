@@ -1,3 +1,5 @@
+# clang -fsanitize=address -g3 srcs/*.c -g3 -Wall -Wextra -Werror -I includes/ -I libft/includes/ -I libft -L libft -lft && sudo ./a.out 8.8.8.8
+
 # *** NAME - CC - FLAGS ****************************************************** #
 
 NAME					= 	ft_ping
@@ -40,6 +42,7 @@ HEADER							=	\
 SRCS_DIR					=	./srcs/
 
 SRCS_LIST					=	\
+							init.c \
 							main.c \
 							packet.c \
 							parsing.c \

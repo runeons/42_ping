@@ -16,25 +16,6 @@
 # include <color_shell.h>
 # include <struct.h>
 
-// typedef struct  s_packet
-// {
-// 	struct icmphdr  h;
-// 	char            payload[ICMP_PAYLOAD_LEN];
-// }               t_packet;
-
-// typedef struct  s_data
-// {
-//     char        *param;
-//     char        flags[2];
-//     char        *ip;
-//     char        *hostname;
-//     int         socket;
-//     struct sockaddr_in address;
-//     int         loop;
-//     t_packet    packet;
-//     int         sequence;
-// }					t_data;
-
 void print_icmp_packet(t_data *dt);
 void craft_icmp_payload(t_data *dt);
 unsigned short checksum(void *b, int len);
@@ -54,6 +35,10 @@ void init_data(t_data *dt);
 void print_data(t_data dt);
 void    print_addrinfo(struct addrinfo *ai);
 void    quit_program(int err);
+
+void init_data(t_data *dt);
+void print_data(t_data dt);
+void    print_addrinfo(struct addrinfo *ai);
 
 void    print_statistics();
 
