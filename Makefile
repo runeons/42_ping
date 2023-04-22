@@ -41,6 +41,10 @@ SRCS_DIR					=	./srcs/
 
 SRCS_LIST					=	\
 							main.c \
+							packet.c \
+							parsing.c \
+							socket.c \
+							statistics.c \
 							# $(UTILS) \
 							# $(MAIN) \
 
