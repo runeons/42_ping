@@ -68,12 +68,48 @@ void    print_statistics(t_data *dt)
     printf("%d packets transmitted, %d received, %d%% packet loss, time %d ms\n", dt->sent_nb, dt->recv_nb, ratio, time / 1000);
 }
 
+void    init_buf(struct msghdr *msg)
+{
+    struct icmphdr icmp_control;
+    struct iovec iov[1];
+    char buffer[1024];  // Buffer de messages de taille 1024
+    // char control[32];  // Données de contrôle de taille sizeof(struct timeval)
+
+    // build control structure
+    memset(&icmp_control, 0, sizeof(struct icmphdr));
+    icmp_control.type = 4;
+
+    iov[0].iov_base = buffer;
+    iov[0].iov_len = sizeof(buffer);
+    msg->msg_name = NULL;
+    msg->msg_namelen = 0;
+    msg->msg_iov = iov;
+    msg->msg_iovlen = 1;
+    msg->msg_control = &icmp_control;
+    msg->msg_controllen = sizeof(icmp_control);
+    msg->msg_flags = 0;
+}
+
+void    print_buf(struct msghdr msg)
+{
+    // printf("msg_iov ====> %lu \n", msg.msg_iov);
+    printf("iov_base ====> %s \n", (char *)msg.msg_iov[0].iov_base);
+    printf("iov_len ====> %lu \n", msg.msg_iov[0].iov_len);
+    printf("msg_name ====> %s \n", (char *)msg.msg_name);
+    printf("msg_namelen ====> %uu \n", msg.msg_namelen);
+    printf("msg_iovlen ====> %lu \n", msg.msg_iovlen);
+    printf("msg_control ====> %s \n", (char *)msg.msg_control);
+    printf("msg_controllen ====> %lu \n", msg.msg_controllen);
+    printf("msg_flags ====> %d \n", msg.msg_flags);
+}
+
 void receive_packet(t_data *dt)
 {
     struct msghdr buf;
     int r;
 
     dt->sent_nb++;
+    init_buf(&buf);
     r = recvmsg(dt->socket, &buf, 0);
     if (r < 0)
         dprintf(2, "packet receiving failure: %s\n", strerror(r));
@@ -83,10 +119,14 @@ void receive_packet(t_data *dt)
             exit_error("time error: Cannot retrieve time");
         dt->bytes = sizeof(buf);
         dt->recv_nb++;
-        print_ping(dt);        
-        // printf("buf.msg_name: %s\n", (char *)buf.msg_name);
-        // printf("buf.msg_flags: %d\n", (buf.msg_flags));
-        // printf("buf.msg_iovlen: %zu\n", buf.msg_iovlen);
+        print_ping(dt);      
+        printf("r: %d\n", r);
+        print_buf(buf);  
+        // printf("ICMP_ECHOREPLY: %d\n", ICMP_ECHOREPLY);
+        // if (buf.msg_type == ICMP_ECHOREPLY)
+        //     printf("ICMP type: %d, code: %d\n", icmp->type, icmp->code);
+        // else
+        //     exit_error("Not ICMP_ECHOREPLY\n");
     }
 }
 
