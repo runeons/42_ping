@@ -23,12 +23,12 @@ int main(int ac, char **av)
         exit_error("usage error: Destination address required");
     init_data(&dt);
     parse_params(ac, av, &dt);
-    print_data(dt);
+    // print_data(dt);
     check_hostname(&dt);
     check_address(&dt);
     open_socket(&dt);
     signal(SIGINT, quit_program);
-    print_data(dt);
+    // print_data(dt);
     print_init_ping(&dt);
     if (gettimeofday(&dt.init_tv, &dt.tz) != 0)
         exit_error("time error: Cannot retrieve time");
