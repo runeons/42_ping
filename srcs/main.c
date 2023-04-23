@@ -1,5 +1,7 @@
 #include "ft_ping.h"
 
+int g_main_loop = 1;
+
 void    exit_error(char *msg)
 {
     dprintf(2, "%s\n", msg);
@@ -9,15 +11,13 @@ void    exit_error(char *msg)
 
 void    quit_program(int err)
 {
-    print_statistics();
-    exit(err);
+    (void)err;
+    g_main_loop = 0;
 }
 
 int main(int ac, char **av)
 {
     t_data dt;
-    // struct timeval  tv;
-    // struct timezone tz;
 
     if (ac < 2)
         exit_error("usage error: Destination address required");
@@ -32,11 +32,9 @@ int main(int ac, char **av)
     print_init_ping(&dt);
     if (gettimeofday(&dt.init_tv, &dt.tz) != 0)
         exit_error("time error: Cannot retrieve time");
-    printf("dt.init_tv.tv_sec: %ld\n", dt.init_tv.tv_sec);
-    printf("dt.init_tv.tv_usec: %ld\n", dt.init_tv.tv_usec);
-    while (1)
+    while (g_main_loop)
         ping(&dt);
-    // end
+    print_statistics(&dt);
     free_all_malloc();
     // while(1);
     return (0);

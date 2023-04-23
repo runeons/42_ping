@@ -32,6 +32,8 @@ typedef struct  s_data
     struct timeval  init_tv;
     struct timeval  send_tv;
     struct timeval  receive_tv;
+    int         sent_nb;
+    int         recv_nb;
 }					t_data;
 
 #endif

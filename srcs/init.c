@@ -19,6 +19,10 @@ void init_data(t_data *dt)
     dt->bytes = 0;
     dt->ttl = TTL_VALUE;
     dt->ms = 0;
+    dt->sent_nb = 0;
+    dt->recv_nb = 0;
+    dt->init_tv.tv_sec = 0;
+    dt->init_tv.tv_usec = 0;
     // tv and tz
 }
 

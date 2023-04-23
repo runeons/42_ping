@@ -49,21 +49,31 @@ void    print_init_ping(t_data *dt)
     printf("PING %s (%s) %lu(%lu) bytes of data.\n", dt->param, dt->ip, sizeof(dt->packet.payload), sizeof(dt->packet));
 }
 
-
 void    print_ping(t_data *dt)
 {
     int time;
 
-    time = dt->receive_tv.tv_usec - dt->send_tv.tv_usec;
+    time = (dt->receive_tv.tv_sec - dt->send_tv.tv_sec) * 1000000 + dt->receive_tv.tv_usec - dt->send_tv.tv_usec;
     printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.2f ms\n", dt->bytes, dt->ip, dt->sequence, dt->ttl, (float)time / 1000);
 }
 
+void    print_statistics(t_data *dt)
+{
+    int ratio;
+    int time;
+
+    ratio = 100 - ((dt->recv_nb / dt->sent_nb) * 100);
+    time = (dt->receive_tv.tv_sec - dt->init_tv.tv_sec) * 1000000 + dt->receive_tv.tv_usec - dt->init_tv.tv_usec;
+    printf("--- %s ping statistics ---\n", dt->param);
+    printf("%d packets transmitted, %d received, %d%% packet loss, time %d ms\n", dt->sent_nb, dt->recv_nb, ratio, time / 1000);
+}
 
 void receive_packet(t_data *dt)
 {
     struct msghdr buf;
     int r;
 
+    dt->sent_nb++;
     r = recvmsg(dt->socket, &buf, 0);
     if (r < 0)
         dprintf(2, "packet receiving failure: %s\n", strerror(r));
@@ -72,6 +82,7 @@ void receive_packet(t_data *dt)
         if (gettimeofday(&dt->receive_tv, &dt->tz) != 0)
             exit_error("time error: Cannot retrieve time");
         dt->bytes = sizeof(buf);
+        dt->recv_nb++;
         print_ping(dt);        
         // printf("buf.msg_name: %s\n", (char *)buf.msg_name);
         // printf("buf.msg_flags: %d\n", (buf.msg_flags));
