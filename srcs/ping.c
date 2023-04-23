@@ -28,21 +28,61 @@ void craft_icmp_payload(t_data *dt)
     dt->sequence++;
 }
 
-// Calculating the Check Sum
-unsigned short checksum(void *b, int len)
-{ unsigned short *buf = b;
-	unsigned int sum=0;
-	unsigned short result;
+// char* toBinary(int n, int len)
+// {
+//     char* binary = (char*)malloc(sizeof(char) * len);
+//     int k = 0;
+//     for (unsigned i = (1 << (len - 1)); i > 0; i = i / 2) {
+//         binary[k++] = (n & i) ? '1' : '0';
+//     }
+//     binary[k] = '\0';
+//     return binary;
+// }
 
-	for ( sum = 0; len > 1; len -= 2 )
-		sum += *buf++;
-	if ( len == 1 )
-		sum += *(unsigned char*)buf;
-	sum = (sum >> 16) + (sum & 0xFFFF);
-	sum += (sum >> 16);
-	result = ~sum;
-	return result;
+unsigned short checksum(void *b, int len) {    
+    unsigned short *buf = b;
+    unsigned int sum = 0;
+    unsigned short result;
+
+    for (sum = 0; len > 1; len -= 2)
+        sum += *buf++;
+
+    if (len == 1)
+        sum += *(unsigned char *)buf;
+
+    sum = (sum >> 16) + (sum & 0xFFFF);
+    sum += (sum >> 16);
+    result = ~sum;
+
+    return result;
 }
+
+// unsigned short checksum(void *packet, int len)
+// {
+//     unsigned short  *tmp;
+// 	unsigned int    checksum;
+
+//     tmp = packet;
+//     // printf("tmp: %d, len: %d\n", *tmp, len);
+//     checksum = 0;
+//     while (len > 1)
+//     {
+//         checksum += *tmp++;
+//         // printf("len: %d, tmp: %hu, checksum: %d, tmp[%s], checksum[%s]\n", len, *tmp, checksum, toBinary(*tmp, 16), toBinary(checksum, 16));
+//         len -= sizeof(unsigned short);
+//     }
+// 	if (len == 1)
+// 		checksum += *(unsigned char*)tmp;
+//     // printf("sum1: %d, checksum[%s]\n", checksum, toBinary(checksum, 16));
+// 	checksum = (checksum >> 16) + (checksum & 0xFFFF);
+//     // printf("sum2: %d, checksum[%s]\n", checksum, toBinary(checksum, 16));
+//     // printf("checksum >> 16 [%s]\n", toBinary(checksum >> 16, 16));
+// 	// checksum += (checksum >> 16);
+//     // printf("sum3: %d, checksum[%s]\n", checksum, toBinary(checksum, 32));
+// 	checksum = (unsigned short)(~checksum);
+//     // printf("checksum: %d, checksum[%s]\n", checksum, toBinary(checksum, 16));
+// 	return checksum;
+// }
 
 void    print_init_ping(t_data *dt)
 {
@@ -73,7 +113,7 @@ void    init_buf(struct msghdr *msg)
     struct icmphdr icmp_control;
     struct iovec iov[1];
     char buffer[1024];  // Buffer de messages de taille 1024
-    // char control[32];  // Données de contrôle de taille sizeof(struct timeval)
+    char control[32];  // Données de contrôle de taille sizeof(struct timeval)
 
     // build control structure
     memset(&icmp_control, 0, sizeof(struct icmphdr));
@@ -85,22 +125,36 @@ void    init_buf(struct msghdr *msg)
     msg->msg_namelen = 0;
     msg->msg_iov = iov;
     msg->msg_iovlen = 1;
-    msg->msg_control = &icmp_control;
-    msg->msg_controllen = sizeof(icmp_control);
-    msg->msg_flags = 0;
+    msg->msg_control = control;
+    msg->msg_controllen = sizeof(control);
+    // msg->msg_control = &icmp_control;
+    // msg->msg_controllen = sizeof(icmp_control);
+    msg->msg_flags = 4;
 }
 
 void    print_buf(struct msghdr msg)
 {
-    // printf("msg_iov ====> %lu \n", msg.msg_iov);
     printf("iov_base ====> %s \n", (char *)msg.msg_iov[0].iov_base);
     printf("iov_len ====> %lu \n", msg.msg_iov[0].iov_len);
     printf("msg_name ====> %s \n", (char *)msg.msg_name);
-    printf("msg_namelen ====> %uu \n", msg.msg_namelen);
+    printf("msg_namelen ====> %u \n", msg.msg_namelen);
     printf("msg_iovlen ====> %lu \n", msg.msg_iovlen);
     printf("msg_control ====> %s \n", (char *)msg.msg_control);
     printf("msg_controllen ====> %lu \n", msg.msg_controllen);
-    printf("msg_flags ====> %d \n", msg.msg_flags);
+    printf("msg_flags ====> %d \n\n", msg.msg_flags);    
+    // struct cmsghdr *cmsg;
+    // for (cmsg = CMSG_FIRSTHDR(&msg); cmsg != NULL; cmsg = CMSG_NXTHDR(&msg, cmsg)) {
+    // // Vérifier si les données de contrôle sont de type ICMP
+    // if (cmsg->cmsg_level == IPPROTO_ICMP && cmsg->cmsg_type == ICMP_ECHO) {
+    //     // Extraire les données de la structure icmp
+    //     struct icmp *icmp = (struct icmp*) CMSG_DATA(cmsg);
+        
+    //     // Vérifier si le type de paquet ICMP est ECHOREPLY
+    //     if (icmp->icmp_type == ICMP_ECHOREPLY) {
+    //         printf("Received ICMP ECHOREPLY packet.\n");
+    //         // Faire quelque chose ici ...
+    //     }
+    // }
 }
 
 void receive_packet(t_data *dt)
@@ -120,13 +174,8 @@ void receive_packet(t_data *dt)
         dt->bytes = sizeof(buf);
         dt->recv_nb++;
         print_ping(dt);      
-        printf("r: %d\n", r);
-        print_buf(buf);  
-        // printf("ICMP_ECHOREPLY: %d\n", ICMP_ECHOREPLY);
-        // if (buf.msg_type == ICMP_ECHOREPLY)
-        //     printf("ICMP type: %d, code: %d\n", icmp->type, icmp->code);
-        // else
-        //     exit_error("Not ICMP_ECHOREPLY\n");
+        // printf("r: %d\n", r);
+        // print_buf(buf);  
     }
 }
 
