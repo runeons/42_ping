@@ -44,6 +44,21 @@ unsigned short checksum(void *b, int len)
 	return result;
 }
 
+void    print_init_ping(t_data *dt)
+{
+    printf("PING %s (%s) %lu(%lu) bytes of data.\n", dt->param, dt->ip, sizeof(dt->packet.payload), sizeof(dt->packet));
+}
+
+
+void    print_ping(t_data *dt)
+{
+    int time;
+
+    time = dt->receive_tv.tv_usec - dt->send_tv.tv_usec;
+    printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.2f ms\n", dt->bytes, dt->ip, dt->sequence, dt->ttl, (float)time / 1000);
+}
+
+
 void receive_packet(t_data *dt)
 {
     struct msghdr buf;
@@ -54,10 +69,13 @@ void receive_packet(t_data *dt)
         dprintf(2, "packet receiving failure: %s\n", strerror(r));
     else
     {
-        printf("Packet received\n");
-        printf("buf.msg_name: %s\n", (char *)buf.msg_name);
-        printf("buf.msg_flags: %d\n", (buf.msg_flags));
-        printf("buf.msg_iovlen: %zu\n", buf.msg_iovlen);
+        if (gettimeofday(&dt->receive_tv, &dt->tz) != 0)
+            exit_error("time error: Cannot retrieve time");
+        dt->bytes = sizeof(buf);
+        print_ping(dt);        
+        // printf("buf.msg_name: %s\n", (char *)buf.msg_name);
+        // printf("buf.msg_flags: %d\n", (buf.msg_flags));
+        // printf("buf.msg_iovlen: %zu\n", buf.msg_iovlen);
     }
 }
 
@@ -66,12 +84,15 @@ void ping(t_data *dt)
     int r;
 
     r = 0;
+    usleep(SLEEP_WAIT);
     craft_icmp_payload(dt);
     dt->packet.h.type = ICMP_ECHO;
     dt->packet.h.un.echo.id = getpid();
     dt->packet.h.un.echo.sequence = dt->sequence;
     dt->packet.h.checksum = checksum(&dt->packet, sizeof(dt->packet));
     // print_icmp_packet(dt);
+    if (gettimeofday(&dt->send_tv, &dt->tz) != 0)
+        exit_error("time error: Cannot retrieve time");
     if ((r = sendto(dt->socket, &dt->packet, sizeof(dt->packet), 0, (struct sockaddr*)&dt->address, sizeof(dt->address))) <= 0)
         dprintf(2, "packet sending failure: %s\n", strerror(r));
     else

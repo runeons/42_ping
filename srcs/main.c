@@ -16,7 +16,9 @@ void    quit_program(int err)
 int main(int ac, char **av)
 {
     t_data dt;
-    
+    // struct timeval  tv;
+    // struct timezone tz;
+
     if (ac < 2)
         exit_error("usage error: Destination address required");
     init_data(&dt);
@@ -27,11 +29,13 @@ int main(int ac, char **av)
     open_socket(&dt);
     signal(SIGINT, quit_program);
     print_data(dt);
-    // while (1)
-    // {
-    usleep(SLEEP_WAIT);
-    ping(&dt);
-    // }
+    print_init_ping(&dt);
+    if (gettimeofday(&dt.init_tv, &dt.tz) != 0)
+        exit_error("time error: Cannot retrieve time");
+    printf("dt.init_tv.tv_sec: %ld\n", dt.init_tv.tv_sec);
+    printf("dt.init_tv.tv_usec: %ld\n", dt.init_tv.tv_usec);
+    while (1)
+        ping(&dt);
     // end
     free_all_malloc();
     // while(1);

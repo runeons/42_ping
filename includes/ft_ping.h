@@ -41,6 +41,8 @@ void print_data(t_data dt);
 void    print_addrinfo(struct addrinfo *ai);
 
 void    print_statistics();
+void    print_ping(t_data *dt);
+void    print_init_ping(t_data *dt);
 
 #endif
 

@@ -16,6 +16,10 @@ void init_data(t_data *dt)
     // dt->packet =  
     dt->sequence = 0;
     // address not initialized ?
+    dt->bytes = 0;
+    dt->ttl = TTL_VALUE;
+    dt->ms = 0;
+    // tv and tz
 }
 
 void print_data(t_data dt)
@@ -31,6 +35,13 @@ void print_data(t_data dt)
     printf("dt.address.sin_port : %d\n", dt.address.sin_port);
     printf("dt.address.sin_addr.s_addr : %u\n", dt.address.sin_addr.s_addr);
     printf("dt.loop : %d\n", dt.loop);
+    printf("dt.bytes : %d\n", dt.bytes);
+    printf("dt.ttl : %d\n", dt.ttl);
+    printf("dt.ms : %f\n", dt.ms);
+    printf("dt.init_tv.tv_sec : %ld\n", dt.init_tv.tv_sec);
+    printf("dt.init_tv.tv_usec : %ld\n", dt.init_tv.tv_usec);
+    // printf("dt.current_tv.tv_sec : %ld\n", dt.current_tv.tv_sec);
+    // printf("dt.current_tv.tv_usec : %ld\n", dt.current_tv.tv_usec);
 }
 
 void    print_addrinfo(struct addrinfo *ai)
