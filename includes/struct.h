@@ -17,7 +17,9 @@ typedef struct  s_packet
 typedef struct  s_data
 {
     char        *param;
-    char        flags[2];
+    int         flag_h;
+    int         flag_v;
+    // char        flags[2];
     char        *ip; // address
     char        *hostname;
     int         socket;
@@ -34,6 +36,7 @@ typedef struct  s_data
     struct timeval  receive_tv;
     int         sent_nb;
     int         recv_nb;
+    char        v_buf[1024];
 }					t_data;
 
 #endif

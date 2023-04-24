@@ -2,14 +2,18 @@
 
 void    add_flag(t_data *dt, char flag)
 {
-    if (ft_strchr(dt->flags, flag))
-        return;
-    if (dt->flags[0] == ' ')
-        dt->flags[0] = flag;
-    else if (dt->flags[1] == ' ')
-        dt->flags[1] = flag;
-    else
-        exit_error("Unknow error - too many flags");
+    if (flag == 'v')
+        dt->flag_v = 1;
+    else if (flag == 'h')
+        dt->flag_h = 1;
+    // if (ft_strchr(dt->flags, flag))
+    //     return;
+    // if (dt->flags[0] == ' ')
+    //     dt->flags[0] = flag;
+    // else if (dt->flags[1] == ' ')
+    //     dt->flags[1] = flag;
+    // else
+    //     exit_error("Unknow error - too many flags");
 }
 
 void    parse_params(int ac, char **av, t_data *dt)
@@ -27,7 +31,6 @@ void    parse_params(int ac, char **av, t_data *dt)
                 add_flag(dt, av[i][1]);
             else
             {
-        
                 dprintf(2, "invalid option -- '%s'\n", av[i]);
                 exit(1);
             }
@@ -38,7 +41,6 @@ void    parse_params(int ac, char **av, t_data *dt)
                 dt->param = av[i];
             else
             {
-        
                 dprintf(2, "usage error: Only one ip/hostname required, unrecognised pattern -- '%s'\n", av[i]);
                 exit(1);
             }

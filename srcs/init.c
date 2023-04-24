@@ -3,8 +3,10 @@
 void init_data(t_data *dt)
 {
     dt->param = "";
-    dt->flags[0] = ' ';
-    dt->flags[1] = ' ';
+    // dt->flags[0] = ' ';
+    // dt->flags[1] = ' ';
+    dt->flag_v = 0;
+    dt->flag_h = 0;
     if ((dt->ip = (char *)mmalloc(sizeof(char) * MAX_IP_LEN + 1)) == NULL)
         exit_error("Malloc error.");
     dt->hostname = "";
@@ -23,6 +25,7 @@ void init_data(t_data *dt)
     dt->recv_nb = 0;
     dt->init_tv.tv_sec = 0;
     dt->init_tv.tv_usec = 0;
+    ft_bzero(dt->v_buf, sizeof(dt->v_buf));
     // tv and tz
 }
 
@@ -30,8 +33,10 @@ void print_data(t_data dt)
 {
     printf("\n");
     printf("dt.param : %s\n", dt.param);
-    printf("dt.flags[0] : %c\n", dt.flags[0]);
-    printf("dt.flags[1] : %c\n", dt.flags[1]);
+    // printf("dt.flags[0] : %c\n", dt.flags[0]);
+    // printf("dt.flags[1] : %c\n", dt.flags[1]);
+    printf("dt.flag_h: %d\n", dt.flag_h);
+    printf("dt.flag_v: %d\n", dt.flag_v);
     printf("dt.ip : %s\n", dt.ip);
     printf("dt.hostname : %s\n", dt.hostname);
     printf("dt.socket : %d\n", dt.socket);
@@ -44,6 +49,7 @@ void print_data(t_data dt)
     printf("dt.ms : %f\n", dt.ms);
     printf("dt.init_tv.tv_sec : %ld\n", dt.init_tv.tv_sec);
     printf("dt.init_tv.tv_usec : %ld\n", dt.init_tv.tv_usec);
+    printf("dt.v_buf : %s\n", dt.v_buf);
     // printf("dt.current_tv.tv_sec : %ld\n", dt.current_tv.tv_sec);
     // printf("dt.current_tv.tv_usec : %ld\n", dt.current_tv.tv_usec);
 }

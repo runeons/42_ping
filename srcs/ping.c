@@ -39,50 +39,50 @@ void craft_icmp_payload(t_data *dt)
 //     return binary;
 // }
 
-unsigned short checksum(void *b, int len) {    
-    unsigned short *buf = b;
-    unsigned int sum = 0;
-    unsigned short result;
+// unsigned short checksum(void *b, int len)
+// {
+//     unsigned short *buf = b;
+//     unsigned int sum = 0;
+//     unsigned short result;
 
-    for (sum = 0; len > 1; len -= 2)
-        sum += *buf++;
+//     for (sum = 0; len > 1; len -= 2)
+//         sum += *buf++;
+//     if (len == 1)
+//         sum += *(unsigned char *)buf;
+//     sum = (sum >> 16) + (sum & 0xFFFF);
+//     sum += (sum >> 16);
+//     result = ~sum;
 
-    if (len == 1)
-        sum += *(unsigned char *)buf;
+//     return result;
+// }
 
-    sum = (sum >> 16) + (sum & 0xFFFF);
-    sum += (sum >> 16);
-    result = ~sum;
+unsigned short checksum(void *packet, int len)
+{
+    unsigned short  *tmp;
+	unsigned int    checksum;
 
-    return result;
+    tmp = packet;
+    // printf("tmp: %d, len: %d\n", *tmp, len);
+    checksum = 0;
+    while (len > 1)
+    {
+        checksum += *tmp++;
+        // printf("len: %d, tmp: %hu, checksum: %d, tmp[%s], checksum[%s]\n", len, *tmp, checksum, toBinary(*tmp, 16), toBinary(checksum, 16));
+        len -= sizeof(unsigned short);
+    }
+	if (len == 1)
+		checksum += *(unsigned char*)tmp;
+    // printf("sum1: %d, checksum[%s]\n", checksum, toBinary(checksum, 16));
+	checksum = (checksum >> 16) + (checksum & 0xFFFF);
+    // printf("sum2: %d, checksum[%s]\n", checksum, toBinary(checksum, 16));
+    // printf("checksum >> 16 [%s]\n", toBinary(checksum >> 16, 16));
+	checksum += (checksum >> 16);
+    // printf("sum3: %d, checksum[%s]\n", checksum, toBinary(checksum, 32));
+	checksum = (unsigned short)(~checksum);
+    // printf("checksum: %d, checksum[%s]\n", checksum, toBinary(checksum, 16));
+	return checksum;
 }
 
-// unsigned short checksum(void *packet, int len)
-// {
-//     unsigned short  *tmp;
-// 	unsigned int    checksum;
-
-//     tmp = packet;
-//     // printf("tmp: %d, len: %d\n", *tmp, len);
-//     checksum = 0;
-//     while (len > 1)
-//     {
-//         checksum += *tmp++;
-//         // printf("len: %d, tmp: %hu, checksum: %d, tmp[%s], checksum[%s]\n", len, *tmp, checksum, toBinary(*tmp, 16), toBinary(checksum, 16));
-//         len -= sizeof(unsigned short);
-//     }
-// 	if (len == 1)
-// 		checksum += *(unsigned char*)tmp;
-//     // printf("sum1: %d, checksum[%s]\n", checksum, toBinary(checksum, 16));
-// 	checksum = (checksum >> 16) + (checksum & 0xFFFF);
-//     // printf("sum2: %d, checksum[%s]\n", checksum, toBinary(checksum, 16));
-//     // printf("checksum >> 16 [%s]\n", toBinary(checksum >> 16, 16));
-// 	// checksum += (checksum >> 16);
-//     // printf("sum3: %d, checksum[%s]\n", checksum, toBinary(checksum, 32));
-// 	checksum = (unsigned short)(~checksum);
-//     // printf("checksum: %d, checksum[%s]\n", checksum, toBinary(checksum, 16));
-// 	return checksum;
-// }
 
 void    print_init_ping(t_data *dt)
 {
@@ -99,36 +99,42 @@ void    print_ping(t_data *dt)
 
 void    print_statistics(t_data *dt)
 {
-    int ratio;
-    int time;
+    int             ratio;
+    int             time;
+    struct timeval  final_tv;
 
+    if (gettimeofday(&final_tv, &dt->tz) != 0)
+            exit_error("time error: Cannot retrieve time");
     ratio = 100 - ((dt->recv_nb / dt->sent_nb) * 100);
-    time = (dt->receive_tv.tv_sec - dt->init_tv.tv_sec) * 1000000 + dt->receive_tv.tv_usec - dt->init_tv.tv_usec;
+    time = (final_tv.tv_sec - dt->init_tv.tv_sec) * 1000000 + final_tv.tv_usec - dt->init_tv.tv_usec;
     printf("--- %s ping statistics ---\n", dt->param);
     printf("%d packets transmitted, %d received, %d%% packet loss, time %d ms\n", dt->sent_nb, dt->recv_nb, ratio, time / 1000);
 }
 
 void    init_buf(struct msghdr *msg)
 {
-    struct icmphdr icmp_control;
-    struct iovec iov[1];
-    char buffer[1024];  // Buffer de messages de taille 1024
-    char control[32];  // Données de contrôle de taille sizeof(struct timeval)
+    struct icmphdr  *icmp_control;
+    struct iovec    *iov;
+    char            *buffer;
 
-    // build control structure
-    memset(&icmp_control, 0, sizeof(struct icmphdr));
-    icmp_control.type = 4;
-
-    iov[0].iov_base = buffer;
-    iov[0].iov_len = sizeof(buffer);
+    if (!(buffer = mmalloc(sizeof(char) * 1024)))
+        exit_error("Malloc error (buffer)");
+    ft_bzero(buffer, 1024);
+    if (!(iov = (struct iovec *)mmalloc(sizeof(struct iovec))))
+        exit_error("Malloc error (iov)");
+    ft_bzero(iov, sizeof(*iov));
+    if (!(icmp_control = (struct icmphdr *)mmalloc(sizeof(struct icmphdr))))
+        exit_error("Malloc error (icmp_control)");
+    ft_bzero(icmp_control, sizeof(*icmp_control));
+    icmp_control->type = 4;
+    iov->iov_base = buffer;
+    iov->iov_len = sizeof(buffer);
     msg->msg_name = NULL;
     msg->msg_namelen = 0;
     msg->msg_iov = iov;
     msg->msg_iovlen = 1;
-    msg->msg_control = control;
-    msg->msg_controllen = sizeof(control);
-    // msg->msg_control = &icmp_control;
-    // msg->msg_controllen = sizeof(icmp_control);
+    msg->msg_control = icmp_control;
+    msg->msg_controllen = sizeof(*icmp_control);
     msg->msg_flags = 4;
 }
 
@@ -142,19 +148,14 @@ void    print_buf(struct msghdr msg)
     printf("msg_control ====> %s \n", (char *)msg.msg_control);
     printf("msg_controllen ====> %lu \n", msg.msg_controllen);
     printf("msg_flags ====> %d \n\n", msg.msg_flags);    
-    // struct cmsghdr *cmsg;
-    // for (cmsg = CMSG_FIRSTHDR(&msg); cmsg != NULL; cmsg = CMSG_NXTHDR(&msg, cmsg)) {
-    // // Vérifier si les données de contrôle sont de type ICMP
-    // if (cmsg->cmsg_level == IPPROTO_ICMP && cmsg->cmsg_type == ICMP_ECHO) {
-    //     // Extraire les données de la structure icmp
-    //     struct icmp *icmp = (struct icmp*) CMSG_DATA(cmsg);
-        
-    //     // Vérifier si le type de paquet ICMP est ECHOREPLY
-    //     if (icmp->icmp_type == ICMP_ECHOREPLY) {
-    //         printf("Received ICMP ECHOREPLY packet.\n");
-    //         // Faire quelque chose ici ...
-    //     }
-    // }
+}
+
+void    print_verbose(t_data *dt)
+{
+    if (dt->flag_v == 1)
+    {
+        dprintf(2, "%s\n", dt->v_buf);
+    }
 }
 
 void receive_packet(t_data *dt)
@@ -166,7 +167,11 @@ void receive_packet(t_data *dt)
     init_buf(&buf);
     r = recvmsg(dt->socket, &buf, 0);
     if (r < 0)
-        dprintf(2, "packet receiving failure: %s\n", strerror(r));
+    {
+        // dprintf(2, "packet receiving failure: %s\n", strerror(r));
+        sprintf(dt->v_buf, "packet receiving failure: %s\n", strerror(r));
+        print_verbose(dt);
+    }
     else
     {
         if (gettimeofday(&dt->receive_tv, &dt->tz) != 0)
