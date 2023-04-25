@@ -34,7 +34,7 @@ void    exit_error(char *msg);
 void init_data(t_data *dt);
 void print_data(t_data dt);
 void    print_addrinfo(struct addrinfo *ai);
-void    quit_program(int err);
+void    end_loop(int err);
 
 void init_data(t_data *dt);
 void print_data(t_data dt);

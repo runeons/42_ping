@@ -55,6 +55,7 @@ void check_address(t_data *dt)
 {
     char    host[MAX_HOSTNAME_LEN]; // what is the maximum size I can use ?
 
+    ft_bzero(host, MAX_HOSTNAME_LEN);
     if (inet_aton(dt->ip, &(dt->address.sin_addr)) <= 0)
         exit_error("address error: Invalid IPv4 address.");
     if (getnameinfo((struct sockaddr*)&dt->address, sizeof(dt->address), host, sizeof(host), NULL, 0, 0) != 0)

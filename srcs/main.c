@@ -9,7 +9,7 @@ void    exit_error(char *msg)
     exit(1);
 }
 
-void    quit_program(int err)
+void    end_loop(int err)
 {
     (void)err;
     g_main_loop = 0;
@@ -19,6 +19,7 @@ int main(int ac, char **av)
 {
     t_data dt;
 
+    (void)av;
     if (ac < 2)
         exit_error("usage error: Destination address required");
     init_data(&dt);
@@ -27,12 +28,13 @@ int main(int ac, char **av)
     check_hostname(&dt);
     check_address(&dt);
     open_socket(&dt);
-    signal(SIGINT, quit_program);
+    signal(SIGINT, end_loop);
     // print_data(dt);
     print_init_ping(&dt);
     if (gettimeofday(&dt.init_tv, &dt.tz) != 0)
         exit_error("time error: Cannot retrieve time");
     while (g_main_loop)
+        // printf("Great\n");
         ping(&dt);
     print_statistics(&dt);
     free_all_malloc();

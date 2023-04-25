@@ -86,7 +86,7 @@ unsigned short checksum(void *packet, int len)
 
 void    print_init_ping(t_data *dt)
 {
-    printf("PING %s (%s) %lu(%lu) bytes of data.\n", dt->param, dt->ip, sizeof(dt->packet.payload), sizeof(dt->packet));
+    printf("PING %s (%s) %lu(%d) bytes of data.\n", dt->param, dt->ip, sizeof(dt->packet.payload), ICMP_PACKET_LEN); // sizeof(dt->packet)
 }
 
 void    print_ping(t_data *dt)
@@ -168,8 +168,8 @@ void receive_packet(t_data *dt)
     r = recvmsg(dt->socket, &buf, 0);
     if (r < 0)
     {
-        // dprintf(2, "packet receiving failure: %s\n", strerror(r));
-        sprintf(dt->v_buf, "packet receiving failure: %s\n", strerror(r));
+        dprintf(2, "packet receiving failure: %s\n", strerror(r));
+        // sprintf(dt->v_buf, "packet receiving failure: %s\n", strerror(r));
         print_verbose(dt);
     }
     else
