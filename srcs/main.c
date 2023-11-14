@@ -34,9 +34,9 @@ int main(int ac, char **av)
     if (gettimeofday(&dt.init_tv, &dt.tz) != 0)
         exit_error("time error: Cannot retrieve time");
     while (g_main_loop)
-        // printf("Great\n");
         ping(&dt);
     print_statistics(&dt);
+    close(dt.socket);
     free_all_malloc();
     // while(1);
     return (0);

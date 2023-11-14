@@ -1,18 +1,5 @@
 #include "ft_ping.h"
 
-void print_icmp_packet(t_data *dt)
-{
-    printf("sizeof(dt->packet): %lu\n", sizeof(dt->packet));
-    printf("dt->packet.payload: %s\n", dt->packet.payload);
-    printf("sizeof(dt->packet.payload): %lu\n", sizeof(dt->packet.payload));
-    printf("dt->sequence: %d\n", dt->sequence);
-    printf("dt->packet.h.type: %d\n", dt->packet.h.type);
-    printf("dt->packet.h.code: %d\n", dt->packet.h.code);
-    printf("dt->packet.h.checksum: %d\n", dt->packet.h.checksum);
-    printf("dt->packet.h.un.echo.id: %d\n", dt->packet.h.un.echo.id);
-    printf("dt->packet.h.un.echo.sequence: %d\n", dt->packet.h.un.echo.sequence);
-}
-
 void craft_icmp_payload(t_data *dt)
 {
     int i;
@@ -84,33 +71,6 @@ unsigned short checksum(void *packet, int len)
 }
 
 
-void    print_init_ping(t_data *dt)
-{
-    printf("PING %s (%s) %lu(%d) bytes of data.\n", dt->param, dt->ip, sizeof(dt->packet.payload), ICMP_PACKET_LEN); // sizeof(dt->packet)
-}
-
-void    print_ping(t_data *dt)
-{
-    int time;
-
-    time = (dt->receive_tv.tv_sec - dt->send_tv.tv_sec) * 1000000 + dt->receive_tv.tv_usec - dt->send_tv.tv_usec;
-    printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.2f ms\n", dt->bytes, dt->ip, dt->sequence, dt->ttl, (float)time / 1000);
-}
-
-void    print_statistics(t_data *dt)
-{
-    int             ratio;
-    int             time;
-    struct timeval  final_tv;
-
-    if (gettimeofday(&final_tv, &dt->tz) != 0)
-            exit_error("time error: Cannot retrieve time");
-    ratio = 100 - ((dt->recv_nb / dt->sent_nb) * 100);
-    time = (final_tv.tv_sec - dt->init_tv.tv_sec) * 1000000 + final_tv.tv_usec - dt->init_tv.tv_usec;
-    printf("--- %s ping statistics ---\n", dt->param);
-    printf("%d packets transmitted, %d received, %d%% packet loss, time %d ms\n", dt->sent_nb, dt->recv_nb, ratio, time / 1000);
-}
-
 void    init_buf(struct msghdr *msg)
 {
     struct icmphdr  *icmp_control;
@@ -138,25 +98,6 @@ void    init_buf(struct msghdr *msg)
     msg->msg_flags = 4;
 }
 
-void    print_buf(struct msghdr msg)
-{
-    printf("iov_base ====> %s \n", (char *)msg.msg_iov[0].iov_base);
-    printf("iov_len ====> %lu \n", msg.msg_iov[0].iov_len);
-    printf("msg_name ====> %s \n", (char *)msg.msg_name);
-    printf("msg_namelen ====> %u \n", msg.msg_namelen);
-    printf("msg_iovlen ====> %lu \n", msg.msg_iovlen);
-    printf("msg_control ====> %s \n", (char *)msg.msg_control);
-    printf("msg_controllen ====> %lu \n", msg.msg_controllen);
-    printf("msg_flags ====> %d \n\n", msg.msg_flags);    
-}
-
-void    print_verbose(t_data *dt)
-{
-    if (dt->flag_v == 1)
-    {
-        dprintf(2, "%s\n", dt->v_buf);
-    }
-}
 
 void receive_packet(t_data *dt)
 {
@@ -166,21 +107,26 @@ void receive_packet(t_data *dt)
     dt->sent_nb++;
     init_buf(&buf);
     r = recvmsg(dt->socket, &buf, 0);
+    printf("receive_packet %d\n", r);
     if (r < 0)
     {
+        // wait or timeout
         dprintf(2, "packet receiving failure: %s\n", strerror(r));
         // sprintf(dt->v_buf, "packet receiving failure: %s\n", strerror(r));
         print_verbose(dt);
+        print_buf(buf);  
+
     }
     else
     {
+        // printf("r: %d %d\n", r, dt->socket);
         if (gettimeofday(&dt->receive_tv, &dt->tz) != 0)
             exit_error("time error: Cannot retrieve time");
         dt->bytes = sizeof(buf);
         dt->recv_nb++;
         print_ping(dt);      
-        // printf("r: %d\n", r);
-        // print_buf(buf);  
+        printf("r: %d\n", r);
+        print_buf(buf);  
     }
 }
 
@@ -198,8 +144,11 @@ void ping(t_data *dt)
     // print_icmp_packet(dt);
     if (gettimeofday(&dt->send_tv, &dt->tz) != 0)
         exit_error("time error: Cannot retrieve time");
-    if ((r = sendto(dt->socket, &dt->packet, sizeof(dt->packet), 0, (struct sockaddr*)&dt->address, sizeof(dt->address))) <= 0)
+    r = sendto(dt->socket, &dt->packet, sizeof(dt->packet), 0, (struct sockaddr*)&dt->address, sizeof(dt->address));
+    if (r <= 0)
         dprintf(2, "packet sending failure: %s\n", strerror(r));
+    else if (r != sizeof(dt->packet))
+        dprintf(2, "packet not entirely sent: %s\n", strerror(r));
     else
         receive_packet(dt);
 }

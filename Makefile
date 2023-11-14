@@ -4,14 +4,15 @@
 
 NAME					= 	ft_ping
 
-CC						= 	clang -g3
+CC						= 	gcc -g3
 
 FFLAGS					=   -fsanitize=address -g3
 
 LFLAGS					=   -fsanitize=leak -g3
 
-CFLAGS					= 	-Wall -Wextra -Werror -I includes/ \
+CFLAGS					= 	-I includes/ \
 							-I libft/includes/ \
+							# -Wall -Wextra -Werror 
 							
 
 BONUS_FLAG				= 	0
@@ -45,6 +46,7 @@ SRCS_LIST					=	\
 							init.c \
 							main.c \
 							parsing.c \
+							print.c \
 							ping.c \
 							socket.c \
 							# $(UTILS) \
