@@ -1,20 +1,18 @@
 #include "ft_ping.h"
 #include "options.h"
 
-int g_main_loop = 1;
+int g_in_progress = 1;
 
-void    end_loop(int err)
+void    handle_sigint(int err)
 {
     (void)err;
-    g_main_loop = 0;
+    g_in_progress = 0;
 }
 
 void    add_destination(t_data *dt, char *curr_arg)
 {
     if (dt)
-    {
         dt->input_dest = curr_arg;
-    }
 }
 
 void    option_h()
@@ -23,6 +21,17 @@ void    option_h()
     free_all_malloc();
     exit(0);
 }
+
+// void    parse(t_parsed_cmd *parsed_cmd)
+// {
+
+// }
+
+// void    initialise(t_data *dt)
+// {
+
+// }
+
 
 int main(int ac, char **av)
 {
@@ -46,19 +55,16 @@ int main(int ac, char **av)
     resolve_hostname(&dt);
     open_socket(&dt);
     set_socket_options(dt.socket);
-    // print_data(dt);
-    signal(SIGINT, end_loop);
-    // print_data(dt);
-    print_init_ping(&dt);
+    signal(SIGINT, handle_sigint);
+    display_ping_init(&dt);
     if (gettimeofday(&dt.init_tv, &dt.tz) != 0)
         exit_error("time error: Cannot retrieve time\n");
-    while (g_main_loop)
+    while (g_in_progress)
         ping(&dt);
     // end of execution
-    print_statistics(&dt);
+    display_ping_end_stats(&dt);
     close(dt.socket);
     free_all_malloc();
     printf(C_B_RED"[DEBUG] END"C_RES"\n");
-    // while(1);
     return (0);
 }

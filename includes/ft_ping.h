@@ -39,7 +39,6 @@ struct icmphdr
 # include <struct.h>
 # include <errno.h>
 
-void            print_icmp_packet(t_data *dt);
 void            craft_icmp_payload(t_data *dt);
 unsigned short  checksum(void *b, int len);
 void            receive_packet(t_data *dt);
@@ -53,13 +52,15 @@ void            set_socket_options(int socket);
 
 void            init_data(t_data *dt);
 void            print_data(t_data dt);
-void            debug_addrinfo(struct addrinfo *ai);
-void            end_loop(int err);
+void            handle_sigint(int err);
 
-void            print_statistics(t_data *dt);
-void            print_ping(t_data *dt);
-void            print_init_ping(t_data *dt);
-void            print_buf(struct msghdr msg);
+void            display_ping_init(t_data *dt);
+void            display_ping_sequence(t_data *dt);
+void            display_ping_end_stats(t_data *dt);
+
+void            debug_addrinfo(struct addrinfo *ai);
+void            debug_icmp_packet(t_data *dt);
+void            debug_buf(struct msghdr msg);
 
 #endif
 

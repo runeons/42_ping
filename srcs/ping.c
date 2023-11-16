@@ -12,7 +12,7 @@ void craft_icmp_payload(t_data *dt)
         i++;
     }
     dt->packet.payload[ICMP_PAYLOAD_LEN - 1] = '\0';
-    dt->sequence++;
+    dt->one_seq.icmp_seq++;
 }
 
 // char* toBinary(int n, int len)
@@ -104,7 +104,7 @@ void receive_packet(t_data *dt)
     struct msghdr buf;
     int r;
 
-    dt->sent_nb++;
+    dt->end_stats.sent_nb++;
     init_buf(&buf);
     r = recvmsg(dt->socket, &buf, 0);
     printf("receive_packet %d\n", r);
@@ -112,20 +112,19 @@ void receive_packet(t_data *dt)
     {
         // wait or timeout
         dprintf(2, "packet receiving failure: %s\n", strerror(r));
-        // sprintf(dt->v_buf, "packet receiving failure: %s\n", strerror(r));
-        // print_buf(buf);  
+        // debug_buf(buf);  
 
     }
     else
     {
         // printf("r: %d %d\n", r, dt->socket);
-        if (gettimeofday(&dt->receive_tv, &dt->tz) != 0)
+        if (gettimeofday(&dt->one_seq.receive_tv, &dt->tz) != 0)
             exit_error("time error: Cannot retrieve time\n");
-        dt->bytes = sizeof(buf);
-        dt->recv_nb++;
-        print_ping(dt);      
+        dt->one_seq.bytes = sizeof(buf);
+        dt->end_stats.recv_nb++;
+        display_ping_sequence(dt);      
         // printf("r: %d\n", r);
-        // print_buf(buf);  
+        // debug_buf(buf);  
     }
 }
 
@@ -138,10 +137,10 @@ void ping(t_data *dt)
     craft_icmp_payload(dt);
     dt->packet.h.type = ICMP_ECHO;
     dt->packet.h.un.echo.id = getpid();
-    dt->packet.h.un.echo.sequence = dt->sequence;
+    dt->packet.h.un.echo.sequence = dt->one_seq.icmp_seq;
     dt->packet.h.checksum = checksum(&dt->packet, sizeof(dt->packet));
-    // print_icmp_packet(dt);
-    if (gettimeofday(&dt->send_tv, &dt->tz) != 0)
+    // debug_icmp_packet(dt);
+    if (gettimeofday(&dt->one_seq.send_tv, &dt->tz) != 0)
         exit_error("time error: Cannot retrieve time\n");
     r = sendto(dt->socket, &dt->packet, sizeof(dt->packet), 0, (struct sockaddr*)&dt->address, sizeof(dt->address));
     if (r <= 0)
