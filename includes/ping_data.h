@@ -1,7 +1,28 @@
-#ifndef STRUCT_H
-# define STRUCT_H
+#ifndef PING_DATA_H
+# define PING_DATA_H
 
-# include "constants.h"
+# include "utils_constants.h"
+
+struct icmphdr
+{
+    unsigned char type;                /* message type */
+    unsigned char code;                /* type sub-code */
+    unsigned short int checksum;
+    union
+    {
+        struct
+        {
+            unsigned short int        id;
+            unsigned short int        sequence;
+        } echo;                        /* echo datagram */
+        unsigned int        gateway;        /* gateway address */
+        struct
+        {
+            unsigned short int        __unused;
+            unsigned short int        mtu;
+        } frag;                        /* path mtu discovery */
+    } un;
+};
 
 typedef struct  s_packet
 {

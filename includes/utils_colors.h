@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COLOR_SHELL_H
-# define COLOR_SHELL_H
+#ifndef UTILS_COLORS_H
+# define UTILS_COLORS_H
 /*
 ** color letters
 */

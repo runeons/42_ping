@@ -1,5 +1,5 @@
-#include "ft_ping.h"
-#include "options.h"
+#include "ping_functions.h"
+#include "utils_options.h"
 
 int g_ping = 1;
 
@@ -27,20 +27,20 @@ void    parse_input(t_parsed_cmd *parsed_cmd, int ac, char **av)
     if (ac < 2)
         exit_error("usage error: Destination address required. ft_ping -h for help.\n");
     *parsed_cmd = parse_options(ac, av);
-    debug_activated_options((*parsed_cmd).act_options);
+    debug_activated_options(parsed_cmd->act_options);
 }
 
 void    initialise_data(t_data *dt, t_parsed_cmd *parsed_cmd)
 {
     init_data(dt);
-    if (ft_lst_size((*parsed_cmd).not_options) != 1)
+    if (ft_lst_size(parsed_cmd->not_options) != 1)
         exit_error("usage error: Destination required and only one.\n");
     else
-        add_destination(dt, (*parsed_cmd).not_options->content);
+        add_destination(dt, parsed_cmd->not_options->content);
     resolve_address(dt);
     resolve_hostname(dt);
     open_socket(dt);
-    set_socket_options((*dt).socket);
+    set_socket_options(dt->socket);
 }
 
 void    ping_init(t_data *dt)

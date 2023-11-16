@@ -1,6 +1,6 @@
 
-#ifndef CONSTANTS_H
-# define CONSTANTS_H
+#ifndef UTILS_CONSTANTS_H
+# define UTILS_CONSTANTS_H
 
 # define MAX_IP_LEN          16
 # define MAX_HOSTNAME_LEN    100
@@ -12,8 +12,6 @@
 # define ICMP_ECHO 8
 
 # define DEBUG 1
-
-
 
 
 #endif

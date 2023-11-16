@@ -1,4 +1,4 @@
-#include "ft_ping.h"
+#include "ping_functions.h"
 
 // void    _init_hints(struct addrinfo *hints)
 // {

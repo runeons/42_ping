@@ -33,9 +33,12 @@ HEAD					=	$(addprefix $(HEADER_DIR), $(HEADER))
 HEADER_DIR				=	\
 							./includes/
 
-HEADER							=	\
-									color_shell.h \
-									ft_ping.h \
+HEADER					=	\
+							ping_data.h \
+							ping_functions.h \
+							utils_colors.h \
+							utils_constants.h \
+							utils_options.h \
 
 
 # *** SRCS ******************************************************************* #
@@ -43,26 +46,13 @@ HEADER							=	\
 SRCS_DIR					=	./srcs/
 
 SRCS_LIST					=	\
-							init.c \
+							display.c \
+							init_data.c \
+							init_socket.c \
 							main.c \
-							options.c \
-							parsing.c \
-							print.c \
 							ping.c \
-							socket.c \
-							# $(UTILS) \
-							# $(MAIN) \
-
-# UTILS						=	\
-# 							utils/signals.c \
-# 							utils/utils.c \
-
-# MAIN						=	\
-# 							main/env.c \
-# 							main/handle_keys.c \
-# 							main/history.c \
-# 							main/main.c \
-# 							main/read_input.c \
+							utils_debug.c \
+							utils_options.c \
 
 SRCS					=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 

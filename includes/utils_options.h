@@ -1,5 +1,5 @@
-#ifndef OPTIONS_H
-# define OPTIONS_H
+#ifndef UTILS_OPTIONS_H
+# define UTILS_OPTIONS_H
 
 # include "stdio.h"
 # include <libft.h>

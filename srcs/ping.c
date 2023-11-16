@@ -1,4 +1,4 @@
-#include "ft_ping.h"
+#include "ping_functions.h"
 
 void craft_icmp_payload(t_data *dt)
 {
@@ -71,7 +71,7 @@ unsigned short checksum(void *packet, int len)
 }
 
 
-void    init_buf(struct msghdr *msg)
+void    _init_buf(struct msghdr *msg)
 {
     struct icmphdr  *icmp_control;
     struct iovec    *iov;
@@ -105,7 +105,7 @@ void receive_packet(t_data *dt)
     int r;
 
     dt->end_stats.sent_nb++;
-    init_buf(&buf);
+    _init_buf(&buf);
     r = recvmsg(dt->socket, &buf, 0);
     // printf("receive_packet %d\n", r);
     if (r < 0)
