@@ -45,6 +45,7 @@ SRCS_DIR					=	./srcs/
 SRCS_LIST					=	\
 							init.c \
 							main.c \
+							options.c \
 							parsing.c \
 							print.c \
 							ping.c \

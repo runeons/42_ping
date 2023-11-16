@@ -113,8 +113,7 @@ void receive_packet(t_data *dt)
         // wait or timeout
         dprintf(2, "packet receiving failure: %s\n", strerror(r));
         // sprintf(dt->v_buf, "packet receiving failure: %s\n", strerror(r));
-        print_verbose(dt);
-        print_buf(buf);  
+        // print_buf(buf);  
 
     }
     else
@@ -125,8 +124,8 @@ void receive_packet(t_data *dt)
         dt->bytes = sizeof(buf);
         dt->recv_nb++;
         print_ping(dt);      
-        printf("r: %d\n", r);
-        print_buf(buf);  
+        // printf("r: %d\n", r);
+        // print_buf(buf);  
     }
 }
 

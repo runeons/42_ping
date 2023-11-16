@@ -1,12 +1,7 @@
 #ifndef STRUCT_H
 # define STRUCT_H
 
-#define MAX_IP_LEN          16
-#define MAX_HOSTNAME_LEN    100
-#define TTL_VALUE           64
-#define ICMP_PACKET_LEN     84
-#define ICMP_PAYLOAD_LEN    56
-#define SLEEP_WAIT          1000000
+# include "constants.h"
 
 typedef struct  s_packet
 {
@@ -16,12 +11,12 @@ typedef struct  s_packet
 
 typedef struct  s_data
 {
-    char        *param;
-    int         flag_h;
-    int         flag_v;
-    // char        flags[2];
-    char        *ip; // address
-    char        *hostname;
+    char        *input_dest;
+    t_lst       *act_options;
+    char        *resolved_address;
+    char        *resolved_hostname;
+
+    
     int         socket;
     struct sockaddr_in address;
     int         loop;
