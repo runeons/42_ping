@@ -8,7 +8,7 @@ void init_data(t_data *dt)
     dt->flag_v = 0;
     dt->flag_h = 0;
     if ((dt->ip = (char *)mmalloc(sizeof(char) * MAX_IP_LEN + 1)) == NULL)
-        exit_error("Malloc error.");
+        exit_error("Malloc error.\n");
     dt->hostname = "";
     dt->socket = 0;
     dt->address.sin_family = AF_INET;

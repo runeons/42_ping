@@ -53,7 +53,7 @@ void    print_statistics(t_data *dt)
     struct timeval  final_tv;
 
     if (gettimeofday(&final_tv, &dt->tz) != 0)
-            exit_error("time error: Cannot retrieve time");
+            exit_error("time error: Cannot retrieve time\n");
     ratio = 100 - ((dt->recv_nb / dt->sent_nb) * 100);
     time = (final_tv.tv_sec - dt->init_tv.tv_sec) * 1000000 + final_tv.tv_usec - dt->init_tv.tv_usec;
     printf("--- %s ping statistics ---\n", dt->param);

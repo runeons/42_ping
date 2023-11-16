@@ -13,7 +13,7 @@ void    add_flag(t_data *dt, char flag)
     // else if (dt->flags[1] == ' ')
     //     dt->flags[1] = flag;
     // else
-    //     exit_error("Unknow error - too many flags");
+    //     exit_error("Unknow error - too many flags\n");
 }
 
 void    parse_params(int ac, char **av, t_data *dt)
@@ -57,14 +57,14 @@ void check_address(t_data *dt)
 
     ft_bzero(host, MAX_HOSTNAME_LEN);
     if (inet_aton(dt->ip, &(dt->address.sin_addr)) <= 0)
-        exit_error("address error: Invalid IPv4 address.");
+        exit_error("address error: Invalid IPv4 address.\n");
     if (getnameinfo((struct sockaddr*)&dt->address, sizeof(dt->address), host, sizeof(host), NULL, 0, 0) != 0)
-        exit_error("address error: The hostname could not be resolved.");
+        exit_error("address error: The hostname could not be resolved.\n");
     else
     {
         dt->hostname = ft_strdup(host);
         if (dt->hostname == NULL)
-            exit_error("Memory error: Malloc failure.");
+            exit_error("Memory error: Malloc failure.\n");
     }
 }
 
@@ -89,14 +89,14 @@ void check_hostname(t_data *dt)
     if (r != 0)
     {
         dprintf(2, "getaddrinfo: %s\n", gai_strerror(r));
-        exit_error("address error: The ip address could not be resolved.");
+        exit_error("address error: The ip address could not be resolved.\n");
     }
     tmp = res;
     while (tmp != NULL)
     {
         dt->ip = ft_strdup(inet_ntoa(((struct sockaddr_in *)tmp->ai_addr)->sin_addr)); // need to free if many ?
         if (dt->ip == NULL)
-            exit_error("Memory error: Malloc failure.");
+            exit_error("Memory error: Malloc failure.\n");
         tmp = tmp->ai_next;
     }
     freeaddrinfo(res);

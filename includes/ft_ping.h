@@ -56,7 +56,6 @@ void check_hostname(t_data *dt);
 
 void open_socket(t_data *dt);
 
-void    exit_error(char *msg);
 void init_data(t_data *dt);
 void print_data(t_data dt);
 void    print_addrinfo(struct addrinfo *ai);

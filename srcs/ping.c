@@ -78,13 +78,13 @@ void    init_buf(struct msghdr *msg)
     char            *buffer;
 
     if (!(buffer = mmalloc(sizeof(char) * 1024)))
-        exit_error("Malloc error (buffer)");
+        exit_error("Malloc error (buffer)\n");
     ft_bzero(buffer, 1024);
     if (!(iov = (struct iovec *)mmalloc(sizeof(struct iovec))))
-        exit_error("Malloc error (iov)");
+        exit_error("Malloc error (iov)\n");
     ft_bzero(iov, sizeof(*iov));
     if (!(icmp_control = (struct icmphdr *)mmalloc(sizeof(struct icmphdr))))
-        exit_error("Malloc error (icmp_control)");
+        exit_error("Malloc error (icmp_control)\n");
     ft_bzero(icmp_control, sizeof(*icmp_control));
     icmp_control->type = 4;
     iov->iov_base = buffer;
@@ -121,7 +121,7 @@ void receive_packet(t_data *dt)
     {
         // printf("r: %d %d\n", r, dt->socket);
         if (gettimeofday(&dt->receive_tv, &dt->tz) != 0)
-            exit_error("time error: Cannot retrieve time");
+            exit_error("time error: Cannot retrieve time\n");
         dt->bytes = sizeof(buf);
         dt->recv_nb++;
         print_ping(dt);      
@@ -143,7 +143,7 @@ void ping(t_data *dt)
     dt->packet.h.checksum = checksum(&dt->packet, sizeof(dt->packet));
     // print_icmp_packet(dt);
     if (gettimeofday(&dt->send_tv, &dt->tz) != 0)
-        exit_error("time error: Cannot retrieve time");
+        exit_error("time error: Cannot retrieve time\n");
     r = sendto(dt->socket, &dt->packet, sizeof(dt->packet), 0, (struct sockaddr*)&dt->address, sizeof(dt->address));
     if (r <= 0)
         dprintf(2, "packet sending failure: %s\n", strerror(r));

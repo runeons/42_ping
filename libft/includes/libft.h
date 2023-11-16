@@ -19,6 +19,7 @@
 # include <get_next_line.h>
 # include <libft_lst.h>
 # include <stdarg.h>
+# include <stdio.h>
 
 typedef struct s_list
 {
@@ -105,5 +106,8 @@ void	*mrealloc(void *ptr, size_t size);
 int		free_all_malloc(void);
 int		mfree(void **to_free);
 int		m_free(void *ptr);
+
+// general
+void exit_error(const char *msg, ...);
 
 #endif

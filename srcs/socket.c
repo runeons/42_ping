@@ -11,7 +11,7 @@ void open_socket(t_data *dt)
     if (dt->socket < 0)
     {
         printf("errno %d %s\n", errno, strerror(errno));
-        exit_error("socket error: Check that you have the correct rights.");
+        exit_error("socket error: Check that you have the correct rights.\n");
     }
 
     struct timeval tv_out;
@@ -25,7 +25,7 @@ void open_socket(t_data *dt)
         printf("r: %d\n", r);
         dprintf(2, "setsockopt1: %s\n", strerror(-1));
         printf("errno %d %s\n", errno, strerror(errno));
-        exit_error("socket error: Exiting program.");
+        exit_error("socket error: Exiting program.\n");
     }
     // setting timeout option
     r = setsockopt(dt->socket, SOL_SOCKET, SO_RCVTIMEO, &tv_out, sizeof(tv_out));
@@ -33,6 +33,6 @@ void open_socket(t_data *dt)
     {
         dprintf(2, "setsockopt2: %s\n", strerror(-1));
         printf("errno %d %s\n", errno, strerror(errno));
-        exit_error("socket error: Exiting program.");
+        exit_error("socket error: Exiting program.\n");
     }
 }

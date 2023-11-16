@@ -110,6 +110,9 @@ STR_FCT							= \
 							str_fct/ft_strtrim.c \
 							str_fct/ft_toupper.c \
 
+GENERAL						= \
+							general/exit.c \
+
 SRCS_LIST				=	\
 							$(DOUBLE_LINKED_FCT) \
 							$(GNL_FCT) \
@@ -120,6 +123,7 @@ SRCS_LIST				=	\
 							$(NUMBER_FCT) \
 							$(PUT_FCT) \
 							$(STR_FCT) \
+							$(GENERAL) \
 
 SRCS					=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 
