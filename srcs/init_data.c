@@ -27,3 +27,31 @@ void init_data(t_data *dt)
     dt->end_stats.sent_nb = 0;
     dt->end_stats.recv_nb = 0;
 }
+
+void    init_recv_buf(struct msghdr *msg)
+{
+    struct icmphdr  *icmp_control;
+    struct iovec    *iov;
+    char            *buffer;
+
+    if (!(buffer = mmalloc(sizeof(char) * 1024)))
+        exit_error("Malloc error (buffer)\n");
+    ft_bzero(buffer, 1024);
+    if (!(iov = (struct iovec *)mmalloc(sizeof(struct iovec))))
+        exit_error("Malloc error (iov)\n");
+    ft_bzero(iov, sizeof(*iov));
+    if (!(icmp_control = (struct icmphdr *)mmalloc(sizeof(struct icmphdr))))
+        exit_error("Malloc error (icmp_control)\n");
+    ft_bzero(icmp_control, sizeof(*icmp_control));
+    icmp_control->type = 4;
+    iov->iov_base = buffer;
+    iov->iov_len = sizeof(buffer);
+    msg->msg_name = NULL;
+    msg->msg_namelen = 0;
+    msg->msg_iov = iov;
+    msg->msg_iovlen = 1;
+    msg->msg_control = icmp_control;
+    msg->msg_controllen = sizeof(*icmp_control);
+    msg->msg_flags = 4;
+}
+

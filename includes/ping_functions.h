@@ -31,6 +31,7 @@ void            set_socket_options(int socket);
 
 //  init_data.c
 void            init_data(t_data *dt);
+void            init_recv_buf(struct msghdr *msg);
 
 //  display.c
 void            display_ping_init(t_data *dt);

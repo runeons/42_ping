@@ -1,34 +1,24 @@
 #include "ping_functions.h"
 
-// char* toBinary(int n, int len)
-// {
-//     char* binary = (char*)malloc(sizeof(char) * len);
-//     int k = 0;
-//     for (unsigned i = (1 << (len - 1)); i > 0; i = i / 2) {
-//         binary[k++] = (n & i) ? '1' : '0';
-//     }
-//     binary[k] = '\0';
-//     return binary;
-// }
+char    *_int_to_bin(int n, int len)
+{
+    char    *bin;
+    int     k = 0;
 
-// unsigned short checksum(void *b, int len)
-// {
-//     unsigned short *buf = b;
-//     unsigned int sum = 0;
-//     unsigned short result;
+    bin = (char*)mmalloc(sizeof(char) * len);
+    if (bin == NULL)
+        exit_error("Malloc error.");
+    for (unsigned i = (1 << (len - 1)); i > 0; i = i / 2)
+        bin[k++] = (n & i) ? '1' : '0';
+    bin[k] = '\0';
+    return bin;
+}
 
-//     for (sum = 0; len > 1; len -= 2)
-//         sum += *buf++;
-//     if (len == 1)
-//         sum += *(unsigned char *)buf;
-//     sum = (sum >> 16) + (sum & 0xFFFF);
-//     sum += (sum >> 16);
-//     result = ~sum;
+// Le complément à un sur 16 bits (= inversement de tous les bits)
+// de la somme des compléments à un de l'en-tête Internet
+// pris par mots de 16 bits.
 
-//     return result;
-// }
-
-unsigned short checksum(void *packet, int len)
+unsigned short _header_checksum(void *packet, int len)
 {
     unsigned short  *tmp;
 	unsigned int    checksum;
@@ -39,47 +29,13 @@ unsigned short checksum(void *packet, int len)
     while (len > 1)
     {
         checksum += *tmp++;
-        // printf("len: %d, tmp: %hu, checksum: %d, tmp[%s], checksum[%s]\n", len, *tmp, checksum, toBinary(*tmp, 16), toBinary(checksum, 16));
-        len -= sizeof(unsigned short);
+        len -= sizeof(*tmp);
     }
-	if (len == 1)
-		checksum += *(unsigned char*)tmp;
-    // printf("sum1: %d, checksum[%s]\n", checksum, toBinary(checksum, 16));
-	checksum = (checksum >> 16) + (checksum & 0xFFFF);
-    // printf("sum2: %d, checksum[%s]\n", checksum, toBinary(checksum, 16));
-    // printf("checksum >> 16 [%s]\n", toBinary(checksum >> 16, 16));
-	checksum += (checksum >> 16);
-    // printf("sum3: %d, checksum[%s]\n", checksum, toBinary(checksum, 32));
-	checksum = (unsigned short)(~checksum);
-    // printf("checksum: %d, checksum[%s]\n", checksum, toBinary(checksum, 16));
+	if (len == 1) // should not go in there because 16 = even 
+		checksum += *(unsigned char *)tmp;
+	checksum = (unsigned short)(~((checksum >> 16) + (checksum & 0xFFFF))); // complément à un = inversement de tous les bits
+    // printf("checksum: %d, checksum[%s]\n", checksum, _int_to_bin(checksum, 16));
 	return checksum;
-}
-
-void    _init_recv_buf(struct msghdr *msg)
-{
-    struct icmphdr  *icmp_control;
-    struct iovec    *iov;
-    char            *buffer;
-
-    if (!(buffer = mmalloc(sizeof(char) * 1024)))
-        exit_error("Malloc error (buffer)\n");
-    ft_bzero(buffer, 1024);
-    if (!(iov = (struct iovec *)mmalloc(sizeof(struct iovec))))
-        exit_error("Malloc error (iov)\n");
-    ft_bzero(iov, sizeof(*iov));
-    if (!(icmp_control = (struct icmphdr *)mmalloc(sizeof(struct icmphdr))))
-        exit_error("Malloc error (icmp_control)\n");
-    ft_bzero(icmp_control, sizeof(*icmp_control));
-    icmp_control->type = 4;
-    iov->iov_base = buffer;
-    iov->iov_len = sizeof(buffer);
-    msg->msg_name = NULL;
-    msg->msg_namelen = 0;
-    msg->msg_iov = iov;
-    msg->msg_iovlen = 1;
-    msg->msg_control = icmp_control;
-    msg->msg_controllen = sizeof(*icmp_control);
-    msg->msg_flags = 4;
 }
 
 void receive_failure(t_data *dt, struct msghdr buf, int recv_ret)
@@ -105,7 +61,7 @@ void receive_packet(t_data *dt)
     int r;
 
     dt->end_stats.sent_nb++;
-    _init_recv_buf(&buf);
+    init_recv_buf(&buf);
     r = recvmsg(dt->socket, &buf, 0);
     if (r < 0)
         receive_failure(dt, buf, r);
@@ -127,7 +83,7 @@ void craft_icmp_packet(t_data *dt)
     dt->packet.h.type = ICMP_ECHO;
     dt->packet.h.un.echo.id = getpid();
     dt->packet.h.un.echo.sequence = dt->one_seq.icmp_seq;
-    dt->packet.h.checksum = checksum(&dt->packet, sizeof(dt->packet));
+    dt->packet.h.checksum = _header_checksum(&dt->packet, sizeof(dt->packet));
 }
 
 void    send_and_receive_packet(t_data *dt)
