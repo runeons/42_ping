@@ -42,7 +42,7 @@ struct icmphdr
 void            craft_icmp_payload(t_data *dt);
 unsigned short  checksum(void *b, int len);
 void            receive_packet(t_data *dt);
-void            ping(t_data *dt);
+void            ping_sequence(t_data *dt);
 
 //  socket.c
 void            resolve_hostname(t_data *dt);

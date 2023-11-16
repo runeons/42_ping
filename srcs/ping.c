@@ -107,7 +107,7 @@ void receive_packet(t_data *dt)
     dt->end_stats.sent_nb++;
     init_buf(&buf);
     r = recvmsg(dt->socket, &buf, 0);
-    printf("receive_packet %d\n", r);
+    // printf("receive_packet %d\n", r);
     if (r < 0)
     {
         // wait or timeout
@@ -128,7 +128,7 @@ void receive_packet(t_data *dt)
     }
 }
 
-void ping(t_data *dt)
+void ping_sequence(t_data *dt)
 {
     int r;
 
