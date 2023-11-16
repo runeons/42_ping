@@ -45,11 +45,11 @@ unsigned short  checksum(void *b, int len);
 void            receive_packet(t_data *dt);
 void            ping(t_data *dt);
 
+//  socket.c
 void            resolve_hostname(t_data *dt);
-void            init_hints(struct addrinfo *hints);
 void            resolve_address(t_data *dt);
-
 void            open_socket(t_data *dt);
+void            set_socket_options(int socket);
 
 void            init_data(t_data *dt);
 void            print_data(t_data dt);

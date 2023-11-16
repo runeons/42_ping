@@ -34,7 +34,6 @@ int main(int ac, char **av)
         exit_error("usage error: Destination address required. ft_ping -h for help.\n");
     parsed_cmd = parse_options(ac, av);
     debug_activated_options(parsed_cmd.act_options);
-    // initial execution and second step parsing
     if (is_activated_option(parsed_cmd.act_options, 'h'))
         option_h();
     init_data(&dt);
@@ -42,11 +41,12 @@ int main(int ac, char **av)
         exit_error("usage error: Destination required and only one.\n");
     else
         add_destination(&dt, parsed_cmd.not_options->content);
+    // socket execution
     resolve_address(&dt);
     resolve_hostname(&dt);
-    // print_data(dt);
-    // second step execution
     open_socket(&dt);
+    set_socket_options(dt.socket);
+    // print_data(dt);
     signal(SIGINT, end_loop);
     // print_data(dt);
     print_init_ping(&dt);
@@ -58,6 +58,7 @@ int main(int ac, char **av)
     print_statistics(&dt);
     close(dt.socket);
     free_all_malloc();
+    printf(C_B_RED"[DEBUG] END"C_RES"\n");
     // while(1);
     return (0);
 }

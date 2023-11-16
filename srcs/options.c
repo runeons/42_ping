@@ -123,16 +123,13 @@ t_parsed_cmd   parse_options(int ac, char **av)
             if (res->need_param)
             {
                 if (++i == ac)
-                {
-                    dprintf(2, "option needs %s\n", res->name);
-                    exit(1);
-                }
+                    exit_error("option needs %s\n", res->name);
                 res->param = ft_strdup(av[i]);
             }
             ft_lst_add_node_back(&act_options, ft_lst_create_node(res));
         }
         else
-            ft_lst_add_node_back(&not_options, ft_lst_create_node(ft_strdup(av[i])));
+            ft_lst_add_node_back(&not_options, ft_lst_create_node(av[i]));
     }
     result.act_options = act_options;
     result.not_options = not_options;

@@ -4,15 +4,16 @@ void init_data(t_data *dt)
 {
     dt->input_dest = "";
     dt->act_options = NULL;
-    if ((dt->resolved_address = (char *)mmalloc(sizeof(char) * MAX_IP_LEN + 1)) == NULL)
-        exit_error("Malloc error.\n");
+    // if ((dt->resolved_address = (char *)mmalloc(sizeof(char) * MAX_IP_LEN + 1)) == NULL)
+        // exit_error("Malloc error.\n");
+    dt->resolved_address = NULL;
     dt->resolved_hostname = "";
-    dt->socket = 0;
     dt->address.sin_family = AF_INET;
     dt->address.sin_port = 0;
     dt->address.sin_addr.s_addr = INADDR_ANY;
+    dt->socket = 0;
+
     dt->loop = 1;
-    // dt->packet =  
     dt->sequence = 0;
     // address not initialized ?
     dt->bytes = 0;
