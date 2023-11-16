@@ -7,7 +7,7 @@
 # define TTL_VALUE           64
 # define ICMP_PACKET_LEN     84
 # define ICMP_PAYLOAD_LEN    56
-# define SLEEP_WAIT          1000000
+# define SEQUENCE_TIME       1000000
 
 # define ICMP_ECHO 8
 
