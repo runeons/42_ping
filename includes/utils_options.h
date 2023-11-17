@@ -25,5 +25,7 @@ void            display_help();
 void            debug_activated_options(t_lst *act_options);
 int             is_activated_option(t_lst *act_options, char c);
 t_parsed_cmd    parse_options(int ac, char **av);
+t_option        *get_option(t_lst *act_options, char c);
+void            print_option(t_lst *act_options, char c);
 
 #endif

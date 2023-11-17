@@ -45,6 +45,11 @@ typedef struct  s_ping_stats
     int recv_nb;  // icmp count    // display end stats
 }               t_ping_stats;
 
+typedef struct  s_options_params
+{
+    char        p_payload[ICMP_PAYLOAD_LEN];
+}               t_options_params;
+
 typedef struct  s_data
 {
     char                *input_dest;
@@ -58,6 +63,7 @@ typedef struct  s_data
     struct timeval      init_tv;    // icmp stats   // display end stats // display end stats
     t_ping_seq          one_seq;
     t_ping_stats        end_stats;
+    t_options_params    options_params;
 }					t_data;
 
 #endif

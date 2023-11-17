@@ -32,7 +32,8 @@ void    parse_input(t_parsed_cmd *parsed_cmd, int ac, char **av)
 
 void    initialise_data(t_data *dt, t_parsed_cmd *parsed_cmd)
 {
-    init_data(dt);
+    init_data(dt, parsed_cmd);
+    init_options_params(dt);
     if (ft_lst_size(parsed_cmd->not_options) != 1)
         exit_error("usage error: Destination required and only one.\n");
     else

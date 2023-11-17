@@ -73,9 +73,10 @@ void craft_icmp_payload(t_data *dt)
 {
     ft_memset(&dt->packet, 0, sizeof(dt->packet));
     for (int i = 0; i < ICMP_PAYLOAD_LEN - 1; i++)
-        dt->packet.payload[i] = 'A';
+        dt->packet.payload[i] = dt->options_params.p_payload[i];
     dt->packet.payload[ICMP_PAYLOAD_LEN - 1] = '\0';
     dt->one_seq.icmp_seq++;
+    // printf(C_B_RED"[DEBUG] [%s] %d"C_RES"\n", dt->packet.payload, sizeof(dt->packet.payload));
 }
 
 void craft_icmp_packet(t_data *dt)

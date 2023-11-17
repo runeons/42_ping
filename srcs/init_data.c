@@ -1,9 +1,29 @@
 #include "ping_functions.h"
 
-void init_data(t_data *dt)
+
+void   option_p(t_data *dt)
+{
+    if (is_activated_option(dt->act_options, 'p'))
+    {
+        strncpy(dt->options_params.p_payload, get_option(dt->act_options, 'p')->param, ICMP_PAYLOAD_LEN);
+        dt->options_params.p_payload[ICMP_PAYLOAD_LEN - 1] = '\0';
+    }
+    else
+    {
+        for (int i = 0; i < ICMP_PAYLOAD_LEN - 1; i++)
+            dt->options_params.p_payload[i] = 'A';
+    }
+}
+
+void    init_options_params(t_data *dt)
+{
+    option_p(dt);
+}
+
+void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
 {
     dt->input_dest = "";
-    dt->act_options = NULL;
+    dt->act_options = parsed_cmd->act_options;
     dt->resolved_address = NULL; // do I need to malloc ? if ((dt->resolved_address = (char *)mmalloc(sizeof(char) * MAX_IP_LEN + 1)) == NULL)
     dt->resolved_hostname = "";
     dt->socket = 0;

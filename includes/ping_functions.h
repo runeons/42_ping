@@ -14,6 +14,7 @@
 # include <libft.h>
 # include <utils_colors.h>
 # include <utils_constants.h>
+# include <utils_options.h>
 # include <ping_data.h>
 # include <errno.h>
 
@@ -30,7 +31,8 @@ void            open_socket(t_data *dt);
 void            set_socket_options(int socket);
 
 //  init_data.c
-void            init_data(t_data *dt);
+void            init_options_params(t_data *dt);
+void            init_data(t_data *dt, t_parsed_cmd *parsed_cmd);
 void            init_recv_buf(struct msghdr *msg);
 
 //  display.c

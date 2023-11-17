@@ -50,6 +50,31 @@ void    display_help()
     printf("\n");
 }
 
+t_option *get_option(t_lst *act_options, char c)
+{
+    while (act_options != NULL)
+    {
+        t_option *tmp = (t_option *)act_options->content;
+        if (tmp->id == c)
+            return tmp;
+        act_options = act_options->next;
+    }
+    return NULL;
+}
+
+void    print_option(t_lst *act_options, char c)
+{
+    t_option *option = get_option(act_options, c);
+    if (option->id != 0)
+    {
+        printf("id: %c\n", option->id);
+        printf("name: %s\n", option->name);
+        printf("need_param: %d\n", option->need_param);
+        printf("description: %s\n", option->description);
+        printf("param: %s\n", option->param);
+    }
+}
+
 void _debug_option(void *content)
 {
     if (content)
