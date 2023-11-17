@@ -104,7 +104,7 @@ void    send_and_receive_packet(t_data *dt)
 
 void ping_sequence(t_data *dt)
 {
-    usleep(SEQUENCE_TIME);
+    usleep(dt->options_params.seq_interval_us);
     craft_icmp_payload(dt);
     craft_icmp_packet(dt);
     // debug_icmp_packet(dt);

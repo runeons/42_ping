@@ -48,6 +48,7 @@ typedef struct  s_ping_stats
 typedef struct  s_options_params
 {
     char        p_payload[ICMP_PAYLOAD_LEN];
+    int         seq_interval_us;
 }               t_options_params;
 
 typedef struct  s_data
