@@ -149,7 +149,7 @@ void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
 
     // seq
     dt->one_seq.bytes = 0;
-    dt->one_seq.icmp_seq = 0;
+    dt->one_seq.icmp_seq_nb = 0;
     dt->one_seq.ttl = TTL_VALUE;
     // dt->one_seq.send_tv
     // dt->one_seq.receive_tv
@@ -173,14 +173,33 @@ void    init_recv_buf(struct msghdr *msg)
     if (!(icmp_control = (struct icmphdr *)mmalloc(sizeof(struct icmphdr))))
         exit_error("Malloc error (icmp_control)\n");
     ft_bzero(icmp_control, sizeof(*icmp_control));
-    icmp_control->type = 4;
+    icmp_control->type = 0;
     iov->iov_base = buffer;
     iov->iov_len = sizeof(buffer);
     msg->msg_name = NULL;
     msg->msg_namelen = 0;
     msg->msg_iov = iov;
-    msg->msg_iovlen = 1;
+    msg->msg_iovlen = 0;
     msg->msg_control = icmp_control;
     msg->msg_controllen = sizeof(*icmp_control);
-    msg->msg_flags = 4;
+    msg->msg_flags = 0;
+}
+
+void    init_recv_msg(struct msghdr *msg, char *rcv_packet, struct sockaddr_in sockaddr)
+{
+	char			buffer[512];
+	ssize_t			ret;
+	struct iovec	iov =
+	{
+		.iov_base = rcv_packet,
+		.iov_len = ICMP_PACKET_LEN
+	};
+	msg->msg_name = &sockaddr;
+	msg->msg_namelen = sizeof(sockaddr);
+	msg->msg_iov = &iov;
+	msg->msg_iovlen = 1;
+	msg->msg_control = buffer;
+	msg->msg_controllen = sizeof(buffer);
+	msg->msg_flags = 0;
+
 }

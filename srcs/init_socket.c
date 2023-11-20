@@ -18,7 +18,7 @@ void resolve_address(t_data *dt) // check that dest exists and resolve address i
     // _init_hints(&hints);
     // r = getaddrinfo(dt->input_dest, NULL, &hints, &res);
     r = getaddrinfo(dt->input_dest, NULL, NULL, &res);
-    debug_addrinfo(res);
+    // debug_addrinfo(res);
     if (r != 0)
         exit_error("address error: The ip address could not be resolved. getaddrinfo: %s\n", gai_strerror(r));
     tmp = res;
@@ -29,7 +29,7 @@ void resolve_address(t_data *dt) // check that dest exists and resolve address i
             exit_error("Memory error: Malloc failure.\n");
         tmp = tmp->ai_next;
     }
-    printf(C_B_RED"dt->resolved_address %s"C_RES"\n", dt->resolved_address);
+    // printf(C_B_RED"dt->resolved_address %s"C_RES"\n", dt->resolved_address);
     freeaddrinfo(res);
 }
 
@@ -52,7 +52,7 @@ void resolve_hostname(t_data *dt) // useful only when input_dest is ip address (
         if (dt->resolved_hostname == NULL)
             exit_error("Memory error: Malloc failure.\n");
     }
-    printf(C_B_RED"dt->resolved_hostname %s"C_RES"\n", dt->resolved_hostname); // 
+    // printf(C_B_RED"dt->resolved_hostname %s"C_RES"\n", dt->resolved_hostname); // 
 }
 
 void open_socket(t_data *dt)
@@ -69,10 +69,10 @@ void set_socket_options(int socket)
     struct timeval tv_out;
 	tv_out.tv_sec = 1;
 	tv_out.tv_usec = 0;
-    r = setsockopt(socket, IPPROTO_IP, IP_TTL, &ttl_value, sizeof(ttl_value)); // setting TTL option // IPPROTO_IP or SOL_IP or SOL_SOCKET ?
-    if (r != 0)
-        exit_error("socket error in setting TTL option: Exiting program. %s\n", strerror(r));
     r = setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, &tv_out, sizeof(tv_out)); // setting timeout option
     if (r != 0)
         exit_error("socket error in setting timeout option: Exiting program. %s\n", strerror(r));
+    r = setsockopt(socket, IPPROTO_IP, IP_TTL, &ttl_value, sizeof(ttl_value)); // setting TTL option // IPPROTO_IP or SOL_IP or SOL_SOCKET ?
+    if (r != 0)
+        exit_error("socket error in setting TTL option: Exiting program. %s\n", strerror(r));
 }

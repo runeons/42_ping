@@ -38,58 +38,101 @@ unsigned short _header_checksum(void *packet, int len)
 	return checksum;
 }
 
-void receive_failure(t_data *dt, struct msghdr buf, int recv_ret)
+void _receive_failure(t_data *dt, struct msghdr *buf, int r)
 {
     // wait or timeout
-    dprintf(2, "packet receiving failure: %s\n", strerror(recv_ret));
-    // debug_buf(buf);  
+    dprintf(2, "packet receiving failure: %s\n", strerror(r));
+    // debug_msghdr(*buf);  
 }
 
-void receive_success(t_data *dt, struct msghdr buf)
+void print_as_hexa(void *data, int size)
+{
+    const unsigned char *ptr = (const unsigned char *)data;
+
+    for (size_t i = 0; i < size; i++)
+    {
+        printf("%02x ", ptr[i]);
+    }
+    printf("\n");
+}
+
+void _receive_success(t_data *dt, struct msghdr *buf, char *packet)
 {
     if (gettimeofday(&dt->one_seq.receive_tv, &dt->tz) != 0)
         exit_error("time error: Cannot retrieve time\n");
-    dt->one_seq.bytes = sizeof(buf);
+    dt->one_seq.bytes = sizeof(*buf);
     dt->end_stats.recv_nb++;
     display_ping_sequence(dt);      
-    // debug_buf(buf);  
+    debug_recv_packet(packet);
+    // debug_packet(p);
+    // debug_msghdr(*buf);  
 }
+
+    // struct iovec {                    /* Scatter/gather array items */
+    //     void  *iov_base;              /* Starting address */
+    //     size_t iov_len;               /* Number of bytes to transfer */
+    // };
+
+    // struct msghdr {
+    //     void         *msg_name;       /* optional address */
+    //     socklen_t     msg_namelen;    /* size of address */
+    //     struct iovec *msg_iov;        /* scatter/gather array */
+    //     size_t        msg_iovlen;     /* # elements in msg_iov */
+    //     void         *msg_control;    /* ancillary data, see below */
+    //     size_t        msg_controllen; /* ancillary data buffer len */
+    //     int           msg_flags;      /* flags on received message */
+    // };
+
 
 void receive_packet(t_data *dt)
 {
-    struct msghdr buf;
-    int r;
+    char		buffer[512];
+    int         r;
+    t_packet    p;
+    char		packet[ICMP_PACKET_LEN];
+    struct      msghdr msg;
 
     dt->end_stats.sent_nb++;
-    init_recv_buf(&buf);
-    r = recvmsg(dt->socket, &buf, 0);
+    // init_recv_buf(&msg);
+    init_recv_msg(&msg, packet, dt->address);
+    r = recvmsg(dt->socket, &msg, 0);
     if (r < 0)
-        receive_failure(dt, buf, r);
+        _receive_failure(dt, &msg, r);
     else
-        receive_success(dt, buf);
+    {
+        _receive_success(dt, &msg, packet);
+        debug_recv_packet(packet);
+    }
 }
 
-void craft_icmp_payload(t_data *dt)
+void _craft_icmp_payload(t_data *dt)
 {
     ft_memset(&dt->packet, 0, sizeof(dt->packet));
     for (int i = 0; i < ICMP_PAYLOAD_LEN - 1; i++)
         dt->packet.payload[i] = dt->options_params.p_payload[i];
     dt->packet.payload[ICMP_PAYLOAD_LEN - 1] = '\0';
-    dt->one_seq.icmp_seq++;
+    dt->one_seq.icmp_seq_nb++;
     // printf(C_B_RED"[DEBUG] [%s] %d"C_RES"\n", dt->packet.payload, sizeof(dt->packet.payload));
+}
+
+void _craft_icmp_header(t_data *dt)
+{
+    dt->packet.h.type = ICMP_ECHO;
+    dt->packet.h.un.echo.id = getpid();
+    dt->packet.h.un.echo.sequence = dt->one_seq.icmp_seq_nb;
+    dt->packet.h.checksum = _header_checksum(&dt->packet, sizeof(dt->packet));
 }
 
 void craft_icmp_packet(t_data *dt)
 {
-    dt->packet.h.type = ICMP_ECHO;
-    dt->packet.h.un.echo.id = getpid();
-    dt->packet.h.un.echo.sequence = dt->one_seq.icmp_seq;
-    dt->packet.h.checksum = _header_checksum(&dt->packet, sizeof(dt->packet));
+    ft_bzero(&dt->packet, sizeof(dt->packet));
+    _craft_icmp_payload(dt);
+    _craft_icmp_header(dt);
 }
 
 void    send_and_receive_packet(t_data *dt)
 {
-    int r = 0;
+    int r = 0;	
 
     if (gettimeofday(&dt->one_seq.send_tv, &dt->tz) != 0)
         exit_error("time error: Cannot retrieve time\n");
@@ -105,8 +148,7 @@ void    send_and_receive_packet(t_data *dt)
 void ping_sequence(t_data *dt)
 {
     usleep(dt->options_params.seq_interval_us);
-    craft_icmp_payload(dt);
     craft_icmp_packet(dt);
-    // debug_icmp_packet(dt);
+    debug_icmp_packet(dt);
     send_and_receive_packet(dt);
 }

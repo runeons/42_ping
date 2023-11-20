@@ -3,26 +3,26 @@
 
 # include "utils_constants.h"
 
-struct icmphdr
-{
-    unsigned char type;                /* message type */
-    unsigned char code;                /* type sub-code */
-    unsigned short int checksum;
-    union
-    {
-        struct
-        {
-            unsigned short int        id;
-            unsigned short int        sequence;
-        } echo;                        /* echo datagram */
-        unsigned int        gateway;        /* gateway address */
-        struct
-        {
-            unsigned short int        __unused;
-            unsigned short int        mtu;
-        } frag;                        /* path mtu discovery */
-    } un;
-};
+// struct icmphdr
+// {
+//     unsigned char type;                /* message type */
+//     unsigned char code;                /* type sub-code */
+//     unsigned short int checksum;
+//     union
+//     {
+//         struct
+//         {
+//             unsigned short int        id;
+//             unsigned short int        sequence;
+//         } echo;                        /* echo datagram */
+//         unsigned int        gateway;        /* gateway address */
+//         struct
+//         {
+//             unsigned short int        __unused;
+//             unsigned short int        mtu;
+//         } frag;                        /* path mtu discovery */
+//     } un;
+// };
 
 typedef struct  s_packet
 {
@@ -33,7 +33,7 @@ typedef struct  s_packet
 typedef struct  s_ping_seq
 {
     int             bytes;      // ping recv bytes nb             // display seq
-    int             icmp_seq;   // icmp cpunt // icmp_seq         // display seq
+    int             icmp_seq_nb;   // icmp cpunt // icmp_seq         // display seq
     int             ttl;        // setup at start                  // display seq
     struct timeval  send_tv;    // icmp stats    // display seq
     struct timeval  receive_tv; // icmp stats      // display seq

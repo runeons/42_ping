@@ -56,7 +56,6 @@ void    ping_end(t_data *dt)
     display_ping_end_stats(dt);
     close(dt->socket);
     free_all_malloc();
-    printf(C_B_RED"[DEBUG] END"C_RES"\n");
 }
 
 int main(int ac, char **av)

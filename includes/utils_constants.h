@@ -10,6 +10,7 @@
 # define SEQUENCE_INTERVAL_S 1
 
 # define ICMP_ECHO 8
+# define IP_HEADER_LEN 20
 
 # define DEBUG 1
 
