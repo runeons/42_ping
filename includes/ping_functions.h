@@ -37,11 +37,11 @@ void            init_options_params(t_data *dt);
 
 //  init_data.c
 void            init_data(t_data *dt, t_parsed_cmd *parsed_cmd);
-void            init_recv_buf(struct msghdr *msg);
-void            init_recv_msg(struct msghdr *msg, char *r_packet, struct sockaddr_in sockaddr);
+void            init_recv_msgh(struct msghdr *msg, char *r_packet, struct sockaddr_in sockaddr);
 //  display.c
 void            display_ping_init(t_data *dt);
-void            display_ping_sequence(t_data *dt);
+void            display_ping_OK(t_data *dt);
+void            display_ping_unreachable(t_data *dt);
 void            display_ping_end_stats(t_data *dt);
 
 //  utils_debug.c

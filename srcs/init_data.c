@@ -26,6 +26,7 @@ void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
 
     dt->end_stats.sent_nb = 0;
     dt->end_stats.recv_nb = 0;
+    dt->end_stats.errors_nb = 0;
 }
 
 void    init_recv_buf(struct msghdr *msg)
@@ -55,7 +56,7 @@ void    init_recv_buf(struct msghdr *msg)
     msg->msg_flags = 0;
 }
 
-void    init_recv_msg(struct msghdr *msg, char *r_packet, struct sockaddr_in sockaddr)
+void    init_recv_msgh(struct msghdr *msg, char *r_packet, struct sockaddr_in sockaddr)
 {
 	char			buffer[512];
     

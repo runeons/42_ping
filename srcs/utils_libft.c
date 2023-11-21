@@ -1,5 +1,14 @@
 #include "ping_functions.h"
 
+void print_as_hexa(void *data, int size)
+{
+    const unsigned char *ptr = (const unsigned char *)data;
+
+    for (int i = 0; i < size; i++)
+        printf("%02x ", ptr[i]);
+    printf("\n");
+}
+
 int ft_isstrfloat(const char *s)
 {
     int i           = 0;

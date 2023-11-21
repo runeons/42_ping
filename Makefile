@@ -46,16 +46,16 @@ HEADER					=	\
 SRCS_DIR					=	./srcs/
 
 SRCS_LIST					=	\
+							craft.c \
 							display.c \
 							init_data.c \
 							init_socket.c \
+							init_options.c \
 							main.c \
-							craft.c \
 							ping.c \
-							options.c \
 							utils_debug.c \
-							utils_options.c \
 							utils_libft.c \
+							utils_options.c \
 
 SRCS					=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 
