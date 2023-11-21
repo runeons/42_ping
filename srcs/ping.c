@@ -63,10 +63,10 @@ static void    send_icmp_and_receive_packet(t_data *dt)
         dt->end_stats.sent_nb++;
         init_recv_msgh(&msgh, dt->one_seq.r_packet, dt->address);
         r = recvmsg(dt->socket, &msgh, 0);
-        if (r < 0)
-            warning_error(C_G_RED"packet receiving failure: %s"C_RES"\n", strerror(r));
-        else
+        if (r >= 0)
             handle_reply(dt, &msgh);
+        // else
+            // warning_error(C_G_RED"packet receiving failure: %s"C_RES"\n", strerror(r));
     }
 }
 
