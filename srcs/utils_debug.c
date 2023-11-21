@@ -12,37 +12,21 @@ void    debug_addrinfo(struct addrinfo *ai)
     }
 }
 
-void    debug_icmp_packet(t_data *dt)
+void    debug_crafted_icmp(t_icmp *crafted_icmp)
 {
     if (DEBUG == 1)
     {
-        printf(C_G_RED"[DEBUG] ICMP packet"C_RES"\n");
-        printf("sizeof(dt->icmp): %lu\n", sizeof(dt->icmp));
-        printf("dt->icmp.payload: %s\n", dt->icmp.payload);
-        printf("sizeof(dt->icmp.payload): %lu\n", sizeof(dt->icmp.payload));
-        printf("dt->one_seq.icmp_seq: %d\n", dt->one_seq.icmp_seq_count);
-        printf("dt->icmp.h.type: %d\n", dt->icmp.h.type);
-        printf("dt->icmp.h.code: %d\n", dt->icmp.h.code);
-        printf("dt->icmp.h.checksum: %d\n", dt->icmp.h.checksum);
-        printf("dt->icmp.h.un.echo.id: %d\n", dt->icmp.h.un.echo.id);
-        printf("dt->icmp.h.un.echo.sequence: %d\n", dt->icmp.h.un.echo.sequence);
-        printf("\n");
-    }
-}
-
-void    debug_packet(t_icmp *p)
-{
-    if (DEBUG == 1)
-    {
-        printf(C_G_RED"[DEBUG] crafted packet"C_RES"\n");
-        printf("sizeof(p): %lu\n", sizeof(p));
-        printf("p->payload: %s\n", p->payload);
-        printf("sizeof(p->payload): %lu\n", sizeof(p->payload));
-        printf("p->h.type: %d\n", p->h.type);
-        printf("p->h.code: %d\n", p->h.code);
-        printf("p->h.checksum: %d\n", p->h.checksum);
-        printf("p->h.un.echo.id: %d\n", p->h.un.echo.id);
-        printf("p->h.un.echo.sequence: %d\n", p->h.un.echo.sequence);
+        printf(C_G_RED"[DEBUG] crafted t_icmp"C_RES"\n");
+        printf("sizeof(crafted_icmp): %lu\n", sizeof(crafted_icmp));
+        printf("sizeof(crafted_icmp->payload): %lu\n", sizeof(crafted_icmp->payload));
+        printf("payload: %s\n", crafted_icmp->payload);
+        printf("h.type: %d\n", crafted_icmp->h.type);
+        printf("h.code: %d\n", crafted_icmp->h.code);
+        printf("h.checksum: %d\n", crafted_icmp->h.checksum);
+        printf("h.un.echo.id: %d\n", crafted_icmp->h.un.echo.id);
+        printf("h.un.echo.sequence: %d\n", crafted_icmp->h.un.echo.sequence);
+        printf("h.un.echo.id: %x\n", crafted_icmp->h.un.echo.id);
+        printf("h.un.echo.sequence: %x\n", crafted_icmp->h.un.echo.sequence);
         printf("\n");
     }
 }
@@ -74,30 +58,27 @@ void    debug_msghdr(struct msghdr msg)
     }
 }
 
-void    debug_recv_packet(void *packet)
+void    debug_packet(t_packet *packet)
 {
     if (DEBUG == 1)
     {
-        struct iphdr *ip = packet;
-    	struct icmphdr *icmp = packet + IP_HEADER_LEN;
-
-        printf(C_G_RED"[DEBUG] recv packet"C_RES"\n");
-        printf("ip->version: %x\n", ip->version);
-        printf("ip->ihl: %x\n", ip->ihl);
-        printf("ip->tos: %hhx\n", ip->tos);
-        printf("ntohs(ip->tot_len): %hx\n", ntohs(ip->tot_len));
-        printf("ip->id: %04hx\n", ip->id);
-        printf("ntohs(ip->frag_off): %hx\n", ntohs(ip->frag_off));
-        printf("ip->ttl: %hhx\n", ip->ttl);
-        printf("ip->protocol: %hhx\n", ip->protocol);
-        printf("ip->check: %04hx\n", ip->check);
-        printf("ip->saddr: %08x\n", ip->saddr);
-        printf("ip->daddr: %08x\n", ip->daddr);
-        printf("icmp->type: %hhx\n", icmp->type);
-        printf("icmp->code: %hhx\n", icmp->code);
-        printf("icmp->checksum: %04hx\n", icmp->checksum);
-        printf("ntohs(icmp->un.echo.id): %x\n", ntohs(icmp->un.echo.id));
-        printf("ntohs(icmp->un.echo.sequence): %x\n", ntohs(icmp->un.echo.sequence));
+        printf(C_G_RED"[DEBUG] final_packet t_packet"C_RES"\n");
+        printf("ip->version: %x\n", packet->ip->version);
+        printf("ip->ihl: %x\n", packet->ip->ihl);
+        printf("ip->tos: %hhx\n", packet->ip->tos);
+        printf("ntohs(ip->tot_len): %hx\n", ntohs(packet->ip->tot_len));
+        printf("ip->id: %04hx\n", packet->ip->id);
+        printf("ntohs(packet->ip->frag_off): %hx\n", ntohs(packet->ip->frag_off));
+        printf("ip->ttl: %hhx\n", packet->ip->ttl);
+        printf("ip->protocol: %hhx\n", packet->ip->protocol);
+        printf("ip->check: %04hx\n", packet->ip->check);
+        printf("ip->saddr: %08x\n", packet->ip->saddr);
+        printf("ip->daddr: %08x\n", packet->ip->daddr);
+        printf("icmp->type: %hhx\n", packet->icmp->type);
+        printf("icmp->code: %hhx\n", packet->icmp->code);
+        printf("icmp->checksum: %04hx\n", packet->icmp->checksum);
+        printf("ntohs(packet->icmp->un.echo.id): %x\n", ntohs(packet->icmp->un.echo.id));
+        printf("ntohs(packet->icmp->un.echo.sequence): %x\n", ntohs(packet->icmp->un.echo.sequence));
         printf("\n");
 
     }

@@ -24,6 +24,13 @@
 //     } un;
 // };
 
+typedef struct  s_packet
+{
+    struct iphdr    *ip;
+    struct icmphdr  *icmp;
+    char            *payload;
+}               t_packet;
+
 typedef struct  s_icmp
 {
 	struct icmphdr  h;
@@ -38,6 +45,7 @@ typedef struct  s_ping_seq
     struct timeval  send_tv;                    // icmp stats
     struct timeval  receive_tv;                 // icmp stats
     char            r_packet[IP_TOTAL_LEN];
+    t_packet        final_packet;
 }               t_ping_seq;
 
 typedef struct  s_ping_stats
@@ -60,7 +68,7 @@ typedef struct  s_data
     char                *resolved_hostname;
     int                 socket;
     struct sockaddr_in  address;
-    t_icmp              icmp;       // icmp         // display_icmp_seq_init
+    t_icmp              crafted_icmp;       // icmp         // display_icmp_seq_init
     struct timeval      tz;         // icmp stats   // display seq // display end stats
     struct timeval      init_tv;    // icmp stats   // display end stats
     t_ping_seq          one_seq;

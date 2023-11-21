@@ -6,8 +6,8 @@ t_option allowed_options[] =
     {'v', "verbose", 0, "Verbose output. Do not suppress DUP replies when pinging multicast address.", NULL},
     {'V', "version", 0, "Show version and exit.", NULL},
     {'p', "pattern", 1, "You may specify up to 16 pad bytes to fill out the packet you send. This is useful for diagnosing data-dependent problems in a network. For example, -p ff will cause the sent packet to be filled with all ones.", NULL},
-    {'t', "ttl", 1, "Set the IP Time to Live."},
-    {'i', "interval", 1, "Wait interval seconds between sending each packet. Real number allowed with dot as a decimal separator (regardless locale setup). The default is to wait for one second between each packet normally, or not to wait in flood mode. Only super-user may set interval to values less than 2 ms."}
+    {'t', "ttl", 1, "Set the IP Time to Live.", NULL},
+    {'i', "interval", 1, "Wait interval seconds between sending each packet. Real number allowed with dot as a decimal separator (regardless locale setup). The default is to wait for one second between each packet normally, or not to wait in flood mode. Only super-user may set interval to values less than 2 ms.", NULL}
 };
 
 static int get_name_max_len()

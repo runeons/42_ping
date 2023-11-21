@@ -2,7 +2,7 @@
 
 void    display_ping_init(t_data *dt)
 {
-    printf("PING %s (%s) %lu(%d) bytes of data.\n", dt->input_dest, dt->resolved_address, sizeof(dt->icmp.payload), IP_TOTAL_LEN); // sizeof(dt->icmp)
+    printf("PING %s (%s) %lu(%d) bytes of data.\n", dt->input_dest, dt->resolved_address, sizeof(dt->crafted_icmp.payload), IP_TOTAL_LEN); // sizeof(dt->crafted_icmp)
 }
 
 void    display_ping_sequence(t_data *dt)

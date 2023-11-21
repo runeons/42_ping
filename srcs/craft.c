@@ -1,19 +1,5 @@
 #include "ping_functions.h"
 
-static char    *int_to_bin(int n, int len)
-{
-    char    *bin;
-    int     k = 0;
-
-    bin = (char*)mmalloc(sizeof(char) * len);
-    if (bin == NULL)
-        exit_error("Malloc error.");
-    for (unsigned i = (1 << (len - 1)); i > 0; i = i / 2)
-        bin[k++] = (n & i) ? '1' : '0';
-    bin[k] = '\0';
-    return bin;
-}
-
 // Le complément à un sur 16 bits (= inversement de tous les bits)
 // de la somme des compléments à un de l'en-tête Internet
 // pris par mots de 16 bits.
@@ -40,25 +26,25 @@ static unsigned short header_checksum(void *packet, int len)
 
 static void craft_icmp_payload(t_data *dt)
 {
-    ft_memset(&dt->icmp, 0, sizeof(dt->icmp));
+    ft_memset(&dt->crafted_icmp, 0, sizeof(dt->crafted_icmp));
     for (int i = 0; i < ICMP_PAYLOAD_LEN - 1; i++)
-        dt->icmp.payload[i] = dt->options_params.p_payload[i];
-    dt->icmp.payload[ICMP_PAYLOAD_LEN - 1] = '\0';
+        dt->crafted_icmp.payload[i] = dt->options_params.p_payload[i];
+    dt->crafted_icmp.payload[ICMP_PAYLOAD_LEN - 1] = '\0';
     dt->one_seq.icmp_seq_count++;
-    // printf(C_B_RED"[DEBUG] [%s] %d"C_RES"\n", dt->icmp.payload, sizeof(dt->icmp.payload));
+    // printf(C_B_RED"[DEBUG] [%s] %d"C_RES"\n", dt->crafted_icmp.payload, sizeof(dt->crafted_icmp.payload));
 }
 
 static void craft_icmp_header(t_data *dt)
 {
-    dt->icmp.h.type = ICMP_ECHO;
-    dt->icmp.h.un.echo.id = getpid();
-    dt->icmp.h.un.echo.sequence = dt->one_seq.icmp_seq_count;
-    dt->icmp.h.checksum = header_checksum(&dt->icmp, sizeof(dt->icmp));
+    dt->crafted_icmp.h.type = ICMP_ECHO;
+    dt->crafted_icmp.h.un.echo.id = getpid();
+    dt->crafted_icmp.h.un.echo.sequence = dt->one_seq.icmp_seq_count;
+    dt->crafted_icmp.h.checksum = header_checksum(&dt->crafted_icmp, sizeof(dt->crafted_icmp));
 }
 
 void craft_icmp(t_data *dt)
 {
-    ft_bzero(&dt->icmp, sizeof(dt->icmp));
+    ft_bzero(&dt->crafted_icmp, sizeof(dt->crafted_icmp));
     craft_icmp_payload(dt);
     craft_icmp_header(dt);
 }

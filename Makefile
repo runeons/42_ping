@@ -1,4 +1,4 @@
-# clang -fsanitize=address -g3 srcs/*.c -g3 -Wall -Wextra -Werror -I includes/ -I libft/includes/ -I libft -L libft -lft && sudo ./a.out 8.8.8.8
+# clang -fsanitize=address -g3 srcs/*.c -Wall -Wextra -Werror -I includes/ -I libft/includes/ -I libft -L libft -lft && sudo ./a.out 8.8.8.8
 
 # *** NAME - CC - FLAGS ****************************************************** #
 
@@ -52,8 +52,10 @@ SRCS_LIST					=	\
 							main.c \
 							craft.c \
 							ping.c \
+							options.c \
 							utils_debug.c \
 							utils_options.c \
+							utils_libft.c \
 
 SRCS					=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 

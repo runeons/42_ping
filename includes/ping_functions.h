@@ -32,8 +32,10 @@ void            resolve_address(t_data *dt);
 void            open_socket(t_data *dt);
 void            set_socket_options(int socket);
 
-//  init_data.c
+//  options.c
 void            init_options_params(t_data *dt);
+
+//  init_data.c
 void            init_data(t_data *dt, t_parsed_cmd *parsed_cmd);
 void            init_recv_buf(struct msghdr *msg);
 void            init_recv_msg(struct msghdr *msg, char *r_packet, struct sockaddr_in sockaddr);
@@ -44,11 +46,14 @@ void            display_ping_end_stats(t_data *dt);
 
 //  utils_debug.c
 void            debug_addrinfo(struct addrinfo *ai);
-void            debug_icmp_packet(t_data *dt);
-void            debug_packet(t_icmp *p);
-void            debug_buf(struct msghdr msg);
-void            debug_recv_packet(void *packet);
+void            debug_crafted_icmp(t_icmp *crafted_icmp);
+void            debug_packet(t_packet *packet);
+void            debug_msghdr(struct msghdr msg);
 
+// utils_libft.c
+int             ft_isstrfloat(const char *s);
+float           ft_atof(const char *s);
+char            *int_to_bin(int n, int len);
 
 #endif
 
