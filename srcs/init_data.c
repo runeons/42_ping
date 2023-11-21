@@ -190,11 +190,11 @@ void    init_recv_msg(struct msghdr *msg, char *r_packet, struct sockaddr_in soc
 	char			buffer[512];
 	ssize_t			ret;
     // ft_bzero(r_packet, sizeof(*r_packet)); // 1
-    ft_bzero(r_packet, ICMP_TOTAL_LEN); 
+    ft_bzero(r_packet, IP_TOTAL_LEN); 
 	struct iovec	iov =
 	{
 		.iov_base = r_packet,
-		.iov_len = ICMP_TOTAL_LEN
+		.iov_len = IP_TOTAL_LEN
 	};
 	msg->msg_name = &sockaddr;
 	msg->msg_namelen = sizeof(sockaddr);
