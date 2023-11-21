@@ -4,7 +4,7 @@
 
 NAME					= 	ft_ping
 
-CC						= 	gcc -g3
+CC						= 	gcc
 
 FFLAGS					=   -fsanitize=address -g3
 

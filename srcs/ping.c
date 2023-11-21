@@ -19,7 +19,7 @@ void print_as_hexa(void *data, int size)
 {
     const unsigned char *ptr = (const unsigned char *)data;
 
-    for (size_t i = 0; i < size; i++)
+    for (int i = 0; i < size; i++)
         printf("%02x ", ptr[i]);
     printf("\n");
 }

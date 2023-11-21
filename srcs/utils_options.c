@@ -14,7 +14,7 @@ static int get_name_max_len()
 {
     int max_len = 0;
     int curr_len = 0;
-    for (int i = 0; i < ARRAY_SIZE(allowed_options); i++)
+    for (size_t i = 0; i < ARRAY_SIZE(allowed_options); i++)
     {
         curr_len = ft_strlen(allowed_options[i].name) + 4;
         if (curr_len > max_len)
@@ -32,7 +32,7 @@ void    display_help()
     printf("    ft_ping sends ICMP ECHO_REQUEST to network hosts\n\n");
     printf("Usage:\n");
     printf("    ft_ping {destination ipv4/hostname} ");
-    for (int i = 0; i < ARRAY_SIZE(allowed_options); i++)
+    for (size_t i = 0; i < ARRAY_SIZE(allowed_options); i++)
     {
         if (allowed_options[i].need_param == 1)
             printf("[-%c %s] ", allowed_options[i].id, allowed_options[i].name);
@@ -41,7 +41,7 @@ void    display_help()
     }
     printf("\n\n");
     printf("Options:\n");
-    for (int i = 0; i < ARRAY_SIZE(allowed_options); i++)
+    for (size_t i = 0; i < ARRAY_SIZE(allowed_options); i++)
     {
         if (allowed_options[i].need_param == 1)
             sprintf(formatted_name, "<%s>", allowed_options[i].name);
@@ -115,7 +115,7 @@ int is_activated_option(t_lst *act_options, char c)
 
 static t_option    *is_allowed_option(char c)
 {
-    for (int i = 0; i < ARRAY_SIZE(allowed_options); i++) 
+    for (size_t i = 0; i < ARRAY_SIZE(allowed_options); i++) 
     {
         if (allowed_options[i].id == c)
             return &allowed_options[i];
