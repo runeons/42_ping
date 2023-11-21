@@ -55,7 +55,6 @@ static void    send_icmp_and_receive_packet(t_data *dt)
     if (gettimeofday(&dt->one_seq.send_tv, &dt->tz) != 0)
         exit_error("time error: Cannot retrieve time\n");
     r = sendto(dt->socket, &dt->crafted_icmp, sizeof(dt->crafted_icmp), 0, (struct sockaddr*)&dt->address, sizeof(dt->address));
-    // printf("send r: %d\n", r);
     if (r <= 0)
         warning_error(C_G_RED"packet sending failure: %s"C_RES"\n", strerror(r));
     else if (r != sizeof(dt->crafted_icmp))
@@ -66,11 +65,8 @@ static void    send_icmp_and_receive_packet(t_data *dt)
         dt->end_stats.sent_nb++;
         init_recv_msgh(&msgh, dt->one_seq.r_packet, &dt->address);
         r = recvmsg(dt->socket, &msgh, 0);
-        // printf("recv r: %d\n", r);
         if (r >= 0)
-        {
             handle_reply(dt, &msgh);
-        }
         // else
             // warning_error(C_G_RED"packet receiving failure: %s"C_RES"\n", strerror(r));
     }

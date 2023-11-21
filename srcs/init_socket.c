@@ -12,25 +12,30 @@ void resolve_address(t_data *dt) // check that dest exists and resolve address i
 {
     int                 r;
     // struct addrinfo     hints;
-    struct addrinfo     *res;
+    struct addrinfo     *resolved_add;
     struct addrinfo     *tmp;
 
     // _init_hints(&hints);
-    // r = getaddrinfo(dt->input_dest, NULL, &hints, &res);
-    r = getaddrinfo(dt->input_dest, NULL, NULL, &res);
-    // debug_addrinfo(res);
+    // r = getaddrinfo(dt->input_dest, NULL, &hints, &resolved_add);
+    r = getaddrinfo(dt->input_dest, NULL, NULL, &resolved_add);
+    // debug_addrinfo(resolved_add);
     if (r != 0)
         exit_error("address error: The ip address could not be resolved. getaddrinfo: %s\n", gai_strerror(r));
-    tmp = res;
+    tmp = resolved_add;
     while (tmp != NULL)
     {
-        dt->resolved_address = ft_strdup(inet_ntoa(((struct sockaddr_in *)tmp->ai_addr)->sin_addr)); // need to free if many ?
+        char ip_str[INET_ADDRSTRLEN]; // 16
+        if (inet_ntop(tmp->ai_family, &((struct sockaddr_in *)tmp->ai_addr)->sin_addr, ip_str, sizeof(ip_str)) == NULL)
+            exit_error("address error: Conversion from network to presentation format failed.\n");
+        // dt->resolved_address = ft_strdup(inet_ntoa(((struct sockaddr_in *)tmp->ai_addr)->sin_addr)); // need to free if many ?
+        dt->resolved_address = ft_strdup(ip_str);
         if (dt->resolved_address == NULL)
             exit_error("Memory error: Malloc failure.\n");
         tmp = tmp->ai_next;
+        break;
     }
     // printf(C_B_RED"dt->resolved_address %s"C_RES"\n", dt->resolved_address);
-    freeaddrinfo(res);
+    freeaddrinfo(resolved_add);
 }
 
 void resolve_hostname(t_data *dt) // useful only when input_dest is ip address (vs. hostname)
