@@ -126,10 +126,30 @@ static t_option    *is_allowed_option(char c)
     return (NULL);
 }
 
+static t_option    *is_allowed_option_long(char *str)
+{
+    int len = 0;
+
+    if (str[1] != '-')
+        return (NULL);
+    for (size_t i = 0; i < ARRAY_SIZE(allowed_options); i++) 
+    {
+        if (ft_strlen((char *)str + 2) == ft_strlen(allowed_options[i].name))
+        {
+            len = ft_strlen(allowed_options[i].name);
+            if (ft_strnstr(allowed_options[i].name, (char *)str + 2, len))
+                return &allowed_options[i];
+        }
+    }
+    return (NULL);
+}
+
 static t_option *check_option(char **av, int i)
 {
     t_option *res = NULL;
     if (ft_strlen(av[i]) == 2 && (res = is_allowed_option(av[i][1])) != NULL)
+        return res;
+    else if (ft_strlen(av[i]) > 2 && (res = is_allowed_option_long(av[i])) != NULL)
         return res;
     else
     {
