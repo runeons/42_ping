@@ -15,6 +15,8 @@
 
 // t_list	*g_libft.all_malloc;
 
+static t_global	g_libft = { 0, NULL };
+
 void	*mmalloc(unsigned int size)
 {
 	void	*new;

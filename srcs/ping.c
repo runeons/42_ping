@@ -49,7 +49,6 @@ static void    send_icmp_and_receive_packet(t_data *dt)
 {
     int             r = 0;	
     struct          msghdr msgh;
-	char		    buffer[512];
 
     memset(&msgh, 0, sizeof(msgh));
     if (gettimeofday(&dt->one_seq.send_tv, &dt->tz) != 0)

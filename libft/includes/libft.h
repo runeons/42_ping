@@ -32,8 +32,7 @@ typedef struct s_global
 	int		exit;
 	t_list	*all_malloc;
 }			t_global;
-
-static t_global	g_libft;
+// static t_global	g_libft;
 
 int		ft_tablen(char **t);
 int		ft_isnum(int c);

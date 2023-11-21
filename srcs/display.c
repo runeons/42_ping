@@ -14,9 +14,6 @@ void    display_ping_OK(t_data *dt)
 }
 void    display_ping_unreachable(t_data *dt)
 {
-    int time;
-
-    time = (dt->one_seq.receive_tv.tv_sec - dt->one_seq.send_tv.tv_sec) * 1000000 + dt->one_seq.receive_tv.tv_usec - dt->one_seq.send_tv.tv_usec;
     printf("%d bytes from %s: icmp_seq=%d %s\n", dt->one_seq.bytes, dt->resolved_address, dt->one_seq.icmp_seq_count, "Destination Host Unreachable");
 }
 
@@ -31,7 +28,7 @@ void    display_ping_end_stats(t_data *dt)
     ratio = 100 - ((dt->end_stats.recv_nb * 100) / dt->end_stats.sent_nb);
     time = (final_tv.tv_sec - dt->init_tv.tv_sec) * 1000000 + final_tv.tv_usec - dt->init_tv.tv_usec;
     if (dt->end_stats.errors_nb <= 0)
-        sprintf(err, "");
+        sprintf(err, "%s", "");
     else
         sprintf(err, "+%d errors, ", dt->end_stats.errors_nb);
     printf("--- %s ping statistics ---\n", dt->input_dest);
