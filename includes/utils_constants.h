@@ -8,7 +8,7 @@
 # define MAX_HOSTNAME_LEN       100
 # define TTL_VALUE              64
 # define SEQUENCE_INTERVAL_S    1
-# define BUFFER_LEN             512
+# define STR_BUFFER_LEN         512
 
 # define ICMP_ECHO              8
 

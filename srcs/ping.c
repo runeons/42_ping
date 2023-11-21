@@ -47,23 +47,30 @@ static void    handle_reply(t_data *dt, struct msghdr *msgh)
 
 static void    send_icmp_and_receive_packet(t_data *dt)    
 {
-    int         r = 0;	
-    struct      msghdr msgh;
+    int             r = 0;	
+    struct          msghdr msgh;
+	char		    buffer[512];
 
+    memset(&msgh, 0, sizeof(msgh));
     if (gettimeofday(&dt->one_seq.send_tv, &dt->tz) != 0)
         exit_error("time error: Cannot retrieve time\n");
     r = sendto(dt->socket, &dt->crafted_icmp, sizeof(dt->crafted_icmp), 0, (struct sockaddr*)&dt->address, sizeof(dt->address));
+    // printf("send r: %d\n", r);
     if (r <= 0)
         warning_error(C_G_RED"packet sending failure: %s"C_RES"\n", strerror(r));
     else if (r != sizeof(dt->crafted_icmp))
         warning_error(C_G_RED"packet not entirely sent: %s"C_RES"\n", strerror(r));
     else
     {
+        // warning_error(C_G_BLUE"packet apparently sent: %s"C_RES"\n", strerror(r));
         dt->end_stats.sent_nb++;
-        init_recv_msgh(&msgh, dt->one_seq.r_packet, dt->address);
+        init_recv_msgh(&msgh, dt->one_seq.r_packet, &dt->address);
         r = recvmsg(dt->socket, &msgh, 0);
+        // printf("recv r: %d\n", r);
         if (r >= 0)
+        {
             handle_reply(dt, &msgh);
+        }
         // else
             // warning_error(C_G_RED"packet receiving failure: %s"C_RES"\n", strerror(r));
     }
@@ -76,8 +83,8 @@ void ping_sequence(t_data *dt)
         g_ping = 0;
         return ;
     }
-    usleep(dt->options_params.seq_interval_us);
     craft_icmp(dt);
     debug_crafted_icmp(&dt->crafted_icmp);
+    usleep(dt->options_params.seq_interval_us);
     send_icmp_and_receive_packet(dt);
 }

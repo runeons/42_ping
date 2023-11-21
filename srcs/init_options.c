@@ -24,7 +24,7 @@ void   option_i(t_data *dt)
     {
         param = ft_strdup(get_option(dt->act_options, 'i')->param);
         if (param == NULL)
-            exit_error("Malloc failure.");
+            exit_error("Malloc failure.\n");
         if (ft_isstrfloat(param) == 0)
             exit_error("invalid argument: '%s'\n", param);
         interval = ft_atof(param); // check_result
@@ -49,7 +49,7 @@ void   option_c(t_data *dt)
     {
         param = ft_strdup(get_option(dt->act_options, 'c')->param);
         if (param == NULL)
-            exit_error("Malloc failure.");
+            exit_error("Malloc failure.\n");
         if (ft_isstrnum(param) == 0)
             exit_error("invalid argument: '%s'\n", param);
         count = ft_atoi(param); // check_result
@@ -71,7 +71,7 @@ void   option_ttl(t_data *dt)
     {
         param = ft_strdup(get_option(dt->act_options, 't')->param);
         if (param == NULL)
-            exit_error("Malloc failure.");
+            exit_error("Malloc failure.\n");
         if (ft_isstrnum(param) == 0)
             exit_error("invalid argument: '%s'\n", param);
         ttl = ft_atoi(param);

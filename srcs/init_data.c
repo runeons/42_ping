@@ -29,46 +29,48 @@ void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
     dt->end_stats.errors_nb = 0;
 }
 
-void    init_recv_buf(struct msghdr *msg)
+// void    init_recv_buf(struct msghdr *msg)
+// {
+//     struct icmphdr  *icmp_control;
+//     struct iovec    *iov;
+//     char            *buffer;
+
+//     if (!(buffer = mmalloc(sizeof(char) * 1024)))
+//         exit_error("Malloc error (buffer)\n");
+//     ft_bzero(buffer, 1024);
+//     if (!(iov = (struct iovec *)mmalloc(sizeof(struct iovec))))
+//         exit_error("Malloc error (iov)\n");
+//     ft_bzero(iov, sizeof(*iov));
+//     if (!(icmp_control = (struct icmphdr *)mmalloc(sizeof(struct icmphdr))))
+//         exit_error("Malloc error (icmp_control)\n");
+//     ft_bzero(icmp_control, sizeof(*icmp_control));
+//     icmp_control->type = 0;
+//     iov->iov_base = buffer;
+//     iov->iov_len = sizeof(buffer);
+//     msg->msg_name = NULL;
+//     msg->msg_namelen = 0;
+//     msg->msg_iov = iov;
+//     msg->msg_iovlen = 0;
+//     msg->msg_control = icmp_control;
+//     msg->msg_controllen = sizeof(*icmp_control);
+//     msg->msg_flags = 0;
+// }
+
+void    init_recv_msgh(struct msghdr *msg, char *r_packet, struct sockaddr_in *sockaddr)
 {
-    struct icmphdr  *icmp_control;
     struct iovec    *iov;
     char            *buffer;
 
-    if (!(buffer = mmalloc(sizeof(char) * 1024)))
-        exit_error("Malloc error (buffer)\n");
-    ft_bzero(buffer, 1024);
-    if (!(iov = (struct iovec *)mmalloc(sizeof(struct iovec))))
-        exit_error("Malloc error (iov)\n");
-    ft_bzero(iov, sizeof(*iov));
-    if (!(icmp_control = (struct icmphdr *)mmalloc(sizeof(struct icmphdr))))
-        exit_error("Malloc error (icmp_control)\n");
-    ft_bzero(icmp_control, sizeof(*icmp_control));
-    icmp_control->type = 0;
-    iov->iov_base = buffer;
-    iov->iov_len = sizeof(buffer);
-    msg->msg_name = NULL;
-    msg->msg_namelen = 0;
-    msg->msg_iov = iov;
-    msg->msg_iovlen = 0;
-    msg->msg_control = icmp_control;
-    msg->msg_controllen = sizeof(*icmp_control);
-    msg->msg_flags = 0;
-}
-
-void    init_recv_msgh(struct msghdr *msg, char *r_packet, struct sockaddr_in sockaddr)
-{
-	char			buffer[512];
-    
-    ft_bzero(r_packet, IP_TOTAL_LEN); 
-	struct iovec	iov =
-	{
-		.iov_base = r_packet,
-		.iov_len = IP_TOTAL_LEN
-	};
-	msg->msg_name = &sockaddr;
-	msg->msg_namelen = sizeof(sockaddr);
-	msg->msg_iov = &iov;
+    if (!(iov = mmalloc(sizeof(struct iovec))))
+        exit_error("Malloc failure.\n");
+    if (!(buffer = mmalloc(sizeof(char) * STR_BUFFER_LEN)))
+        exit_error("Malloc failure.\n");
+    ft_bzero(r_packet, IP_TOTAL_LEN);
+    iov->iov_base = r_packet;
+    iov->iov_len = IP_TOTAL_LEN;
+	msg->msg_name = sockaddr;
+	msg->msg_namelen = sizeof(*sockaddr);
+	msg->msg_iov = iov;
 	msg->msg_iovlen = 1;
 	msg->msg_control = buffer;
 	msg->msg_controllen = sizeof(buffer);
