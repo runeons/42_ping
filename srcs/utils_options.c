@@ -2,16 +2,15 @@
 
 t_option allowed_options[] =
 {
-    {'h', "help", 0, "Show help.", NULL},
-    {'v', "verbose", 0, "Verbose output. Do not suppress DUP replies when pinging multicast address.", NULL},
-    {'V', "version", 0, "Show version and exit.", NULL},
-    {'p', "pattern", 1, "You may specify up to 16 pad bytes to fill out the packet you send. This is useful for diagnosing data-dependent problems in a network. For example, -p ff will cause the sent packet to be filled with all ones.", NULL},
-    {'t', "ttl", 1, "Set the IP Time to Live.", NULL},
-    {'i', "interval", 1, "Wait interval seconds between sending each packet. Real number allowed with dot as a decimal separator (regardless locale setup). The default is to wait for one second between each packet normally, or not to wait in flood mode. Only super-user may set interval to values less than 2 ms.", NULL},
-    {'c', "count", 1, "Stop after sending count ECHO_REQUEST packets. With deadline option, ping waits for count ECHO_REPLY packets, until the timeout expires.", NULL},
-    {'w', "deadline", 1, "Specify a timeout, in seconds, before ping exits regardless of how many packets have been sent or received. In this case ping does not stop after count packet are sent, it waits either for deadline expire or until count probes are answered or for some error notification from network.", NULL},
-    // {'W', "timeout", 1, "Time to wait for a response, in seconds. The option affects only timeout in absence of any responses, otherwise ping waits for two RTTs. Real number allowed with dot as a decimal separator (regardless locale setup). 0 means infinite timeout.", NULL}
-    // W for a single ping
+    {'?', "help", 0, "", NULL, "give this help list"},
+    {'v', "verbose", 0, "", NULL, "verbose output"},
+    {'V', "version", 0, "", NULL, "print program version"},
+    {'p', "pattern", 1, "PATTERN", NULL, "fill ICMP packet with given pattern (hex)"},
+    {'t', "ttl", 1, "N", NULL, "specify N as time-to-live"},
+    {'i', "interval", 1, "NUMBER", NULL, "wait NUMBER seconds between sending each packet"},
+    {'c', "count", 1, "NUMBER", NULL, "stop after sending NUMBER packets"},
+    {'w', "timeout", 1, "N", NULL, "stop after N seconds"}
+    // {'W', "linger", 1, "Tnumber of seconds to wait for response"} //for a single ping
 };
 
 static int get_name_max_len()
@@ -20,7 +19,7 @@ static int get_name_max_len()
     int curr_len = 0;
     for (size_t i = 0; i < ARRAY_SIZE(allowed_options); i++)
     {
-        curr_len = ft_strlen(allowed_options[i].name) + 4;
+        curr_len = ft_strlen(allowed_options[i].name) + 8 +  ft_strlen(allowed_options[i].param_name);
         if (curr_len > max_len)
             max_len = curr_len;
     }
@@ -33,25 +32,25 @@ void    display_help()
     char formatted_name[max_len + 1];
 
     printf("Description:\n");
-    printf("    ft_ping sends ICMP ECHO_REQUEST to network hosts\n\n");
+    printf("    Send ICMP ECHO_REQUEST packets to network hosts.\n\n");
     printf("Usage:\n");
-    printf("    ft_ping {destination ipv4/hostname} ");
+    printf("    ft_ping ");
     for (size_t i = 0; i < ARRAY_SIZE(allowed_options); i++)
     {
         if (allowed_options[i].need_param == 1)
-            printf("[-%c %s] ", allowed_options[i].id, allowed_options[i].name);
+            printf("[-%c %s] ", allowed_options[i].id, allowed_options[i].param_name);
         else if (allowed_options[i].need_param == 0)
             printf("[-%c] ", allowed_options[i].id);
     }
-    printf("\n\n");
+    printf("HOST ...\n\n");
     printf("Options:\n");
     for (size_t i = 0; i < ARRAY_SIZE(allowed_options); i++)
     {
         if (allowed_options[i].need_param == 1)
-            sprintf(formatted_name, "<%s>", allowed_options[i].name);
+            sprintf(formatted_name, "--%s=%s", allowed_options[i].name, allowed_options[i].param_name);
         else if (allowed_options[i].need_param == 0)
             sprintf(formatted_name, " ");
-        printf("    -%c %-*s %s\n", allowed_options[i].id, max_len, formatted_name, allowed_options[i].description);
+        printf("    -%c, %-*s %s\n", allowed_options[i].id, max_len, formatted_name, allowed_options[i].description);
     }
     printf("\n");
 }

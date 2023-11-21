@@ -17,8 +17,9 @@ typedef struct s_option
     char    id;
     char    *name;
     int     need_param;
-    char    *description;
+    char    *param_name;
     char    *param;
+    char    *description;
 }              t_option;
 
 void            display_help();

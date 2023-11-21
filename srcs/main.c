@@ -64,7 +64,7 @@ int main(int ac, char **av)
     t_parsed_cmd    parsed_cmd;
 
     parse_input(&parsed_cmd, ac, av);
-    if (is_activated_option(parsed_cmd.act_options, 'h'))
+    if (is_activated_option(parsed_cmd.act_options, '?'))
         option_h();
     initialise_data(&dt, &parsed_cmd);
     signal(SIGINT, handle_sigint);

@@ -12,7 +12,7 @@ LFLAGS					=   -fsanitize=leak -g3
 
 CFLAGS					= 	-I includes/ \
 							-I libft/includes/ \
-							# -Wall -Wextra -Werror 
+							-Wall -Wextra -Werror 
 							
 
 BONUS_FLAG				= 	0
