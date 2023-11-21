@@ -24,6 +24,8 @@
 //     } un;
 // };
 
+extern int g_ping;
+
 typedef struct  s_packet
 {
     struct iphdr    *ip;
@@ -59,6 +61,7 @@ typedef struct  s_options_params
 {
     char        p_payload[ICMP_PAYLOAD_LEN];
     int         seq_interval_us;
+    int         count;
 }               t_options_params;
 
 typedef struct  s_data

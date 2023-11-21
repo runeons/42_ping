@@ -59,7 +59,6 @@ static void    send_icmp_and_receive_packet(t_data *dt)
         warning_error(C_G_RED"packet not entirely sent: %s"C_RES"\n", strerror(r));
     else
     {
-        
         dt->end_stats.sent_nb++;
         init_recv_msgh(&msgh, dt->one_seq.r_packet, dt->address);
         r = recvmsg(dt->socket, &msgh, 0);
@@ -72,6 +71,11 @@ static void    send_icmp_and_receive_packet(t_data *dt)
 
 void ping_sequence(t_data *dt)
 {
+    if (dt->options_params.count > 0 && dt->end_stats.sent_nb >= dt->options_params.count)
+    {
+        g_ping = 0;
+        return ;
+    }
     usleep(dt->options_params.seq_interval_us);
     craft_icmp(dt);
     debug_crafted_icmp(&dt->crafted_icmp);

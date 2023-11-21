@@ -40,6 +40,28 @@ void   option_i(t_data *dt)
         dt->options_params.seq_interval_us = SEQUENCE_INTERVAL_S * 1000000;
 }
 
+void   option_c(t_data *dt)
+{
+    int    count          = 0;
+    char   *param         = NULL;
+
+    if (is_activated_option(dt->act_options, 'c'))
+    {
+        param = ft_strdup(get_option(dt->act_options, 'c')->param);
+        if (param == NULL)
+            exit_error("Malloc failure.");
+        if (ft_isstrnum(param) == 0)
+            exit_error("invalid argument: '%s'\n", param);
+        count = ft_atoi(param); // check_result
+        if (count < 1 || count > 2147483647)
+            exit_error("invalid argument: '%s': out of range: 1 <= value <= 2147483647\n", param);
+        else
+            dt->options_params.count = count;
+    }
+    else
+        dt->options_params.count = 0;
+}
+
 void   option_ttl(t_data *dt)
 {
     int  ttl    = 0;
@@ -65,4 +87,5 @@ void    init_options_params(t_data *dt)
     option_p(dt);
     option_i(dt);
     option_ttl(dt);
+    option_c(dt);
 }
