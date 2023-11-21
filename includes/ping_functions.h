@@ -19,9 +19,10 @@
 # include <ping_data.h>
 # include <errno.h>
 
+//  craft.c
+void            craft_icmp(t_data *dt);
+
 //  ping.c
-void            craft_icmp_payload(t_data *dt);
-unsigned short  checksum(void *b, int len);
 void            receive_packet(t_data *dt);
 void            ping_sequence(t_data *dt);
 
@@ -35,7 +36,7 @@ void            set_socket_options(int socket);
 void            init_options_params(t_data *dt);
 void            init_data(t_data *dt, t_parsed_cmd *parsed_cmd);
 void            init_recv_buf(struct msghdr *msg);
-void            init_recv_msg(struct msghdr *msg, char *rcv_packet, struct sockaddr_in sockaddr);
+void            init_recv_msg(struct msghdr *msg, char *r_packet, struct sockaddr_in sockaddr);
 //  display.c
 void            display_ping_init(t_data *dt);
 void            display_ping_sequence(t_data *dt);
@@ -44,7 +45,7 @@ void            display_ping_end_stats(t_data *dt);
 //  utils_debug.c
 void            debug_addrinfo(struct addrinfo *ai);
 void            debug_icmp_packet(t_data *dt);
-void            debug_packet(t_packet *p);
+void            debug_packet(t_icmp *p);
 void            debug_buf(struct msghdr msg);
 void            debug_recv_packet(void *packet);
 

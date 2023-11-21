@@ -149,7 +149,7 @@ void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
 
     // seq
     dt->one_seq.bytes = 0;
-    dt->one_seq.icmp_seq_nb = 0;
+    dt->one_seq.icmp_seq_count = 0;
     dt->one_seq.ttl = TTL_VALUE;
     // dt->one_seq.send_tv
     // dt->one_seq.receive_tv
@@ -185,14 +185,16 @@ void    init_recv_buf(struct msghdr *msg)
     msg->msg_flags = 0;
 }
 
-void    init_recv_msg(struct msghdr *msg, char *rcv_packet, struct sockaddr_in sockaddr)
+void    init_recv_msg(struct msghdr *msg, char *r_packet, struct sockaddr_in sockaddr)
 {
 	char			buffer[512];
 	ssize_t			ret;
+    // ft_bzero(r_packet, sizeof(*r_packet)); // 1
+    ft_bzero(r_packet, ICMP_TOTAL_LEN); 
 	struct iovec	iov =
 	{
-		.iov_base = rcv_packet,
-		.iov_len = ICMP_PACKET_LEN
+		.iov_base = r_packet,
+		.iov_len = ICMP_TOTAL_LEN
 	};
 	msg->msg_name = &sockaddr;
 	msg->msg_namelen = sizeof(sockaddr);

@@ -5,12 +5,13 @@
 # define MAX_IP_LEN          16
 # define MAX_HOSTNAME_LEN    100
 # define TTL_VALUE           64
-# define ICMP_PACKET_LEN     84
-# define ICMP_PAYLOAD_LEN    56
 # define SEQUENCE_INTERVAL_S 1
+# define BUFFER_LEN          512
 
 # define ICMP_ECHO 8
 # define IP_HEADER_LEN 20
+# define ICMP_TOTAL_LEN     84
+# define ICMP_PAYLOAD_LEN    56 // ICMP_TOTAL_LEN - sizeof(struct icmphdr)
 
 # define DEBUG 1
 

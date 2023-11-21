@@ -9,3 +9,11 @@ void exit_error(const char *msg, ...)
     free_all_malloc();
     exit(1);
 }
+
+void warning_error(const char *msg, ...)
+{
+    va_list args;
+    va_start(args, msg);
+    vfprintf(stderr, msg, args);
+    va_end(args);
+}

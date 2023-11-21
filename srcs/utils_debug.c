@@ -17,20 +17,20 @@ void    debug_icmp_packet(t_data *dt)
     if (DEBUG == 1)
     {
         printf(C_G_RED"[DEBUG] ICMP packet"C_RES"\n");
-        printf("sizeof(dt->packet): %lu\n", sizeof(dt->packet));
-        printf("dt->packet.payload: %s\n", dt->packet.payload);
-        printf("sizeof(dt->packet.payload): %lu\n", sizeof(dt->packet.payload));
-        printf("dt->one_seq.icmp_seq: %d\n", dt->one_seq.icmp_seq_nb);
-        printf("dt->packet.h.type: %d\n", dt->packet.h.type);
-        printf("dt->packet.h.code: %d\n", dt->packet.h.code);
-        printf("dt->packet.h.checksum: %d\n", dt->packet.h.checksum);
-        printf("dt->packet.h.un.echo.id: %d\n", dt->packet.h.un.echo.id);
-        printf("dt->packet.h.un.echo.sequence: %d\n", dt->packet.h.un.echo.sequence);
+        printf("sizeof(dt->icmp): %lu\n", sizeof(dt->icmp));
+        printf("dt->icmp.payload: %s\n", dt->icmp.payload);
+        printf("sizeof(dt->icmp.payload): %lu\n", sizeof(dt->icmp.payload));
+        printf("dt->one_seq.icmp_seq: %d\n", dt->one_seq.icmp_seq_count);
+        printf("dt->icmp.h.type: %d\n", dt->icmp.h.type);
+        printf("dt->icmp.h.code: %d\n", dt->icmp.h.code);
+        printf("dt->icmp.h.checksum: %d\n", dt->icmp.h.checksum);
+        printf("dt->icmp.h.un.echo.id: %d\n", dt->icmp.h.un.echo.id);
+        printf("dt->icmp.h.un.echo.sequence: %d\n", dt->icmp.h.un.echo.sequence);
         printf("\n");
     }
 }
 
-void    debug_packet(t_packet *p)
+void    debug_packet(t_icmp *p)
 {
     if (DEBUG == 1)
     {

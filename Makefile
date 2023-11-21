@@ -50,6 +50,7 @@ SRCS_LIST					=	\
 							init_data.c \
 							init_socket.c \
 							main.c \
+							craft.c \
 							ping.c \
 							utils_debug.c \
 							utils_options.c \

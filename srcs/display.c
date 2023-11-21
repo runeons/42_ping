@@ -2,7 +2,7 @@
 
 void    display_ping_init(t_data *dt)
 {
-    printf("PING %s (%s) %lu(%d) bytes of data.\n", dt->input_dest, dt->resolved_address, sizeof(dt->packet.payload), ICMP_PACKET_LEN); // sizeof(dt->packet)
+    printf("PING %s (%s) %lu(%d) bytes of data.\n", dt->input_dest, dt->resolved_address, sizeof(dt->icmp.payload), ICMP_TOTAL_LEN); // sizeof(dt->icmp)
 }
 
 void    display_ping_sequence(t_data *dt)
@@ -10,7 +10,7 @@ void    display_ping_sequence(t_data *dt)
     int time;
 
     time = (dt->one_seq.receive_tv.tv_sec - dt->one_seq.send_tv.tv_sec) * 1000000 + dt->one_seq.receive_tv.tv_usec - dt->one_seq.send_tv.tv_usec;
-    printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.2f ms\n", dt->one_seq.bytes, dt->resolved_address, dt->one_seq.icmp_seq_nb, dt->one_seq.ttl, (float)time / 1000);
+    printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.2f ms\n", dt->one_seq.bytes, dt->resolved_address, dt->one_seq.icmp_seq_count, dt->one_seq.ttl, (float)time / 1000);
 }
 
 void    display_ping_end_stats(t_data *dt)

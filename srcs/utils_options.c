@@ -10,7 +10,7 @@ t_option allowed_options[] =
     {'i', "interval", 1, "Wait interval seconds between sending each packet. Real number allowed with dot as a decimal separator (regardless locale setup). The default is to wait for one second between each packet normally, or not to wait in flood mode. Only super-user may set interval to values less than 2 ms."}
 };
 
-int _get_name_max_len()
+static int get_name_max_len()
 {
     int max_len = 0;
     int curr_len = 0;
@@ -25,7 +25,7 @@ int _get_name_max_len()
 
 void    display_help()
 {
-    int max_len = _get_name_max_len();
+    int max_len = get_name_max_len();
     char formatted_name[max_len + 1];
 
     printf("Description:\n");
@@ -113,7 +113,7 @@ int is_activated_option(t_lst *act_options, char c)
     return(0);
 }
 
-t_option    *_is_allowed_option(char c)
+static t_option    *is_allowed_option(char c)
 {
     for (int i = 0; i < ARRAY_SIZE(allowed_options); i++) 
     {
@@ -123,10 +123,10 @@ t_option    *_is_allowed_option(char c)
     return (NULL);
 }
 
-t_option *_check_option(char **av, int i)
+static t_option *check_option(char **av, int i)
 {
     t_option *res = NULL;
-    if (ft_strlen(av[i]) == 2 && (res = _is_allowed_option(av[i][1])) != NULL)
+    if (ft_strlen(av[i]) == 2 && (res = is_allowed_option(av[i][1])) != NULL)
         return res;
     else
     {
@@ -146,7 +146,7 @@ t_parsed_cmd   parse_options(int ac, char **av)
     {
         if (ft_strlen(av[i]) && av[i][0] == '-')
         {
-            res = _check_option(av, i);
+            res = check_option(av, i);
             if (res->need_param)
             {
                 if (++i == ac)
