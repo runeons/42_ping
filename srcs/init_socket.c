@@ -65,10 +65,10 @@ void open_socket(t_data *dt)
         exit_error("socket error: Check that you have the correct rights. %s\n", strerror(dt->socket));
 }
 
-void set_socket_options(int socket)
+void set_socket_options(int socket, t_data *dt)
 {
     int r           = 0;
-    int ttl_value   = TTL_VALUE + 1;
+    int ttl_value   = dt->one_seq.ttl;
     struct timeval tv_out;
 	tv_out.tv_sec = 1;
 	tv_out.tv_usec = 0;

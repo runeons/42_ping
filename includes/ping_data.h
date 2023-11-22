@@ -48,6 +48,7 @@ typedef struct  s_ping_seq
     struct timeval  receive_tv;                 // icmp stats
     char            r_packet[IP_TOTAL_LEN];
     t_packet        final_packet;
+    int             time;
 }               t_ping_seq;
 
 typedef struct  s_ping_stats
@@ -55,6 +56,7 @@ typedef struct  s_ping_stats
     int sent_nb;  // icmp count    // display end stats
     int recv_nb;  // icmp count    // display end stats
     int errors_nb;  // icmp count    // display end stats
+    t_lst  *times;
 }               t_ping_stats;
 
 typedef struct  s_options_params
@@ -62,6 +64,7 @@ typedef struct  s_options_params
     char        p_payload[ICMP_PAYLOAD_LEN];
     int         seq_interval_us;
     int         count;
+    int         v;
 }               t_options_params;
 
 typedef struct  s_data

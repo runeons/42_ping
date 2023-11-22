@@ -56,6 +56,7 @@ SRCS_LIST					=	\
 							utils_debug.c \
 							utils_libft.c \
 							utils_options.c \
+							utils_time.c \
 
 SRCS					=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 

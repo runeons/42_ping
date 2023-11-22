@@ -22,20 +22,31 @@ static void    save_packet(t_data *dt)
     dt->one_seq.final_packet.payload = (void *)dt->one_seq.r_packet + IP_HEADER_LEN + ICMP_HEADER_LEN;
 }
 
+static void    save_time(t_data *dt)
+{
+    int *time;
+
+    if (!(time = mmalloc(sizeof(int))))
+        exit_error("Malloc failure.");
+    *time = (dt->one_seq.receive_tv.tv_sec - dt->one_seq.send_tv.tv_sec) * 1000000 + dt->one_seq.receive_tv.tv_usec - dt->one_seq.send_tv.tv_usec;
+    dt->one_seq.time = *time;
+    ft_lst_add_node_back(&dt->end_stats.times, ft_lst_create_node(time));
+}
+
 static void    handle_reply(t_data *dt, struct msghdr *msgh)
 {
     if (gettimeofday(&dt->one_seq.receive_tv, &dt->tz) != 0)
         exit_error("time error: Cannot retrieve time\n");
+    save_time(dt);
     save_packet(dt);
+    dt->one_seq.bytes = sizeof(*msgh) + ICMP_HEADER_LEN;
     if (dt->one_seq.final_packet.icmp->type == ICMP_ECHO_REPLY)
     {
-        dt->one_seq.bytes = sizeof(*msgh);
         display_ping_OK(dt);
         dt->end_stats.recv_nb++;
     }
     else
     {
-        dt->one_seq.bytes = 0;
         dt->end_stats.errors_nb++;
         if (dt->one_seq.final_packet.icmp->type == ICMP_ERR_UNREACHABLE)
             display_ping_unreachable(dt);

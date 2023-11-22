@@ -62,24 +62,39 @@ void    debug_packet(t_packet *packet)
 {
     if (DEBUG == 1)
     {
-        printf(C_G_RED"[DEBUG] final_packet t_packet"C_RES"\n");
-        printf("ip->version: %x\n", packet->ip->version);
-        printf("ip->ihl: %x\n", packet->ip->ihl);
-        printf("ip->tos: %hhx\n", packet->ip->tos);
-        printf("ntohs(ip->tot_len): %hx\n", ntohs(packet->ip->tot_len));
-        printf("ip->id: %04hx\n", packet->ip->id);
-        printf("ntohs(packet->ip->frag_off): %hx\n", ntohs(packet->ip->frag_off));
-        printf("ip->ttl: %hhx\n", packet->ip->ttl);
-        printf("ip->protocol: %hhx\n", packet->ip->protocol);
-        printf("ip->check: %04hx\n", packet->ip->check);
-        printf("ip->saddr: %08x\n", packet->ip->saddr);
-        printf("ip->daddr: %08x\n", packet->ip->daddr);
-        printf("icmp->type: %hhx\n", packet->icmp->type);
-        printf("icmp->code: %hhx\n", packet->icmp->code);
-        printf("icmp->checksum: %04hx\n", packet->icmp->checksum);
-        printf("ntohs(packet->icmp->un.echo.id): %x\n", ntohs(packet->icmp->un.echo.id));
-        printf("ntohs(packet->icmp->un.echo.sequence): %x\n", ntohs(packet->icmp->un.echo.sequence));
+        printf(C_G_RED"[DEBUG] RECEIVED PACKET"C_RES"\n");
+        printf(C_G_RED"[DEBUG] IP"C_RES"\n");
+        printf("    version: %x\n", packet->ip->version);
+        printf("    ihl: %x\n", packet->ip->ihl);
+        printf("    tos: %d\n", packet->ip->tos);
+        printf("    tot_len: %hx\n", packet->ip->tot_len);
+        printf("    id: %04x\n", packet->ip->id);
+        printf("    frag_off: %hx\n", ntohs(packet->ip->frag_off)); // TO CHECK
+        printf("    ttl: %hhx\n", packet->ip->ttl);
+        printf("    protocol: %hhx\n", packet->ip->protocol);
+        printf("    check: 0x%04x\n", packet->ip->check);
+        printf("    saddr: %08x\n", packet->ip->saddr);
+        printf("    daddr: %08x\n", packet->ip->daddr);
+        printf(C_G_RED"[DEBUG] ICMP"C_RES"\n");
+        printf("    type: %d\n", packet->icmp->type);
+        printf("    code: %d\n", packet->icmp->code);
+        printf("    checksum: 0x%04x\n", packet->icmp->checksum);
+        printf("    id: 0x%04x\n", packet->icmp->un.echo.id);
+        printf("    sequence: 0x%04x\n", packet->icmp->un.echo.sequence);
+        printf(C_G_RED"[DEBUG] ICMP IN PAYLOAD"C_RES"\n");
+        struct icmphdr  *icmp_in_payload = (struct icmphdr *)((char *)packet->icmp + IP_HEADER_LEN + ICMP_HEADER_LEN);
+        printf("    id: 0x%04x\n", icmp_in_payload->un.echo.id);
+        printf("    sequence: 0x%04x\n", icmp_in_payload->un.echo.sequence);
         printf("\n");
 
+    }
+}
+
+void debug_time(void *content)
+{
+    if (content)
+    {
+        int *t = (int *)content;
+        printf("time: %d, \n", *t);
     }
 }

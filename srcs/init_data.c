@@ -19,8 +19,9 @@ void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
 
     // seq
     dt->one_seq.bytes = 0;
-    dt->one_seq.icmp_seq_count = 0;
-    dt->one_seq.ttl = TTL_VALUE;
+    dt->one_seq.icmp_seq_count = -1;
+    dt->one_seq.ttl = 0;
+    dt->one_seq.time = 0;
     // dt->one_seq.send_tv
     // dt->one_seq.receive_tv
 

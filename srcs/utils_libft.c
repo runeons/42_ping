@@ -85,3 +85,12 @@ char    *int_to_bin(int n, int len)
     bin[k] = '\0';
     return bin;
 }
+
+unsigned int ft_sqrt(unsigned int x)
+{
+    unsigned int r = x;
+    while (r * r > x) {
+        r = (r + x / r) / 2;
+    }
+    return r;
+}

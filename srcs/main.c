@@ -41,7 +41,7 @@ void    initialise_data(t_data *dt, t_parsed_cmd *parsed_cmd)
     resolve_address(dt);
     resolve_hostname(dt);
     open_socket(dt);
-    set_socket_options(dt->socket);
+    set_socket_options(dt->socket, dt);
 }
 
 void    ping_init(t_data *dt)

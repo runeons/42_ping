@@ -30,7 +30,7 @@ void            ping_sequence(t_data *dt);
 void            resolve_hostname(t_data *dt);
 void            resolve_address(t_data *dt);
 void            open_socket(t_data *dt);
-void            set_socket_options(int socket);
+void            set_socket_options(int socket, t_data *dt);
 
 //  options.c
 void            init_options_params(t_data *dt);
@@ -49,11 +49,20 @@ void            debug_addrinfo(struct addrinfo *ai);
 void            debug_crafted_icmp(t_icmp *crafted_icmp);
 void            debug_packet(t_packet *packet);
 void            debug_msghdr(struct msghdr msg);
+void            debug_time(void *content);
 
 // utils_libft.c
 int             ft_isstrfloat(const char *s);
 float           ft_atof(const char *s);
 char            *int_to_bin(int n, int len);
+unsigned int    ft_sqrt(unsigned int x);
+
+// utils_libft.c
+int             get_time_min(t_data *dt);
+int             get_time_max(t_data *dt);
+int             get_time_sum(t_data *dt);
+int             get_time_avg(t_data *dt);
+int             get_time_std(t_data *dt);
 
 #endif
 

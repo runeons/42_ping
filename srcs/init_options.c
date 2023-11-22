@@ -14,6 +14,14 @@ void   option_p(t_data *dt)
     }
 }
 
+void   option_v(t_data *dt)
+{
+    if (is_activated_option(dt->act_options, 'v'))
+        dt->options_params.v = 1;
+    else
+        dt->options_params.v = 0;
+}
+
 void   option_i(t_data *dt)
 {
     float  interval       = 0;
@@ -73,13 +81,18 @@ void   option_ttl(t_data *dt)
         if (param == NULL)
             exit_error("Malloc failure.\n");
         if (ft_isstrnum(param) == 0)
-            exit_error("invalid argument: '%s'\n", param);
+            exit_error("invalid value '%s'\n", param);
         ttl = ft_atoi(param);
-        if (ttl < 0 || ttl > 255)
-            exit_error("invalid argument: '%s': out of range: 0 <= value <= 255\n", param);
+        if (ttl < 0)
+            exit_error("option value too small: %d\n", param);
+        else if (ttl > 255)
+            exit_error("option value too big: %d\n", param);
         else
             dt->one_seq.ttl = ft_atoi(param);
     }
+    else
+        dt->one_seq.ttl = TTL_VALUE;
+    dt->one_seq.ttl--; // NEED TO TAKE INTO ACCOUNT
 }
 
 void    init_options_params(t_data *dt)
@@ -88,4 +101,5 @@ void    init_options_params(t_data *dt)
     option_i(dt);
     option_ttl(dt);
     option_c(dt);
+    option_v(dt);
 }
