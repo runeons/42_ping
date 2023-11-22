@@ -72,6 +72,7 @@ int    get_time_std(t_data *dt)
             variance += ((*tmp - mean) * (*tmp - mean));
         current = current->next;
     }
-    std = ft_sqrt(variance / ft_lst_size(dt->end_stats.times));
+    if (ft_lst_size(dt->end_stats.times) != 0)
+        std = ft_sqrt(variance / ft_lst_size(dt->end_stats.times));
     return std;
 }

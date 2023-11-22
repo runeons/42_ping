@@ -36,7 +36,7 @@ static void craft_icmp_payload(t_data *dt)
 
 static void craft_icmp_header(t_data *dt)
 {
-    dt->crafted_icmp.h.type = ICMP_ECHO;
+    dt->crafted_icmp.h.type = ICMP_ECHO_REQUEST;
     dt->crafted_icmp.h.un.echo.id = getpid();
     dt->crafted_icmp.h.un.echo.sequence = dt->one_seq.icmp_seq_count;
     dt->crafted_icmp.h.checksum = header_checksum(&dt->crafted_icmp, sizeof(dt->crafted_icmp));

@@ -47,7 +47,6 @@ static void    handle_reply(t_data *dt, struct msghdr *msgh)
     }
     else
     {
-        dt->end_stats.errors_nb++;
         if (dt->one_seq.final_packet.icmp->type == ICMP_ERR_UNREACHABLE)
             display_ping_unreachable(dt);
         else

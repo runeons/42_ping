@@ -4,11 +4,11 @@
 
 NAME					= 	ft_ping
 
-CC						= 	gcc
+CC						= 	gcc -g3
 
-FFLAGS					=   -fsanitize=address -g3
+FFLAGS					=   -fsanitize=address
 
-LFLAGS					=   -fsanitize=leak -g3
+LFLAGS					=   -fsanitize=leak
 
 CFLAGS					= 	-I includes/ \
 							-I libft/includes/ \

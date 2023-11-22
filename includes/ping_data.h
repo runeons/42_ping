@@ -55,7 +55,6 @@ typedef struct  s_ping_stats
 {
     int sent_nb;  // icmp count    // display end stats
     int recv_nb;  // icmp count    // display end stats
-    int errors_nb;  // icmp count    // display end stats
     t_lst  *times;
 }               t_ping_stats;
 
