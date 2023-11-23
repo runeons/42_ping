@@ -18,9 +18,9 @@
 static void    save_packet(t_data *dt)
 {
     ft_bzero(&dt->one_seq.final_packet, sizeof(dt->one_seq.final_packet));
-    dt->one_seq.final_packet.ip = (void *)dt->one_seq.r_packet;
-    dt->one_seq.final_packet.icmp = (void *)dt->one_seq.r_packet + IP_HEADER_LEN;
-    dt->one_seq.final_packet.payload = (void *)dt->one_seq.r_packet + IP_HEADER_LEN + ICMP_HEADER_LEN;
+    dt->one_seq.final_packet.ip = (struct iphdr *)dt->one_seq.r_packet;
+    dt->one_seq.final_packet.icmp = (struct icmphdr *)(dt->one_seq.r_packet + IP_HEADER_LEN);
+    dt->one_seq.final_packet.payload = (char *)(dt->one_seq.r_packet + IP_HEADER_LEN + ICMP_HEADER_LEN);
 }
 
 static void    save_time(t_data *dt)
@@ -58,11 +58,34 @@ static void    handle_reply(t_data *dt, struct msghdr *msgh)
     debug_packet(&(dt->one_seq.final_packet));
 }
 
+char    *addrinfo_to_str(struct addrinfo *addr)
+{
+    struct addrinfo     *tmp;
+    tmp = addr;
+
+    char ip_str[MAX_IP_LEN];
+
+    if (inet_ntop(tmp->ai_family, &((struct sockaddr_in *)tmp->ai_addr)->sin_addr, ip_str, sizeof(ip_str)) == NULL)
+        exit_error("ping: address error: Conversion from network to presentation format failed.\n");
+
+    return (ft_strdup(ip_str));
+}
+
+char    *sockaddr_in_to_str(struct sockaddr_in *addr)
+{
+    char ip_str[MAX_IP_LEN];
+
+    if (inet_ntop(addr->sin_family, &addr->sin_addr, ip_str, sizeof(ip_str)) == NULL)
+        exit_error("ping: address error: Conversion from network to presentation format failed.\n");
+
+    return (ft_strdup(ip_str));
+}
+
 static void    send_icmp_and_receive_packet(t_data *dt)    
 {
-    int             r = 0;	
-    struct          msghdr msgh;
-
+    int                     r = 0;	
+    struct msghdr           msgh;
+    
     memset(&msgh, 0, sizeof(msgh));
     if (gettimeofday(&dt->one_seq.send_tv, &dt->tz) != 0)
         exit_error("ping: cannot retrieve time\n");
@@ -75,7 +98,7 @@ static void    send_icmp_and_receive_packet(t_data *dt)
     {
         // warning_error(C_G_BLUE"packet apparently sent: %s"C_RES"\n", strerror(r));
         dt->end_stats.sent_nb++;
-        init_recv_msgh(&msgh, dt->one_seq.r_packet, &dt->address);
+        init_recv_msgh(&msgh, dt->one_seq.r_packet);
         r = recvmsg(dt->socket, &msgh, 0);
         if (r >= 0)
             handle_reply(dt, &msgh);

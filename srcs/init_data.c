@@ -30,20 +30,23 @@ void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
     dt->end_stats.times = NULL;
 }
 
-void    init_recv_msgh(struct msghdr *msg, char *r_packet, struct sockaddr_in *sockaddr)
+void    init_recv_msgh(struct msghdr *msg, char *r_packet)
 {
-    struct iovec    *iov;
-    char            *msg_control;
+    struct iovec        *iov;
+    char                *msg_control;
+    struct sockaddr_in  *dst;
 
     if (!(iov = mmalloc(sizeof(struct iovec))))
         exit_error("ping: malloc failure.\n");
     if (!(msg_control = mmalloc(sizeof(char) * STR_BUFFER_LEN)))
         exit_error("ping: malloc failure.\n");
+    if (!(dst = mmalloc(sizeof(struct sockaddr_in))))
+        exit_error("ping: malloc failure.\n");
     ft_bzero(r_packet, IP_TOTAL_LEN);
     iov->iov_base = r_packet;
     iov->iov_len = IP_TOTAL_LEN;
-	msg->msg_name = sockaddr;
-	msg->msg_namelen = sizeof(*sockaddr);
+	msg->msg_name = dst;
+	msg->msg_namelen = sizeof(*dst);
 	msg->msg_iov = iov;
 	msg->msg_iovlen = 1;
 	msg->msg_control = msg_control;
