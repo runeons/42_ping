@@ -27,9 +27,9 @@ static unsigned short header_checksum(void *packet, int len)
 static void craft_icmp_payload(t_data *dt)
 {
     ft_memset(&dt->crafted_icmp, 0, sizeof(dt->crafted_icmp));
-    for (int i = 0; i < ICMP_PAYLOAD_LEN - 1; i++)
-        dt->crafted_icmp.payload[i] = dt->options_params.p_payload[i];
-    dt->crafted_icmp.payload[ICMP_PAYLOAD_LEN - 1] = '\0';
+    for (int i = 0; i < ICMP_PAYLOAD_LEN; i++)
+        dt->crafted_icmp.payload[i + ICMP_TIMESTAMP_LEN] = dt->options_params.p_payload[i];
+    dt->crafted_icmp.payload[ICMP_TIMESTAMP_LEN + ICMP_PAYLOAD_LEN] = '\0';
     dt->one_seq.icmp_seq_count++;
     // printf(C_B_RED"[DEBUG] [%s] %d"C_RES"\n", dt->crafted_icmp.payload, sizeof(dt->crafted_icmp.payload));
 }
@@ -46,5 +46,6 @@ void craft_icmp(t_data *dt)
 {
     ft_bzero(&dt->crafted_icmp, sizeof(dt->crafted_icmp));
     craft_icmp_payload(dt);
+    // craft_icmp_timestamp(dt); // no need yet because ft_bzero in payload
     craft_icmp_header(dt);
 }

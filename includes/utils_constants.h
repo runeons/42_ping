@@ -16,7 +16,8 @@
 # define IP_TOTAL_LEN           84
 # define IP_HEADER_LEN          20
 # define ICMP_HEADER_LEN        8   // sizeof(struct icmphdr)
-# define ICMP_PAYLOAD_LEN       56  // IP_TOTAL_LEN - sizeof(struct icmphdr) = 76
+# define ICMP_TIMESTAMP_LEN     8
+# define ICMP_PAYLOAD_LEN       48
 
 # define IP_FLAGS_MASK          0xE000
 # define IP_OFFSET_MASK         0x1FFF

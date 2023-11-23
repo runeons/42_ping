@@ -36,7 +36,8 @@ typedef struct  s_packet
 typedef struct  s_icmp
 {
 	struct icmphdr  h;
-	char            payload[ICMP_PAYLOAD_LEN];
+	char            timestamp[ICMP_TIMESTAMP_LEN];
+	char            payload[ICMP_PAYLOAD_LEN]; // = data
 }               t_icmp;
 
 typedef struct  s_ping_seq

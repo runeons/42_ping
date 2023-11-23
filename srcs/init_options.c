@@ -65,12 +65,13 @@ void   option_p(t_data *dt)
     if (is_activated_option(dt->act_options, 'p'))
     {
         strncpy(dt->options_params.p_payload, get_option(dt->act_options, 'p')->param, ICMP_PAYLOAD_LEN);
-        dt->options_params.p_payload[ICMP_PAYLOAD_LEN - 1] = '\0';
+        dt->options_params.p_payload[ICMP_PAYLOAD_LEN] = '\0';
     }
     else
     {
-        for (int i = 0; i < ICMP_PAYLOAD_LEN - 1; i++)
-            dt->options_params.p_payload[i] = 'A';
+        for (int i = 0; i < ICMP_PAYLOAD_LEN; i++)
+            dt->options_params.p_payload[i] = i;
+        dt->options_params.p_payload[ICMP_PAYLOAD_LEN] = '\0';
     }
 }
 
@@ -101,8 +102,8 @@ void   option_ttl(t_data *dt)
 void    init_options_params(t_data *dt)
 {
     option_v(dt);
+    option_p(dt);
     option_c(dt);
     option_i(dt);
-    option_p(dt);
     option_ttl(dt);
 }
