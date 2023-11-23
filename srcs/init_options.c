@@ -85,18 +85,17 @@ void   option_ttl(t_data *dt)
         if (param == NULL)
             exit_error("ping: malloc failure.\n");
         if (ft_isstrnum(param) == 0)
-            exit_error("ping: invalid value '%s'\n", param);
+            exit_error("ping: invalid value: (`%s' near `%s')\n", param, param);
         ttl = ft_atoi(param);
-        if (ttl < 0)
-            exit_error("ping: option value too small: %d\n", param);
+        if (ttl <= 0)
+            exit_error("ping: option value too small: %d\n", ttl);
         else if (ttl > 255)
-            exit_error("ping: option value too big: %d\n", param);
+            exit_error("ping: option value too big: %d\n", ttl);
         else
             dt->one_seq.ttl = ft_atoi(param);
     }
     else
         dt->one_seq.ttl = TTL_VALUE;
-    dt->one_seq.ttl--; // NEED TO TAKE INTO ACCOUNT
 }
 
 void    init_options_params(t_data *dt)

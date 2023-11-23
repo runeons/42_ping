@@ -1,16 +1,11 @@
 #include "ping_functions.h"
 
-void    display_ping_init(t_data *dt)
+char    *addr_to_str(int addr)
 {
-    printf("PING %s (%s): %lu data bytes", dt->input_dest, dt->resolved_address, sizeof(dt->crafted_icmp.payload));
-    if (dt->options_params.v)
-        printf(", id 0x%x = %d", htons(getpid()), htons(getpid()));
-    printf("\n");
-}
-
-void    display_ping_OK(t_data *dt)
-{
-    printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n", dt->one_seq.bytes, dt->resolved_address, dt->one_seq.icmp_seq_count, dt->one_seq.ttl, (float)dt->one_seq.time / 1000);
+    char res[MAX_IP_LEN];
+    
+    sprintf(res, "%u.%u.%u.%u", addr & 0xFF, (addr >> 8) & 0xFF, (addr >> 16) & 0xFF, (addr >> 24) & 0xFF);
+    return ft_strdup(res);
 }
 
 static unsigned int    get_flags(unsigned int frag_off)
@@ -29,14 +24,6 @@ static unsigned int    get_offset(unsigned int frag_off)
     offset = ntohs(frag_off) & IP_OFFSET_MASK;
     // printf(C_G_RED"offset: %04x"C_RES"\n", offset);
     return offset;
-}
-
-char    *addr_to_str(int addr)
-{
-    char res[MAX_IP_LEN];
-    
-    sprintf(res, "%u.%u.%u.%u", addr & 0xFF, (addr >> 8) & 0xFF, (addr >> 16) & 0xFF, (addr >> 24) & 0xFF);
-    return ft_strdup(res);
 }
 
 static void    display_ip_header(unsigned char *bytes_ip)
@@ -59,9 +46,30 @@ static void    display_icmp_header(t_data *dt, unsigned char *bytes)
     printf("ICMP: type %d, code %d, size %d, id 0x%04x, seq 0x%04d\n", icmp_in_payload->type, icmp_in_payload->code, dt->one_seq.bytes, htons(icmp_in_payload->un.echo.id), icmp_in_payload->un.echo.sequence);
 }
 
-void    display_ping_unreachable(t_data *dt)
+void    display_ping_init(t_data *dt)
 {
-    printf("%d bytes from %s: Destination Host Unreachable\n", dt->one_seq.bytes, dt->resolved_address);
+    printf("PING %s (%s): %lu data bytes", dt->input_dest, dt->resolved_address, sizeof(dt->crafted_icmp.payload));
+    if (dt->options_params.v)
+        printf(", id 0x%x = %d", htons(getpid()), htons(getpid()));
+    printf("\n");
+}
+
+void    display_ping_OK(t_data *dt)
+{
+    unsigned char *bytes = (unsigned char *)dt->one_seq.final_packet.ip;
+    struct iphdr    *ip = (struct iphdr *)(bytes);
+
+
+    printf(C_G_RED"[QUICK DEBUG] ip->saddr: %s"C_RES"\n", addr_to_str(ip->saddr));
+    // display_ip_header((unsigned char *)dt->one_seq.final_packet.ip);
+    printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%.3f ms\n", dt->one_seq.bytes, addr_to_str(ip->saddr), dt->one_seq.icmp_seq_count, dt->one_seq.ttl, (float)dt->one_seq.time / 1000);
+}
+
+void    display_ping_error(t_data *dt, char *msg)
+{
+
+    
+    printf("%d bytes from %s: %s\n", dt->one_seq.bytes, dt->resolved_address, msg);
     debug_packet(&dt->one_seq.final_packet);
     if (dt->options_params.v)
     {

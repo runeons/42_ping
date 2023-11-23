@@ -17,6 +17,7 @@
 
 static void    save_packet(t_data *dt)
 {
+    ft_bzero(&dt->one_seq.final_packet, sizeof(dt->one_seq.final_packet));
     dt->one_seq.final_packet.ip = (void *)dt->one_seq.r_packet;
     dt->one_seq.final_packet.icmp = (void *)dt->one_seq.r_packet + IP_HEADER_LEN;
     dt->one_seq.final_packet.payload = (void *)dt->one_seq.r_packet + IP_HEADER_LEN + ICMP_HEADER_LEN;
@@ -48,7 +49,9 @@ static void    handle_reply(t_data *dt, struct msghdr *msgh)
     else
     {
         if (dt->one_seq.final_packet.icmp->type == ICMP_ERR_UNREACHABLE)
-            display_ping_unreachable(dt);
+            display_ping_error(dt, "Destination Host Unreachable");
+        else if (dt->one_seq.final_packet.icmp->type == ICMP_ERR_TIME_EXCEEDED)
+            display_ping_error(dt, "Time to live exceeded");
         else
             warning_error(C_G_BLUE"UNHANDLED type %d"C_RES"\n", dt->one_seq.final_packet.icmp->type);
     }

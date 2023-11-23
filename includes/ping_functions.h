@@ -41,7 +41,7 @@ void            init_recv_msgh(struct msghdr *msg, char *r_packet, struct sockad
 //  display.c
 void            display_ping_init(t_data *dt);
 void            display_ping_OK(t_data *dt);
-void            display_ping_unreachable(t_data *dt);
+void            display_ping_error(t_data *dt, char *msg);
 void            display_ping_end_stats(t_data *dt);
 
 //  utils_debug.c
