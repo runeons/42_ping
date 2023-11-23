@@ -22,6 +22,13 @@ void    option_h()
     exit(0);
 }
 
+void    option_u()
+{
+    display_long_usage();
+    free_all_malloc();
+    exit(0);
+}
+
 void    parse_input(t_parsed_cmd *parsed_cmd, int ac, char **av)
 {
     if (ac < 2)
@@ -66,6 +73,8 @@ int main(int ac, char **av)
     parse_input(&parsed_cmd, ac, av);
     if (is_activated_option(parsed_cmd.act_options, '?'))
         option_h();
+    else if (is_activated_option(parsed_cmd.act_options, 'u'))
+        option_u();
     initialise_data(&dt, &parsed_cmd);
     signal(SIGINT, handle_sigint);
     ping_init(&dt);

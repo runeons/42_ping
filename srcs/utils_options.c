@@ -3,13 +3,13 @@
 t_option allowed_options[] =
 {
     {'?', "help",       0, "",          NULL, "give this help list"},
+    {'u', "usage",      0, "",          NULL, "give a short usage message"}, // TO DO or remove reference in error message 
     {'v', "verbose",    0, "",          NULL, "verbose output"},
-    {'V', "version",    0, "",          NULL, "print program version"},
+    // {'V', "version",    0, "",          NULL, "print program version"},
     {'p', "pattern",    1, "PATTERN",   NULL, "fill ICMP packet with given pattern (hex)"},
     {'t', "ttl",        1, "N",         NULL, "specify N as time-to-live"},
     {'i', "interval",   1, "NUMBER",    NULL, "wait NUMBER seconds between sending each packet"},
     {'c', "count",      1, "NUMBER",    NULL, "stop after sending NUMBER packets"},
-    {'u', "usage",      0, "",          NULL, "give a short usage message"}, // TO DO or remove reference in error message 
     {'w', "timeout",    1, "N",         NULL, "stop after N seconds"}
     // {'W', "linger", 1, "Tnumber of seconds to wait for response"} //for a single ping
 };
@@ -27,15 +27,15 @@ static int get_name_max_len()
     return max_len;
 }
 
-void    display_help()
+void    display_extra_short_usage()
 {
-    int max_len = get_name_max_len();
-    char formatted_name[max_len + 1];
+    printf("Usage: %s [OPTION...] HOST\n", CMD_NAME);
+}
 
-    printf("Description:\n");
-    printf("    Send ICMP ECHO_REQUEST packets to network hosts.\n\n");
+void    display_short_usage()
+{
     printf("Usage:\n");
-    printf("    ft_ping ");
+    printf("    %s ", CMD_NAME);
     for (size_t i = 0; i < ARRAY_SIZE(allowed_options); i++)
     {
         if (allowed_options[i].need_param == 1)
@@ -43,7 +43,32 @@ void    display_help()
         else if (allowed_options[i].need_param == 0)
             printf("[-%c] ", allowed_options[i].id);
     }
-    printf("HOST ...\n\n");
+}
+
+void    display_long_usage()
+{
+    printf("Usage: %s", CMD_NAME);
+    for (size_t i = 0; i < ARRAY_SIZE(allowed_options); i++)
+    {
+        if (i % 4 == 0)
+            printf("\n                ");
+        if (allowed_options[i].need_param == 1)
+            printf("[--%s %s] ", allowed_options[i].name, allowed_options[i].param_name);
+        else if (allowed_options[i].need_param == 0)
+            printf("[--%s] ", allowed_options[i].name);
+    }
+    printf("\n                HOST\n");
+}
+
+void    display_help()
+{
+    int max_len = get_name_max_len();
+    char formatted_name[max_len + 1];
+
+    display_extra_short_usage();
+    printf("\n");
+    printf("Description:\n");
+    printf("    Send ICMP ECHO_REQUEST packets to network hosts.\n\n");
     printf("Options:\n");
     for (size_t i = 0; i < ARRAY_SIZE(allowed_options); i++)
     {
