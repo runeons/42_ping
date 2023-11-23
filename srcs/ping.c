@@ -107,9 +107,36 @@ static void    send_icmp_and_receive_packet(t_data *dt)
     }
 }
 
-void ping_sequence(t_data *dt)
+int    end_max_count(t_data *dt)
 {
     if (dt->options_params.count > 0 && dt->end_stats.sent_nb >= dt->options_params.count)
+    {
+        if (dt->end_stats.recv_nb >= dt->options_params.count)
+            return 1;
+        else
+            return 1; // TO DO jump to recv only without sending any other packet
+    }
+    return 0;
+}
+
+int     end_timeout(t_data *dt)
+{
+    struct timeval      curr_tv; 
+    
+    if (dt->options_params.w_timeout > 0)
+    {
+        if (gettimeofday(&curr_tv, &dt->tz) != 0)
+            exit_error("ping: cannot retrieve time\n");
+        printf(C_G_RED"[QUICK DEBUG] : %ld"C_RES"\n", curr_tv.tv_sec - dt->init_tv.tv_sec);   
+        if ((curr_tv.tv_sec - dt->init_tv.tv_sec) >= dt->options_params.w_timeout)
+            return 1;
+    }
+    return 0;
+}
+
+void ping_sequence(t_data *dt)
+{
+    if (end_max_count(dt) || end_timeout(dt))
     {
         g_ping = 0;
         return ;

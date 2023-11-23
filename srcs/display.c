@@ -48,7 +48,7 @@ static void    display_icmp_header(t_data *dt, unsigned char *bytes)
 
 void    display_ping_init(t_data *dt)
 {
-    printf("PING %s (%s): %lu data bytes", dt->input_dest, dt->resolved_address, sizeof(dt->crafted_icmp.payload));
+    printf("PING %s (%s): %lu data bytes", dt->input_dest, dt->resolved_address, sizeof(dt->crafted_icmp) - sizeof(dt->crafted_icmp.h));
     if (dt->options_params.v)
         printf(", id 0x%x = %d", htons(getpid()), htons(getpid()));
     printf("\n");

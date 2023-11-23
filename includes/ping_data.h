@@ -65,6 +65,7 @@ typedef struct  s_options_params
     int         seq_interval_us;
     int         count;
     int         v;
+    int         w_timeout;
 }               t_options_params;
 
 typedef struct  s_data

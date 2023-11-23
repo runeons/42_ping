@@ -60,6 +60,32 @@ void   option_c(t_data *dt)
         dt->options_params.count = 0;
 }
 
+void   option_w(t_data *dt)
+{
+    int    timeout        = 0;
+    char   *param         = NULL;
+
+    if (is_activated_option(dt->act_options, 'w'))
+    {
+        param = ft_strdup(get_option(dt->act_options, 'w')->param);
+        if (param == NULL)
+            exit_error("ping: malloc failure.\n");
+        if (ft_isstrnum(param) == 0)
+            exit_error("ping: invalid value: (`%s' near `%s')\n", param, param);
+        timeout = ft_atoi(param);
+        if (timeout < 1 || timeout > MAX_INT)
+        {
+            dt->options_params.w_timeout = 0;
+            if (dt->options_params.v)
+                warning_error("ping: warning: '%s' ignored as out of range: 1 <= value <= MAX_INT\n", param);
+        }
+        else
+            dt->options_params.w_timeout = timeout;
+    }
+    else
+        dt->options_params.w_timeout = 0;
+}
+
 void   option_p(t_data *dt)
 {
     if (is_activated_option(dt->act_options, 'p'))
@@ -104,6 +130,7 @@ void    init_options_params(t_data *dt)
     option_v(dt);
     option_p(dt);
     option_c(dt);
+    option_w(dt);
     option_i(dt);
     option_ttl(dt);
 }
