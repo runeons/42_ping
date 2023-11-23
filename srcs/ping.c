@@ -27,7 +27,7 @@ static void    save_time(t_data *dt)
     int *time;
 
     if (!(time = mmalloc(sizeof(int))))
-        exit_error("Malloc failure.");
+        exit_error("ping: malloc failure.");
     *time = (dt->one_seq.receive_tv.tv_sec - dt->one_seq.send_tv.tv_sec) * 1000000 + dt->one_seq.receive_tv.tv_usec - dt->one_seq.send_tv.tv_usec;
     dt->one_seq.time = *time;
     ft_lst_add_node_back(&dt->end_stats.times, ft_lst_create_node(time));
@@ -36,7 +36,7 @@ static void    save_time(t_data *dt)
 static void    handle_reply(t_data *dt, struct msghdr *msgh)
 {
     if (gettimeofday(&dt->one_seq.receive_tv, &dt->tz) != 0)
-        exit_error("time error: Cannot retrieve time\n");
+        exit_error("ping: cannot retrieve time\n");
     save_time(dt);
     save_packet(dt);
     dt->one_seq.bytes = sizeof(*msgh) + ICMP_HEADER_LEN;
@@ -62,7 +62,7 @@ static void    send_icmp_and_receive_packet(t_data *dt)
 
     memset(&msgh, 0, sizeof(msgh));
     if (gettimeofday(&dt->one_seq.send_tv, &dt->tz) != 0)
-        exit_error("time error: Cannot retrieve time\n");
+        exit_error("ping: cannot retrieve time\n");
     r = sendto(dt->socket, &dt->crafted_icmp, sizeof(dt->crafted_icmp), 0, (struct sockaddr*)&dt->address, sizeof(dt->address));
     if (r <= 0)
         warning_error(C_G_RED"packet sending failure: %s"C_RES"\n", strerror(r));

@@ -36,9 +36,9 @@ void    init_recv_msgh(struct msghdr *msg, char *r_packet, struct sockaddr_in *s
     char            *msg_control;
 
     if (!(iov = mmalloc(sizeof(struct iovec))))
-        exit_error("Malloc failure.\n");
+        exit_error("ping: malloc failure.\n");
     if (!(msg_control = mmalloc(sizeof(char) * STR_BUFFER_LEN)))
-        exit_error("Malloc failure.\n");
+        exit_error("ping: malloc failure.\n");
     ft_bzero(r_packet, IP_TOTAL_LEN);
     iov->iov_base = r_packet;
     iov->iov_len = IP_TOTAL_LEN;

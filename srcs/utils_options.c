@@ -2,14 +2,15 @@
 
 t_option allowed_options[] =
 {
-    {'?', "help", 0, "", NULL, "give this help list"},
-    {'v', "verbose", 0, "", NULL, "verbose output"},
-    {'V', "version", 0, "", NULL, "print program version"},
-    {'p', "pattern", 1, "PATTERN", NULL, "fill ICMP packet with given pattern (hex)"},
-    {'t', "ttl", 1, "N", NULL, "specify N as time-to-live"},
-    {'i', "interval", 1, "NUMBER", NULL, "wait NUMBER seconds between sending each packet"},
-    {'c', "count", 1, "NUMBER", NULL, "stop after sending NUMBER packets"},
-    {'w', "timeout", 1, "N", NULL, "stop after N seconds"}
+    {'?', "help",       0, "",          NULL, "give this help list"},
+    {'v', "verbose",    0, "",          NULL, "verbose output"},
+    {'V', "version",    0, "",          NULL, "print program version"},
+    {'p', "pattern",    1, "PATTERN",   NULL, "fill ICMP packet with given pattern (hex)"},
+    {'t', "ttl",        1, "N",         NULL, "specify N as time-to-live"},
+    {'i', "interval",   1, "NUMBER",    NULL, "wait NUMBER seconds between sending each packet"},
+    {'c', "count",      1, "NUMBER",    NULL, "stop after sending NUMBER packets"},
+    {'u', "usage",      0, "",          NULL, "give a short usage message"}, // TO DO or remove reference in error message 
+    {'w', "timeout",    1, "N",         NULL, "stop after N seconds"}
     // {'W', "linger", 1, "Tnumber of seconds to wait for response"} //for a single ping
 };
 
@@ -173,7 +174,7 @@ t_parsed_cmd   parse_options(int ac, char **av)
             if (res->need_param)
             {
                 if (++i == ac)
-                    exit_error("option needs %s\n", res->name);
+                    exit_error("ping: option '%s' requires an argument\nTry 'ping --help' or 'ping --usage' for more information.\n", res->name);
                 res->param = ft_strdup(av[i]);
             }
             ft_lst_add_node_back(&act_options, ft_lst_create_node(res));

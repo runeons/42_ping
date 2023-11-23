@@ -79,7 +79,7 @@ char    *int_to_bin(int n, int len)
 
     bin = (char*)mmalloc(sizeof(char) * len);
     if (bin == NULL)
-        exit_error("Malloc error.");
+        exit_error("ping: malloc failure.");
     for (unsigned i = (1 << (len - 1)); i > 0; i = i / 2)
         bin[k++] = (n & i) ? '1' : '0';
     bin[k] = '\0';

@@ -4,6 +4,9 @@
 
 # define DEBUG 0
 
+# define MAX_INT                2147483647
+# define MIN_INT                -2147483648
+
 # define MAX_IP_LEN             16
 # define MAX_HOSTNAME_LEN       100
 # define TTL_VALUE              64

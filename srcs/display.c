@@ -33,7 +33,7 @@ static unsigned int    get_offset(unsigned int frag_off)
 
 char    *addr_to_str(int addr)
 {
-    char res[16];
+    char res[MAX_IP_LEN];
     
     sprintf(res, "%u.%u.%u.%u", addr & 0xFF, (addr >> 8) & 0xFF, (addr >> 16) & 0xFF, (addr >> 24) & 0xFF);
     return ft_strdup(res);
@@ -80,7 +80,7 @@ void    display_ping_end_stats(t_data *dt)
     // printf(C_G_RED"TIMES:"C_RES"\n");
     // ft_lst_iter_content(dt->end_stats.times, debug_time);
     if (gettimeofday(&final_tv, &dt->tz) != 0)
-        exit_error("time error: Cannot retrieve time\n");
+        exit_error("ping: cannot retrieve time\n");
     ratio = 100 - ((dt->end_stats.recv_nb * 100) / dt->end_stats.sent_nb);
     // time_sum = (final_tv.tv_sec - dt->init_tv.tv_sec) * 1000000 + final_tv.tv_usec - dt->init_tv.tv_usec;
     printf("--- %s ping statistics ---\n", dt->input_dest);

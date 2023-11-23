@@ -2,7 +2,7 @@
 
 int    get_time_min(t_data *dt)
 {
-    int min_time = 2147483647;
+    int min_time = MAX_INT;
     int *tmp = NULL;
 
     t_lst *current = dt->end_stats.times;
@@ -18,7 +18,7 @@ int    get_time_min(t_data *dt)
 
 int    get_time_max(t_data *dt)
 {
-    int max_time = -2147483648;
+    int max_time = MIN_INT;
     int *tmp = NULL;
 
     t_lst *current = dt->end_stats.times;
