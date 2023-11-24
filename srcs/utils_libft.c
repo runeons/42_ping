@@ -1,5 +1,17 @@
 #include "ping_functions.h"
 
+#define HEX_CHARS "0123456789abcdefABCDEF"
+
+int ft_ishex(char *s, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        if (ft_strchr(HEX_CHARS, s[i]) == NULL)
+            return 0;
+    }
+    return 1;
+}
+
 void print_as_hexa(void *data, int size)
 {
     const unsigned char *ptr = (const unsigned char *)data;
@@ -7,6 +19,13 @@ void print_as_hexa(void *data, int size)
     for (int i = 0; i < size; i++)
         printf("%02x ", ptr[i]);
     printf("\n");
+}
+
+int     ft_cap(int a, int max)
+{
+    if (a > max)
+        return max;
+    return a;
 }
 
 int ft_isstrfloat(const char *s)

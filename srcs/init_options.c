@@ -86,7 +86,7 @@ void   option_w(t_data *dt)
         dt->options_params.w_timeout = 0;
 }
 
-int pos(char a)
+static int hex_pos(char a)
 {
     for (int i = 0; i < 16; i++)
     {
@@ -98,21 +98,17 @@ int pos(char a)
     return -1;
 }
 
-int     ft_cap(int a, int max)
-{
-    if (a > max)
-        return max;
-    return a;
-}
-
 void   option_p(t_data *dt)
 {
     if (is_activated_option(dt->act_options, 'p'))
     {
-        char *param = ft_strdup(get_option(dt->act_options, 'p')->param);
-        int param_len = ft_cap(ft_strlen(param), 16);
+        int param_len = ft_cap(ft_strlen(get_option(dt->act_options, 'p')->param), 16);
+
+        char *param = ft_strndup(get_option(dt->act_options, 'p')->param, param_len);
+        if (ft_ishex(param, param_len) == 0)
+            exit_error("ping: error in pattern near %s\n", param);
         for (int i = 0; i < ICMP_DATA_LEN * 2; i += 2)
-            dt->options_params.p_payload[i / 2] = (pos(param[i % param_len]) << 4) | pos(param[(i + 1) % param_len]);
+            dt->options_params.p_payload[i / 2] = (hex_pos(param[i % param_len]) << 4) | hex_pos(param[(i + 1) % param_len]);
     }
     else
     {

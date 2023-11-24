@@ -82,7 +82,7 @@ $(OBJS_DIR)%.o: $(SRCS_DIR)%.c
 
 fsan:  $(OBJS) $(SRCS)
 	@ make -C libft/
-	@ $(CC) $(CFLAGS) $(FFLAGS) $(HDIR) $(OBJS) $(INC_LIB) $(LIB) -llsan -o $(NAME)
+	@ $(CC) $(CFLAGS) $(FFLAGS) $(HDIR) $(OBJS) $(INC_LIB) $(LIB) -o $(NAME)
 
 leak:  $(OBJS) $(SRCS)
 	@ make -C libft/
@@ -98,6 +98,8 @@ fclean:
 	@ rm -rf $(OBJS_DIR)
 
 re: fclean all
+
+fsanr: fclean fsan
 
 bonus:
 	make fclean

@@ -56,6 +56,8 @@ int             ft_isstrfloat(const char *s);
 float           ft_atof(const char *s);
 char            *int_to_bin(int n, int len);
 unsigned int    ft_sqrt(unsigned int x);
+int             ft_cap(int a, int max);
+int             ft_ishex(char *s, int size); // add HEX_CHARS
 
 // utils_libft.c
 int             get_time_min(t_data *dt);
