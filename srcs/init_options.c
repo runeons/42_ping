@@ -86,18 +86,39 @@ void   option_w(t_data *dt)
         dt->options_params.w_timeout = 0;
 }
 
+int pos(char a)
+{
+    for (int i = 0; i < 16; i++)
+    {
+        if (a == HEX_BASE_U[i])
+            return i;
+        if (a == HEX_BASE_L[i])
+            return i;
+    }
+    return -1;
+}
+
+int     ft_cap(int a, int max)
+{
+    if (a > max)
+        return max;
+    return a;
+}
+
 void   option_p(t_data *dt)
 {
     if (is_activated_option(dt->act_options, 'p'))
     {
-        strncpy(dt->options_params.p_payload, get_option(dt->act_options, 'p')->param, ICMP_PAYLOAD_LEN);
-        dt->options_params.p_payload[ICMP_PAYLOAD_LEN] = '\0';
+        char *param = ft_strdup(get_option(dt->act_options, 'p')->param);
+        int param_len = ft_cap(ft_strlen(param), 16);
+        for (int i = 0; i < ICMP_DATA_LEN * 2; i += 2)
+            dt->options_params.p_payload[i / 2] = (pos(param[i % param_len]) << 4) | pos(param[(i + 1) % param_len]);
     }
     else
     {
-        for (int i = 0; i < ICMP_PAYLOAD_LEN; i++)
+        for (int i = 0; i < ICMP_DATA_LEN; i++)
             dt->options_params.p_payload[i] = i;
-        dt->options_params.p_payload[ICMP_PAYLOAD_LEN] = '\0';
+        dt->options_params.p_payload[ICMP_DATA_LEN] = '\0';
     }
 }
 

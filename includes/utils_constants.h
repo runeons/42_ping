@@ -7,6 +7,9 @@
 # define MAX_INT                2147483647
 # define MIN_INT                -2147483648
 
+# define HEX_BASE_U             "0123456789ABCDEF"
+# define HEX_BASE_L             "0123456789abcdef"
+
 # define MAX_IP_LEN             16
 # define MAX_HOSTNAME_LEN       100
 # define TTL_VALUE              64
@@ -18,6 +21,7 @@
 # define ICMP_HEADER_LEN        8   // sizeof(struct icmphdr)
 # define ICMP_TIMESTAMP_LEN     8
 # define ICMP_PAYLOAD_LEN       48
+# define ICMP_DATA_LEN          40
 
 # define IP_FLAGS_MASK          0xE000
 # define IP_OFFSET_MASK         0x1FFF
