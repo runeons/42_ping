@@ -91,19 +91,19 @@ static void    send_icmp_and_receive_packet(t_data *dt)
         exit_error("ping: cannot retrieve time\n");
     r = sendto(dt->socket, &dt->crafted_icmp, sizeof(dt->crafted_icmp), 0, (struct sockaddr*)&dt->address, sizeof(dt->address));
     if (r <= 0)
-        warning_error(C_G_RED"packet sending failure: %s"C_RES"\n", strerror(r));
+        warning_error(C_G_RED"packet sending failure:"C_RES"\n");
     else if (r != sizeof(dt->crafted_icmp))
-        warning_error(C_G_RED"packet not entirely sent: %s"C_RES"\n", strerror(r));
+        warning_error(C_G_RED"packet not entirely sent:"C_RES"\n");
     else
     {
-        // warning_error(C_G_BLUE"packet apparently sent: %s"C_RES"\n", strerror(r));
+        // warning_error(C_G_BLUE"packet apparently sent:"C_RES"\n");
         dt->end_stats.sent_nb++;
         init_recv_msgh(&msgh, dt->one_seq.r_packet);
         r = recvmsg(dt->socket, &msgh, 0);
         if (r >= 0)
             handle_reply(dt, &msgh);
         // else
-            // warning_error(C_G_RED"packet receiving failure: %s"C_RES"\n", strerror(r));
+            // warning_error(C_G_RED"packet receiving failure:"C_RES"\n");
     }
 }
 

@@ -177,11 +177,8 @@ static t_option *check_option(char **av, int i)
         return res;
     else if (ft_strlen(av[i]) > 2 && (res = is_allowed_option_long(av[i])) != NULL)
         return res;
-    else
-    {
-        dprintf(2, "invalid option '%s'\n", av[i]);
-        exit(1);
-    }
+    exit_error("ping: error in pattern near %s\n", av[i]);
+    return (NULL);
 }
 
 t_parsed_cmd   parse_options(int ac, char **av)

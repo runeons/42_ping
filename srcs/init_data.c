@@ -8,6 +8,7 @@ void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
     dt->resolved_hostname = "";
     dt->socket = 0;
     // address not initialized ?
+    // dt->address = mmalloc(sizeof( struct sockaddr_in))
     dt->address.sin_family = AF_INET;
     dt->address.sin_port = 0;
     dt->address.sin_addr.s_addr = INADDR_ANY;

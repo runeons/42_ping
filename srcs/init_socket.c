@@ -50,9 +50,10 @@ void resolve_hostname(t_data *dt) // useful only when input_dest is ip address (
     // memset(&(dt->address), 0, sizeof(dt->address));
     r = getnameinfo((struct sockaddr*)&(dt->address), sizeof(dt->address), host, sizeof(host), NULL, 0, 0);
     if (r != 0)
-        exit_error("ping: address error: The hostname could not be resolved. %d %s\n", r, strerror(r));
+        exit_error("ping: address error: The hostname could not be resolved. %d\n", r);
     else
     {
+        // printf(C_B_RED"host %s"C_RES"\n", host);
         dt->resolved_hostname = ft_strdup(host);
         if (dt->resolved_hostname == NULL)
             exit_error("ping: malloc failure.\n");
@@ -64,7 +65,7 @@ void open_socket(t_data *dt)
 {
     dt->socket = socket(AF_INET, SOCK_RAW, IPPROTO_ICMP);
     if (dt->socket < 0)
-        exit_error("ping: socket error: Check that you have the correct rights. %s\n", strerror(dt->socket));
+        exit_error("ping: socket error: Check that you have the correct rights.\n");
 }
 
 void set_socket_options(int socket, t_data *dt)
@@ -76,8 +77,8 @@ void set_socket_options(int socket, t_data *dt)
 	tv_out.tv_usec = 0;
     r = setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, &tv_out, sizeof(tv_out)); // setting timeout option
     if (r != 0)
-        exit_error("ping: socket error in setting timeout option: Exiting program. %s\n", strerror(r));
+        exit_error("ping: socket error in setting timeout option: Exiting program.\n");
     r = setsockopt(socket, IPPROTO_IP, IP_TTL, &ttl_value, sizeof(ttl_value)); // setting TTL option // IPPROTO_IP or SOL_IP or SOL_SOCKET ?
     if (r != 0)
-        exit_error("ping: socket error in setting TTL option: Exiting program. %s\n", strerror(r));
+        exit_error("ping: socket error in setting TTL option: Exiting program.\n");
 }
