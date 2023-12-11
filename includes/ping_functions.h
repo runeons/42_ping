@@ -23,7 +23,6 @@
 void            craft_icmp(t_data *dt);
 
 //  ping.c
-void            receive_packet(t_data *dt);
 void            ping_sequence(t_data *dt);
 
 //  socket.c

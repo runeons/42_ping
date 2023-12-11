@@ -77,7 +77,7 @@ typedef struct  s_data
     int                 socket;
     struct sockaddr_in  address;
     t_icmp              crafted_icmp;
-    pid_t               id;
+    unsigned short int  id;
     struct timeval      tz;
     struct timeval      init_tv;
     t_ping_seq          one_seq;

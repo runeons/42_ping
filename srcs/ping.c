@@ -1,41 +1,35 @@
 #include "ping_functions.h"
 
+static int    is_same_id(t_data *dt) // is reply id the same as request id
+{
+    if (dt->one_seq.final_packet.icmp->un.echo.id == dt->id) // same id in icmp header
+        return (1);
+    else 
+    {
+        unsigned char *bytes = (unsigned char *)dt->one_seq.final_packet.icmp;
+        struct icmphdr  *icmp_in_payload = (struct icmphdr *)(bytes + IP_HEADER_LEN + ICMP_HEADER_LEN);
+
+        if (icmp_in_payload->un.echo.id == dt->id)  // same id in icmp header in payload (when Unreachable)
+            return (1);
+        else
+            return (0);
+    }
+}
+
 static void    save_packet(t_data *dt)
 {
     ft_bzero(&dt->one_seq.final_packet, sizeof(dt->one_seq.final_packet));
     dt->one_seq.final_packet.ip = (struct iphdr *)dt->one_seq.r_packet;
     dt->one_seq.final_packet.icmp = (struct icmphdr *)(dt->one_seq.r_packet + IP_HEADER_LEN);
     dt->one_seq.final_packet.payload = (char *)(dt->one_seq.r_packet + IP_HEADER_LEN + ICMP_HEADER_LEN);
-    if (dt->one_seq.final_packet.icmp->un.echo.id == dt->id)
-    {
-        ;
-        // printf(C_G_RED"SAME PROCESS ID - SUCCESS code 0"C_RES"\n");
-    }
-    else 
-    {
-        unsigned char *bytes = (unsigned char *)dt->one_seq.final_packet.icmp;
-        struct icmphdr  *icmp_in_payload = (struct icmphdr *)(bytes + IP_HEADER_LEN + ICMP_HEADER_LEN);
-
-        if (icmp_in_payload->un.echo.id == dt->id)
-        {
-            ;
-            // printf(C_G_RED"SAME PROCESS ID - UNREACHABLE"C_RES"\n");
-        }
-        else
-        {
-            ;
-            // printf(C_G_RED"DIFFERENT PROCESSES"C_RES"\n");
-            // printf(C_G_RED"received : %d"C_RES"\n", dt->one_seq.final_packet.icmp->un.echo.id);
-            // printf(C_G_RED"dt->id : %d"C_RES"\n", dt->id);
-
-        }
-    }
 }
 
 static void    save_time(t_data *dt)
 {
     int *time;
 
+    if (gettimeofday(&dt->one_seq.receive_tv, &dt->tz) != 0)
+        exit_error_close(dt->socket, "ping: cannot retrieve time\n");
     if (!(time = mmalloc(sizeof(int))))
         exit_error_close(dt->socket, "ping: malloc failure.");
     *time = (dt->one_seq.receive_tv.tv_sec - dt->one_seq.send_tv.tv_sec) * 1000000 + dt->one_seq.receive_tv.tv_usec - dt->one_seq.send_tv.tv_usec;
@@ -45,10 +39,6 @@ static void    save_time(t_data *dt)
 
 static void    handle_reply(t_data *dt, struct msghdr *msgh)
 {
-    if (gettimeofday(&dt->one_seq.receive_tv, &dt->tz) != 0)
-        exit_error_close(dt->socket, "ping: cannot retrieve time\n");
-    save_time(dt);
-    save_packet(dt);
     dt->one_seq.bytes = sizeof(*msgh) + ICMP_HEADER_LEN;
     if (dt->one_seq.final_packet.icmp->type == ICMP_ECHO_REPLY)
     {
@@ -67,12 +57,39 @@ static void    handle_reply(t_data *dt, struct msghdr *msgh)
     debug_packet(&(dt->one_seq.final_packet));
 }
 
-static void    send_icmp_and_receive_packet(t_data *dt)    
+static void    receive_packet(t_data *dt)
 {
     int                     r = 0;	
     struct msghdr           msgh;
+    int                     same_id = 0;
+    while (g_ping)
+    {
+        ft_memset(&msgh, 0, sizeof(msgh));
+        init_recv_msgh(&msgh, dt->one_seq.r_packet, dt->socket);
+        r = recvmsg(dt->socket, &msgh, 0);
+        if (r >= 0)
+        {
+            save_packet(dt);
+            same_id = is_same_id(dt);
+            if (same_id == 0)
+                continue; // don't handle this reply if not the same id - wait for another reply
+            save_time(dt);
+            handle_reply(dt, &msgh);
+            break; // send new request after handle_reply when same id as request
+        }
+        else
+        {
+            if (VERBOSE == 1)
+                warning_error(C_G_BLUE"No reply received"C_RES"\n"); // ignore and send new request if no reply received
+            break;
+        }
+    }
+}
+
+static void    send_icmp_and_receive_packet(t_data *dt)    
+{
+    int                     r = 0;	
     
-    ft_memset(&msgh, 0, sizeof(msgh)); // ADDED FT
     if (gettimeofday(&dt->one_seq.send_tv, &dt->tz) != 0)
         exit_error_close(dt->socket, "ping: cannot retrieve time\n");
     r = sendto(dt->socket, &dt->crafted_icmp, sizeof(dt->crafted_icmp), 0, (struct sockaddr*)&dt->address, sizeof(dt->address));
@@ -83,20 +100,14 @@ static void    send_icmp_and_receive_packet(t_data *dt)
     else
     {
         dt->end_stats.sent_nb++;
-        init_recv_msgh(&msgh, dt->one_seq.r_packet, dt->socket);
-        r = recvmsg(dt->socket, &msgh, 0);
-        if (r >= 0)
-            handle_reply(dt, &msgh);
+        receive_packet(dt);
     }
 }
 
 int    end_max_count(t_data *dt)
 {
     if (dt->options_params.count > 0 && dt->end_stats.sent_nb >= dt->options_params.count)
-    {
-        if (dt->end_stats.recv_nb >= dt->options_params.count)
-            return 1;
-    }
+        return 1;
     return 0;
 }
 

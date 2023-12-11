@@ -3,6 +3,7 @@
 # define UTILS_CONSTANTS_H
 
 # define DEBUG 0
+# define VERBOSE 0
 
 # define MAX_INT                2147483647
 # define MIN_INT                -2147483648
