@@ -72,8 +72,6 @@ int    end_max_count(t_data *dt)
     {
         if (dt->end_stats.recv_nb >= dt->options_params.count)
             return 1;
-        else
-            return 1; // TO DO jump to recv only without sending any other packet
     }
     return 0;
 }

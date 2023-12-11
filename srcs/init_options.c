@@ -21,11 +21,11 @@ void   option_i(t_data *dt)
             exit_error("ping: malloc failure.\n");
         if (ft_isstrfloat(param) == 0)
             exit_error("ping: invalid value (`%s' near `%s')\nTry 'ping --help' or 'ping --usage' for more information.\n", param, param);
-        interval = ft_atof(param); // check_result
+        interval = ft_atof(param);
         interval_us = (int)(interval * 1000000);
         if (interval_us < 200000)
             exit_error("ping: option value too small: %s\n", param);
-        else if (interval > MAX_INT)
+        else if (interval > 2048)
             exit_error("ping: option value too big: %s\n", param);
         else
             dt->options_params.seq_interval_us = interval_us;

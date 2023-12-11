@@ -34,7 +34,7 @@ static void    display_ip_header(unsigned char *bytes_ip)
     for (int i = 0; i < IP_HEADER_LEN; i = i + 2)
         printf(" %02X%02X", bytes_ip[i], bytes_ip[i + 1]);
     printf("\n");
-    printf("%2s %2s %3s %4s %4s %3s %4s %3s %3s %4s %12s %12s %s\n", "Vr","HL","TOS","Len","ID","Flg","off","TTL","Pro","cks","Src","Dst","Data"); // TO DO why is Data empty
+    printf("%2s %2s %3s %4s %4s %3s %4s %3s %3s %4s %12s %12s %s\n", "Vr","HL","TOS","Len","ID","Flg","off","TTL","Pro","cks","Src","Dst","Data");
     printf("%2x %2x %3x %04x %4x %3x %04x %3x %3x %4x %12s %12s\n", ip->version, ip->ihl, ip->tos, htons(ip->tot_len), ip->id, get_flags(ip->frag_off), get_offset(ip->frag_off), ip->ttl, ip->protocol, htons(ip->check), addr_to_str(ip->saddr), addr_to_str(ip->daddr));
 
 }

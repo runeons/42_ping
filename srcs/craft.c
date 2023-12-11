@@ -1,15 +1,14 @@
 #include "ping_functions.h"
 
-// Le complément à un sur 16 bits / 2 bytes (= inversement de tous les bits)
-// de la somme des compléments à un de l'icmp header
+// one complement (= inversement de tous les bits) sur 16 bits / 2 bytes
+// de la somme des one complements de l'icmp header
 // pris par mots de 16 bits / 2 bytes / unsigned short
 
 static unsigned short header_checksum(void *packet, int len) // sur 64  = size of (crafted_icmp)
 {
-    unsigned short  *tmp;
-	unsigned int    checksum;
+    unsigned short *tmp;
+    unsigned int checksum;
 
-    // printf(C_B_RED"[DEBUG] %d %ld"C_RES"\n", len, sizeof(((t_icmp *)packet)->h));
     tmp = packet;
     checksum = 0;
     while (len > 1)
@@ -18,11 +17,14 @@ static unsigned short header_checksum(void *packet, int len) // sur 64  = size o
         checksum += *tmp++;
         len -= sizeof(*tmp);
     }
-	if (len == 1) // should not go in there because 16 = even 
-		checksum += *(unsigned char *)tmp;
-	checksum = (unsigned short)(~((checksum >> 16) + (checksum & 0xFFFF))); // complément à un = inversement de tous les bits
-    // printf("checksum: %d, checksum[%s]\n", checksum, int_to_bin(checksum, 16));
-	return checksum;
+    // if (len == 1) // could delete because 16 = even
+    //     checksum += *(unsigned char *)tmp; // ADDED
+    checksum = (unsigned short)(~((checksum >> 16) + (checksum & 0xFFFF))); // final one complement
+    if (DEBUG == 1)
+    {
+        printf(C_B_RED "[DEBUG] checksum: %d, checksum: [%s]" C_RES "\n", checksum, int_to_bin(checksum, 16));
+    }
+    return checksum;
 }
 
 static void craft_icmp_data(t_data *dt)
@@ -37,7 +39,6 @@ static void craft_icmp_data(t_data *dt)
         dt->crafted_icmp.payload[i + ICMP_TIMESTAMP_LEN] = dt->options_params.p_payload[i];
     dt->crafted_icmp.payload[ICMP_TIMESTAMP_LEN + ICMP_PAYLOAD_LEN] = '\0';
     dt->one_seq.icmp_seq_count++;
-    // printf(C_B_RED"[DEBUG] [%s] %d"C_RES"\n", dt->crafted_icmp.payload, sizeof(dt->crafted_icmp.payload));
 }
 
 static void craft_icmp_header(t_data *dt)

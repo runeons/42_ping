@@ -59,7 +59,7 @@ void    debug_packet(t_packet *packet)
         printf("    tos: %d\n", packet->ip->tos);
         printf("    tot_len: %hx\n", packet->ip->tot_len);
         printf("    id: %04x\n", packet->ip->id);
-        printf("    frag_off: %hx\n", ntohs(packet->ip->frag_off)); // TO CHECK
+        printf("    frag_off: %hx\n", ntohs(packet->ip->frag_off));
         printf("    ttl: %hhx\n", packet->ip->ttl);
         printf("    protocol: %hhx\n", packet->ip->protocol);
         printf("    check: 0x%04x\n", packet->ip->check);
