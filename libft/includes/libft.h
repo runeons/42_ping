@@ -108,6 +108,7 @@ int		m_free(void *ptr);
 
 // general
 void exit_error(const char *msg, ...);
+void exit_error_close(int socket, const char *msg, ...);
 void warning_error(const char *msg, ...);
 
 #endif

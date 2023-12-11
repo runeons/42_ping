@@ -66,8 +66,8 @@ void set_socket_options(int socket, t_data *dt)
 	tv_out.tv_usec = 0;
     r = setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, &tv_out, sizeof(tv_out)); // setting timeout option
     if (r != 0)
-        exit_error("ping: socket error in setting timeout option: Exiting program.\n");
+        exit_error_close(dt->socket, "ping: socket error in setting timeout option: Exiting program.\n");
     r = setsockopt(socket, IPPROTO_IP, IP_TTL, &ttl_value, sizeof(ttl_value)); // setting TTL option 
     if (r != 0)
-        exit_error("ping: socket error in setting TTL option: Exiting program.\n");
+        exit_error_close(dt->socket, "ping: socket error in setting TTL option: Exiting program.\n");
 }

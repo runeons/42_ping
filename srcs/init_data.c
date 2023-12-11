@@ -22,7 +22,7 @@ void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
     dt->resolved_address = NULL;
     dt->resolved_hostname = "";
     dt->socket = 0;
-    memset(&(dt->address), 0, sizeof(dt->address)); // ADDED
+    ft_memset(&(dt->address), 0, sizeof(dt->address)); // ADDED
     dt->address.sin_family = AF_INET;
     dt->address.sin_port = 0;
     dt->address.sin_addr.s_addr = INADDR_ANY;
@@ -37,18 +37,18 @@ void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
     dt->end_stats.times = NULL;
 }
 
-void    init_recv_msgh(struct msghdr *msg, char *r_packet)
+void    init_recv_msgh(struct msghdr *msg, char *r_packet, int socket)
 {
     struct iovec        *iov;
     char                *msg_control;
     struct sockaddr_in  *dst;
 
     if (!(iov = mmalloc(sizeof(struct iovec))))
-        exit_error("ping: malloc failure.\n");
+        exit_error_close(socket, "ping: malloc failure.\n");
     if (!(msg_control = mmalloc(sizeof(char) * STR_BUFFER_LEN)))
-        exit_error("ping: malloc failure.\n");
+        exit_error_close(socket, "ping: malloc failure.\n");
     if (!(dst = mmalloc(sizeof(struct sockaddr_in))))
-        exit_error("ping: malloc failure.\n");
+        exit_error_close(socket, "ping: malloc failure.\n");
     ft_bzero(r_packet, IP_TOTAL_LEN);
     iov->iov_base = r_packet;
     iov->iov_len = IP_TOTAL_LEN;

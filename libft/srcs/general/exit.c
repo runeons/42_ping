@@ -17,7 +17,8 @@ void exit_error_close(int socket, const char *msg, ...)
     vfprintf(stderr, msg, args);
     va_end(args);
     free_all_malloc();
-    close(socket);
+    if (socket > 0)
+        close(socket);
     exit(1);
 }
 

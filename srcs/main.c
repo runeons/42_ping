@@ -55,7 +55,7 @@ void    ping_init(t_data *dt)
 {
     display_ping_init(dt);
     if (gettimeofday(&dt->init_tv, &dt->tz) != 0)
-        exit_error("ping: cannot retrieve time\n");
+        exit_error_close(dt->socket, "ping: cannot retrieve time\n");
 }
 
 void    ping_end(t_data *dt)

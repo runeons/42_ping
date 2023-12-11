@@ -29,7 +29,8 @@ static void craft_icmp_data(t_data *dt)
 {
     struct timeval current_time;
 
-    gettimeofday(&current_time, NULL);
+    if (gettimeofday(&current_time, NULL) != 0)
+        exit_error_close(dt->socket, "ping: cannot retrieve time\n");
     ft_memset(&dt->crafted_icmp, 0, sizeof(dt->crafted_icmp));
     ft_memcpy(&dt->crafted_icmp.timestamp, &current_time, ICMP_TIMESTAMP_LEN);
     for (int i = 0; i < ICMP_PAYLOAD_LEN; i++)
