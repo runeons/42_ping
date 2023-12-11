@@ -24,9 +24,32 @@ static unsigned short header_checksum(void *packet, int len)
 	return checksum;
 }
 
-static void craft_icmp_payload(t_data *dt)
+// static unsigned short header_checksum(void *packet, int len)
+// {
+//     unsigned short  *ip;
+
+//     ip = packet;
+//     long sum = 0;  /* assume 32 bit long, 16 bit short */
+//     while(len > 1){
+//         sum += *(unsigned short*)ip++;
+//         if(sum & 0x80000000)   /* if high order bit set, fold */
+//         sum = (sum & 0xFFFF) + (sum >> 16);
+//         len -= 2;
+//     }
+//     if(len)       /* take care of left over byte */
+//         sum += (unsigned short) *(unsigned char *)ip;
+//     while(sum>>16)
+//         sum = (sum & 0xFFFF) + (sum >> 16);
+//     return ~sum;
+// }
+
+static void craft_icmp_data(t_data *dt)
 {
+    struct timeval current_time;
+
+    gettimeofday(&current_time, NULL);
     ft_memset(&dt->crafted_icmp, 0, sizeof(dt->crafted_icmp));
+    ft_memcpy(&dt->crafted_icmp.timestamp, &current_time, ICMP_TIMESTAMP_LEN);
     for (int i = 0; i < ICMP_PAYLOAD_LEN; i++)
         dt->crafted_icmp.payload[i + ICMP_TIMESTAMP_LEN] = dt->options_params.p_payload[i];
     dt->crafted_icmp.payload[ICMP_TIMESTAMP_LEN + ICMP_PAYLOAD_LEN] = '\0';
@@ -45,7 +68,6 @@ static void craft_icmp_header(t_data *dt)
 void craft_icmp(t_data *dt)
 {
     ft_bzero(&dt->crafted_icmp, sizeof(dt->crafted_icmp));
-    craft_icmp_payload(dt);
-    // craft_icmp_timestamp(dt); // no need yet because ft_bzero in payload
+    craft_icmp_data(dt);
     craft_icmp_header(dt);
 }
