@@ -72,7 +72,6 @@ float ft_atof(const char *s)
             n = -1;
         i++;
     }
-
     while (ft_isdigit(s[i])) {
         res = res * 10.0f + (s[i] - '0');
         i++;
@@ -108,8 +107,8 @@ char    *int_to_bin(int n, int len)
 unsigned int ft_sqrt(unsigned int x)
 {
     unsigned int r = x;
-    while (r * r > x) {
+
+    while (r * r > x)
         r = (r + x / r) / 2;
-    }
     return r;
 }

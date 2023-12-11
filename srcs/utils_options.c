@@ -3,15 +3,13 @@
 t_option allowed_options[] =
 {
     {'?', "help",       0, "",          NULL, "give this help list"},
-    {'u', "usage",      0, "",          NULL, "give a short usage message"}, // TO DO or remove reference in error message 
+    {'u', "usage",      0, "",          NULL, "give a short usage message"},
     {'v', "verbose",    0, "",          NULL, "verbose output"},
-    // {'V', "version",    0, "",          NULL, "print program version"},
     {'p', "pattern",    1, "PATTERN",   NULL, "fill ICMP packet with given pattern (hex)"},
     {'t', "ttl",        1, "N",         NULL, "specify N as time-to-live"},
     {'i', "interval",   1, "NUMBER",    NULL, "wait NUMBER seconds between sending each packet"},
     {'c', "count",      1, "NUMBER",    NULL, "stop after sending NUMBER packets"},
     {'w', "timeout",    1, "N",         NULL, "stop after N seconds"}
-    // {'W', "linger", 1, "Tnumber of seconds to wait for response"} //for a single ping
 };
 
 static int get_name_max_len()
@@ -106,7 +104,7 @@ void    print_option(t_lst *act_options, char c)
     }
 }
 
-void _debug_option(void *content)
+static void debug_option(void *content)
 {
     if (content)
     {
@@ -121,7 +119,7 @@ void    debug_activated_options(t_lst *act_options)
     {
         printf("\n\n");
         printf("Activated options:\n");
-        ft_lst_iter_content(act_options, _debug_option);
+        ft_lst_iter_content(act_options, debug_option);
     }
 }
 

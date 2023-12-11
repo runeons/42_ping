@@ -1,20 +1,5 @@
 #include "ping_functions.h"
 
-    // struct iovec {                    /* Scatter/gather array items */
-    //     void  *iov_base;              /* Starting address */
-    //     size_t iov_len;               /* Number of bytes to transfer */
-    // };
-
-    // struct msghdr {
-    //     void         *msg_name;       /* optional address */
-    //     socklen_t     msg_namelen;    /* size of address */
-    //     struct iovec *msg_iov;        /* scatter/gather array */
-    //     size_t        msg_iovlen;     /* # elements in msg_iov */
-    //     void         *msg_control;    /* ancillary data, see below */
-    //     size_t        msg_controllen; /* ancillary data buffer len */
-    //     int           msg_flags;      /* flags on received message */
-    // };
-
 static void    save_packet(t_data *dt)
 {
     ft_bzero(&dt->one_seq.final_packet, sizeof(dt->one_seq.final_packet));
@@ -96,14 +81,13 @@ static void    send_icmp_and_receive_packet(t_data *dt)
         warning_error(C_G_RED"packet not entirely sent:"C_RES"\n");
     else
     {
-        // warning_error(C_G_BLUE"packet apparently sent:"C_RES"\n");
         dt->end_stats.sent_nb++;
         init_recv_msgh(&msgh, dt->one_seq.r_packet);
         r = recvmsg(dt->socket, &msgh, 0);
         if (r >= 0)
             handle_reply(dt, &msgh);
-        // else
-            // warning_error(C_G_RED"packet receiving failure:"C_RES"\n");
+        else
+            warning_error(C_G_RED"packet receiving failure:"C_RES"\n"); // ADDED
     }
 }
 

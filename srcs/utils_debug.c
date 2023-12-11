@@ -45,16 +45,6 @@ void    debug_msghdr(struct msghdr msg)
         printf("msg_controllen ====> %lu \n", msg.msg_controllen);
         printf("msg_flags ====> %d \n\n", msg.msg_flags);  
         printf("\n");
-        // printf("iov_base ====> %p \n", (char *)msg.msg_iov[0].iov_base);
-        // printf("iov_len ====> %x \n", msg.msg_iov[0].iov_len);
-        // printf("msg_name ====> %p \n", (char *)msg.msg_name);
-        // printf("msg_namelen ====> %x \n", msg.msg_namelen);
-        // printf("msg_iovlen ====> %x \n", msg.msg_iovlen);
-        // printf("msg_control ====> %p \n", (char *)msg.msg_control);
-        // printf("msg_controllen ====> %x \n", msg.msg_controllen);
-        // printf("msg_flags ====> %x \n\n", msg.msg_flags);  
-        // printf("\n");
-
     }
 }
 

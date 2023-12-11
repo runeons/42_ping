@@ -33,7 +33,7 @@ void resolve_address(t_data *dt) // check that dest exists and resolve address i
         if (dt->resolved_address == NULL)
             exit_error("ping: malloc failure.\n");
         tmp = tmp->ai_next;
-        break; // need to free if many ? braek is enough
+        break; // useful if many
     }
     // printf(C_B_RED"dt->resolved_address %s"C_RES"\n", dt->resolved_address);
     freeaddrinfo(resolved_add);

@@ -11,7 +11,7 @@
 # define HEX_BASE_L             "0123456789abcdef"
 
 # define MAX_IP_LEN             16
-# define MAX_HOSTNAME_LEN       100
+# define MAX_HOSTNAME_LEN       128
 # define TTL_VALUE              64
 # define SEQUENCE_INTERVAL_S    1
 # define STR_BUFFER_LEN         512

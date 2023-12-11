@@ -1,5 +1,20 @@
 #include "ping_functions.h"
 
+// struct iovec {                    /* Scatter/gather array items */
+//     void  *iov_base;              /* Starting address */
+//     size_t iov_len;               /* Number of bytes to transfer */
+// };
+
+// struct msghdr {
+//     void         *msg_name;       /* optional address */
+//     socklen_t     msg_namelen;    /* size of address */
+//     struct iovec *msg_iov;        /* scatter/gather array */
+//     size_t        msg_iovlen;     /* # elements in msg_iov */
+//     void         *msg_control;    /* ancillary data, see below */
+//     size_t        msg_controllen; /* ancillary data buffer len */
+//     int           msg_flags;      /* flags on received message */
+// };
+
 void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
 {
     dt->input_dest = "";
@@ -11,17 +26,12 @@ void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
     dt->address.sin_family = AF_INET;
     dt->address.sin_port = 0;
     dt->address.sin_addr.s_addr = INADDR_ANY;
-
-    // packet
     dt->init_tv.tv_sec = 0;
     dt->init_tv.tv_usec = 0;
-
-    // seq
     dt->one_seq.bytes = 0;
     dt->one_seq.icmp_seq_count = -1;
     dt->one_seq.ttl = 0;
     dt->one_seq.time = 0;
-
     dt->end_stats.sent_nb = 0;
     dt->end_stats.recv_nb = 0;
     dt->end_stats.times = NULL;
