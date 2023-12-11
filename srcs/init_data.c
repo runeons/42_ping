@@ -22,6 +22,7 @@ void init_data(t_data *dt, t_parsed_cmd *parsed_cmd)
     dt->resolved_address = NULL;
     dt->resolved_hostname = "";
     dt->socket = 0;
+    dt->id = getpid();
     ft_memset(&(dt->address), 0, sizeof(dt->address)); // ADDED
     dt->address.sin_family = AF_INET;
     dt->address.sin_port = 0;

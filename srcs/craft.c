@@ -35,7 +35,7 @@ static void craft_icmp_data(t_data *dt)
         exit_error_close(dt->socket, "ping: cannot retrieve time\n");
     ft_memset(&dt->crafted_icmp, 0, sizeof(dt->crafted_icmp));
     ft_memcpy(&dt->crafted_icmp.timestamp, &current_time, ICMP_TIMESTAMP_LEN);
-    for (int i = 0; i < ICMP_PAYLOAD_LEN; i++)
+    for (int i = 0; i < ICMP_DATA_LEN; i++)
         dt->crafted_icmp.payload[i + ICMP_TIMESTAMP_LEN] = dt->options_params.p_payload[i];
     dt->crafted_icmp.payload[ICMP_TIMESTAMP_LEN + ICMP_PAYLOAD_LEN] = '\0';
     dt->one_seq.icmp_seq_count++;
@@ -44,7 +44,7 @@ static void craft_icmp_data(t_data *dt)
 static void craft_icmp_header(t_data *dt)
 {
     dt->crafted_icmp.h.type = ICMP_ECHO_REQUEST;
-    dt->crafted_icmp.h.un.echo.id = getpid();
+    dt->crafted_icmp.h.un.echo.id = dt->id;
     dt->crafted_icmp.h.un.echo.sequence = dt->one_seq.icmp_seq_count;
     dt->crafted_icmp.h.checksum = header_checksum(&dt->crafted_icmp, sizeof(dt->crafted_icmp));
 }

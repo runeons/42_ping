@@ -6,6 +6,30 @@ static void    save_packet(t_data *dt)
     dt->one_seq.final_packet.ip = (struct iphdr *)dt->one_seq.r_packet;
     dt->one_seq.final_packet.icmp = (struct icmphdr *)(dt->one_seq.r_packet + IP_HEADER_LEN);
     dt->one_seq.final_packet.payload = (char *)(dt->one_seq.r_packet + IP_HEADER_LEN + ICMP_HEADER_LEN);
+    if (dt->one_seq.final_packet.icmp->un.echo.id == dt->id)
+    {
+        ;
+        // printf(C_G_RED"SAME PROCESS ID - SUCCESS code 0"C_RES"\n");
+    }
+    else 
+    {
+        unsigned char *bytes = (unsigned char *)dt->one_seq.final_packet.icmp;
+        struct icmphdr  *icmp_in_payload = (struct icmphdr *)(bytes + IP_HEADER_LEN + ICMP_HEADER_LEN);
+
+        if (icmp_in_payload->un.echo.id == dt->id)
+        {
+            ;
+            // printf(C_G_RED"SAME PROCESS ID - UNREACHABLE"C_RES"\n");
+        }
+        else
+        {
+            ;
+            // printf(C_G_RED"DIFFERENT PROCESSES"C_RES"\n");
+            // printf(C_G_RED"received : %d"C_RES"\n", dt->one_seq.final_packet.icmp->un.echo.id);
+            // printf(C_G_RED"dt->id : %d"C_RES"\n", dt->id);
+
+        }
+    }
 }
 
 static void    save_time(t_data *dt)
