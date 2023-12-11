@@ -51,20 +51,15 @@ void            debug_packet(t_packet *packet);
 void            debug_msghdr(struct msghdr msg);
 void            debug_time(void *content);
 
-// utils_libft.c
-int             ft_isstrfloat(const char *s);
-float           ft_atof(const char *s);
-char            *int_to_bin(int n, int len);
-unsigned int    ft_sqrt(unsigned int x);
-int             ft_cap(int a, int max);
-int             ft_ishex(char *s, int size);
-
-// utils_libft.c
+// utils_time.c
 int             get_time_min(t_data *dt);
 int             get_time_max(t_data *dt);
 int             get_time_sum(t_data *dt);
 int             get_time_avg(t_data *dt);
 int             get_time_std(t_data *dt);
 
-#endif
+// utils_libft.c
+char            *int_to_bin(int n, int len);
+void            print_as_hexa(void *data, int size);
 
+#endif

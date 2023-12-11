@@ -44,6 +44,10 @@ IS_FCT							=	\
 							is_fct/ft_isascii.c \
 							is_fct/ft_isdigit.c \
 							is_fct/ft_isprint.c \
+							is_fct/ft_isstrfloat.c \
+							is_fct/ft_ishex.c \
+							is_fct/ft_isnum.c \
+							is_fct/ft_isstrnum.c \
 
 LIST_FCT						=	\
 							list_fct/ft_lstadd_back.c \
@@ -69,16 +73,16 @@ MEM_FCT							=	\
 							mem_fct/ft_realloc.c \
 
 NUMBER_FCT						= \
+							number_fct/ft_cap.c \
 							number_fct/ft_atoi.c \
+							number_fct/ft_atof.c \
+							number_fct/ft_intlen.c \
 							number_fct/ft_itoa.c \
+							number_fct/ft_sqrt.c \
 
-NEW						= \
-							new/ft_free_tab.c \
-							new/ft_intlen.c \
-							new/ft_isnum.c \
-							new/ft_isstrnum.c \
-							new/ft_strjoin_multi.c \
-							new/ft_tablen.c \
+TAB_FCT						= \
+							tab_fct/ft_free_tab.c \
+							tab_fct/ft_tablen.c \
 
 PUT_FCT							= \
 							put_fct/ft_putchar_fd.c \
@@ -98,6 +102,7 @@ STR_FCT							= \
 							str_fct/ft_strchr.c \
 							str_fct/ft_strdel.c \
 							str_fct/ft_strjoinfree.c \
+							str_fct/ft_strjoin_multi.c \
 							str_fct/ft_strlen.c \
 							str_fct/ft_strndup.c \
 							str_fct/ft_strrchr.c \
@@ -110,8 +115,10 @@ STR_FCT							= \
 							str_fct/ft_strtrim.c \
 							str_fct/ft_toupper.c \
 
-GENERAL						= \
-							general/exit.c \
+ERROR_FCT						= \
+							error_fct/exit_error.c \
+							error_fct/exit_error_close.c \
+							error_fct/warning_error.c \
 
 SRCS_LIST				=	\
 							$(DOUBLE_LINKED_FCT) \
@@ -119,11 +126,11 @@ SRCS_LIST				=	\
 							$(IS_FCT) \
 							$(LIST_FCT) \
 							$(MEM_FCT) \
-							$(NEW) \
+							$(TAB_FCT) \
 							$(NUMBER_FCT) \
 							$(PUT_FCT) \
 							$(STR_FCT) \
-							$(GENERAL) \
+							$(ERROR_FCT) \
 
 SRCS					=	$(addprefix $(SRCS_DIR), $(SRCS_LIST))
 
