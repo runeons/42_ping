@@ -1,24 +1,13 @@
 #include "ping_functions.h"
 
-// void    _init_hints(struct addrinfo *hints)
-// {
-//     memset(hints, 0, sizeof(*hints));
-// 	hints->ai_family = AF_INET;
-// 	hints->ai_socktype = SOCK_RAW;
-// 	hints->ai_protocol = IPPROTO_ICMP;
-// }
-
 void resolve_address(t_data *dt) // check that dest exists and resolve address if input == hostname
 {
     int                 r;
     struct addrinfo     *resolved_add;
     struct addrinfo     *tmp;
 
-    // struct addrinfo     hints;
-    // _init_hints(&hints);
-    // r = getaddrinfo(dt->input_dest, NULL, &hints, &resolved_add);
     r = getaddrinfo(dt->input_dest, NULL, NULL, &resolved_add);
-    // debug_addrinfo(resolved_add);
+    debug_addrinfo(resolved_add);
     if (r != 0)
         exit_error("ping: unknown host\n");
     tmp = resolved_add;
@@ -35,13 +24,14 @@ void resolve_address(t_data *dt) // check that dest exists and resolve address i
         tmp = tmp->ai_next;
         break; // useful if many
     }
-    // printf(C_B_RED"dt->resolved_address %s"C_RES"\n", dt->resolved_address);
+    if (DEBUG == 1)
+        printf(C_B_RED"dt->resolved_address %s"C_RES"\n", dt->resolved_address);
     freeaddrinfo(resolved_add);
 }
 
 void resolve_hostname(t_data *dt) // useful only when input_dest is ip address (vs. hostname)
 {
-    char    host[MAX_HOSTNAME_LEN]; // what is the maximum size I can use ?
+    char    host[MAX_HOSTNAME_LEN];
     int r = 0;
 
     ft_bzero(host, MAX_HOSTNAME_LEN);
@@ -52,12 +42,12 @@ void resolve_hostname(t_data *dt) // useful only when input_dest is ip address (
         exit_error("ping: address error: The hostname could not be resolved. %d\n", r);
     else
     {
-        // printf(C_B_RED"host %s"C_RES"\n", host);
         dt->resolved_hostname = ft_strdup(host);
         if (dt->resolved_hostname == NULL)
             exit_error("ping: malloc failure.\n");
     }
-    // printf(C_B_RED"dt->resolved_hostname %s"C_RES"\n", dt->resolved_hostname); // 
+    if (DEBUG == 1)
+        printf(C_B_RED"dt->resolved_hostname %s"C_RES"\n", dt->resolved_hostname);
 }
 
 void open_socket(t_data *dt)
@@ -77,7 +67,7 @@ void set_socket_options(int socket, t_data *dt)
     r = setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, &tv_out, sizeof(tv_out)); // setting timeout option
     if (r != 0)
         exit_error("ping: socket error in setting timeout option: Exiting program.\n");
-    r = setsockopt(socket, IPPROTO_IP, IP_TTL, &ttl_value, sizeof(ttl_value)); // setting TTL option // IPPROTO_IP or SOL_IP or SOL_SOCKET ?
+    r = setsockopt(socket, IPPROTO_IP, IP_TTL, &ttl_value, sizeof(ttl_value)); // setting TTL option 
     if (r != 0)
         exit_error("ping: socket error in setting TTL option: Exiting program.\n");
 }

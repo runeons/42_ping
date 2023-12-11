@@ -86,8 +86,6 @@ static void    send_icmp_and_receive_packet(t_data *dt)
         r = recvmsg(dt->socket, &msgh, 0);
         if (r >= 0)
             handle_reply(dt, &msgh);
-        else
-            warning_error(C_G_RED"packet receiving failure:"C_RES"\n"); // ADDED
     }
 }
 
