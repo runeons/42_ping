@@ -127,7 +127,6 @@ int     end_timeout(t_data *dt)
     {
         if (gettimeofday(&curr_tv, &dt->tz) != 0)
             exit_error("ping: cannot retrieve time\n");
-        printf(C_G_RED"[QUICK DEBUG] : %ld"C_RES"\n", curr_tv.tv_sec - dt->init_tv.tv_sec);   
         if ((curr_tv.tv_sec - dt->init_tv.tv_sec) >= dt->options_params.w_timeout)
             return 1;
     }

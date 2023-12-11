@@ -47,7 +47,6 @@ void resolve_hostname(t_data *dt) // useful only when input_dest is ip address (
     ft_bzero(host, MAX_HOSTNAME_LEN);
     if (inet_pton(AF_INET, dt->resolved_address, &(dt->address.sin_addr)) <= 0)
         exit_error("ping: address error: Invalid IPv4 address.\n");
-    // memset(&(dt->address), 0, sizeof(dt->address));
     r = getnameinfo((struct sockaddr*)&(dt->address), sizeof(dt->address), host, sizeof(host), NULL, 0, 0);
     if (r != 0)
         exit_error("ping: address error: The hostname could not be resolved. %d\n", r);

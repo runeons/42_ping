@@ -10,8 +10,8 @@
 # include <sys/socket.h>
 # include <arpa/inet.h>
 # include <netdb.h>
-# include <netinet/ip_icmp.h> // that includes ICMP_ECHO and icmphdr
-# include <netinet/ip.h> // that includes ICMP_ECHO and icmphdr
+# include <netinet/ip_icmp.h>
+# include <netinet/ip.h>
 # include <libft.h>
 # include <utils_colors.h>
 # include <utils_constants.h>
@@ -57,7 +57,7 @@ float           ft_atof(const char *s);
 char            *int_to_bin(int n, int len);
 unsigned int    ft_sqrt(unsigned int x);
 int             ft_cap(int a, int max);
-int             ft_ishex(char *s, int size); // add HEX_CHARS
+int             ft_ishex(char *s, int size);
 
 // utils_libft.c
 int             get_time_min(t_data *dt);

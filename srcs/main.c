@@ -54,7 +54,7 @@ void    initialise_data(t_data *dt, t_parsed_cmd *parsed_cmd)
 void    ping_init(t_data *dt)
 {
     display_ping_init(dt);
-    if (gettimeofday(&dt->init_tv, &dt->tz) != 0)
+    if (gettimeofday(&dt->init_tv, &dt->tz) != 0) // for timeout option
         exit_error("ping: cannot retrieve time\n");
 }
 

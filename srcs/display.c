@@ -77,12 +77,11 @@ void    display_ping_end_stats(t_data *dt)
     // int             time_sum;
     struct timeval  final_tv;
 
-    // printf(C_G_RED"TIMES:"C_RES"\n");
+    // printf(C_G_RED"TIMES:"C_RES"\n");v
     // ft_lst_iter_content(dt->end_stats.times, debug_time);
     if (gettimeofday(&final_tv, &dt->tz) != 0)
         exit_error("ping: cannot retrieve time\n");
     ratio = 100 - ((dt->end_stats.recv_nb * 100) / dt->end_stats.sent_nb);
-    // time_sum = (final_tv.tv_sec - dt->init_tv.tv_sec) * 1000000 + final_tv.tv_usec - dt->init_tv.tv_usec;
     printf("--- %s ping statistics ---\n", dt->input_dest);
     printf("%d packets transmitted, %d packets received, %d%% packet loss\n", dt->end_stats.sent_nb, dt->end_stats.recv_nb, ratio);
     if (ft_lst_size(dt->end_stats.times) != 0)
