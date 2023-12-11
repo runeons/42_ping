@@ -1,19 +1,20 @@
 #include "ping_functions.h"
 
-// Le complément à un sur 16 bits (= inversement de tous les bits)
-// de la somme des compléments à un de l'en-tête Internet
-// pris par mots de 16 bits.
+// Le complément à un sur 16 bits / 2 bytes (= inversement de tous les bits)
+// de la somme des compléments à un de l'icmp header
+// pris par mots de 16 bits / 2 bytes / unsigned short
 
-static unsigned short header_checksum(void *packet, int len)
+static unsigned short header_checksum(void *packet, int len) // sur 64  = size of (crafted_icmp)
 {
     unsigned short  *tmp;
 	unsigned int    checksum;
 
+    // printf(C_B_RED"[DEBUG] %d %ld"C_RES"\n", len, sizeof(((t_icmp *)packet)->h));
     tmp = packet;
-    // printf("tmp: %d, len: %d\n", *tmp, len);
     checksum = 0;
     while (len > 1)
     {
+        // printf("[%d] checksum: %d, checksum[%s]\n", len, checksum, int_to_bin(checksum, 16));
         checksum += *tmp++;
         len -= sizeof(*tmp);
     }
@@ -23,25 +24,6 @@ static unsigned short header_checksum(void *packet, int len)
     // printf("checksum: %d, checksum[%s]\n", checksum, int_to_bin(checksum, 16));
 	return checksum;
 }
-
-// static unsigned short header_checksum(void *packet, int len)
-// {
-//     unsigned short  *ip;
-
-//     ip = packet;
-//     long sum = 0;  /* assume 32 bit long, 16 bit short */
-//     while(len > 1){
-//         sum += *(unsigned short*)ip++;
-//         if(sum & 0x80000000)   /* if high order bit set, fold */
-//         sum = (sum & 0xFFFF) + (sum >> 16);
-//         len -= 2;
-//     }
-//     if(len)       /* take care of left over byte */
-//         sum += (unsigned short) *(unsigned char *)ip;
-//     while(sum>>16)
-//         sum = (sum & 0xFFFF) + (sum >> 16);
-//     return ~sum;
-// }
 
 static void craft_icmp_data(t_data *dt)
 {
