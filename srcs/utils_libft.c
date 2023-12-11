@@ -11,7 +11,7 @@ char    *int_to_bin(int n, int len)
     for (unsigned i = (1 << (len - 1)); i > 0; i = i / 2)
         bin[k++] = (n & i) ? '1' : '0';
     bin[k] = '\0';
-    return bin;
+    return (bin);
 }
 
 void print_as_hexa(void *data, int size)

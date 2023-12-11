@@ -17,14 +17,12 @@ static unsigned short header_checksum(void *packet, int len) // sur 64  = size o
         checksum += *tmp++;
         len -= sizeof(*tmp);
     }
-    // if (len == 1) // could delete because 16 = even
-    //     checksum += *(unsigned char *)tmp; // ADDED
     checksum = (unsigned short)(~((checksum >> 16) + (checksum & 0xFFFF))); // final one complement
     if (DEBUG == 1)
     {
         printf(C_B_RED "[DEBUG] checksum: %d, checksum: [%s]" C_RES "\n", checksum, int_to_bin(checksum, 16));
     }
-    return checksum;
+    return (checksum);
 }
 
 static void craft_icmp_data(t_data *dt)

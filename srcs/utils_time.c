@@ -13,7 +13,7 @@ int    get_time_min(t_data *dt)
             min_time = *tmp;
         current = current->next;
     }
-    return min_time;
+    return (min_time);
 }
 
 int    get_time_max(t_data *dt)
@@ -29,7 +29,7 @@ int    get_time_max(t_data *dt)
             max_time = *tmp;
         current = current->next;
     }
-    return max_time;
+    return (max_time);
 }
 
 int    get_time_sum(t_data *dt)
@@ -45,7 +45,7 @@ int    get_time_sum(t_data *dt)
             time_sum += *tmp;
         current = current->next;
     }
-    return time_sum;
+    return (time_sum);
 }
 
 int    get_time_avg(t_data *dt)
@@ -54,7 +54,7 @@ int    get_time_avg(t_data *dt)
     
     if (dt != NULL && ft_lst_size(dt->end_stats.times))
         time_avg = get_time_sum(dt) / ft_lst_size(dt->end_stats.times);
-    return time_avg;
+    return (time_avg);
 }
 
 int    get_time_std(t_data *dt)
@@ -74,5 +74,5 @@ int    get_time_std(t_data *dt)
     }
     if (ft_lst_size(dt->end_stats.times) != 0)
         std = ft_sqrt(variance / ft_lst_size(dt->end_stats.times));
-    return std;
+    return (std);
 }

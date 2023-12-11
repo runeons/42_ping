@@ -16,13 +16,14 @@ static int get_name_max_len()
 {
     int max_len = 0;
     int curr_len = 0;
+
     for (size_t i = 0; i < ARRAY_SIZE(allowed_options); i++)
     {
         curr_len = ft_strlen(allowed_options[i].name) + 8 +  ft_strlen(allowed_options[i].param_name);
         if (curr_len > max_len)
             max_len = curr_len;
     }
-    return max_len;
+    return (max_len);
 }
 
 void    display_extra_short_usage()
@@ -85,10 +86,10 @@ t_option *get_option(t_lst *act_options, char c)
     {
         t_option *tmp = (t_option *)act_options->content;
         if (tmp->id == c)
-            return tmp;
+            return (tmp);
         act_options = act_options->next;
     }
-    return NULL;
+    return (NULL);
 }
 
 void    print_option(t_lst *act_options, char c)
@@ -162,7 +163,7 @@ static t_option    *is_allowed_option_long(char *str)
         {
             len = ft_strlen(allowed_options[i].name);
             if (ft_strnstr(allowed_options[i].name, (char *)str + 2, len))
-                return &allowed_options[i];
+                return (&allowed_options[i]);
         }
     }
     return (NULL);
@@ -172,9 +173,9 @@ static t_option *check_option(char **av, int i)
 {
     t_option *res = NULL;
     if (ft_strlen(av[i]) == 2 && (res = is_allowed_option(av[i][1])) != NULL)
-        return res;
+        return (res);
     else if (ft_strlen(av[i]) > 2 && (res = is_allowed_option_long(av[i])) != NULL)
-        return res;
+        return (res);
     exit_error("ping: error in pattern near %s\n", av[i]);
     return (NULL);
 }
@@ -204,5 +205,5 @@ t_parsed_cmd   parse_options(int ac, char **av)
     }
     result.act_options = act_options;
     result.not_options = not_options;
-    return result;
+    return (result);
 }

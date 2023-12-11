@@ -91,11 +91,11 @@ static int hex_pos(char a)
     for (int i = 0; i < 16; i++)
     {
         if (a == HEX_BASE_U[i])
-            return i;
+            return (i);
         if (a == HEX_BASE_L[i])
-            return i;
+            return (i);
     }
-    return -1;
+    return (-1);
 }
 
 void   option_p(t_data *dt)

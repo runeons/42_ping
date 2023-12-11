@@ -94,9 +94,9 @@ static void    send_icmp_and_receive_packet(t_data *dt)
         exit_error_close(dt->socket, "ping: cannot retrieve time\n");
     r = sendto(dt->socket, &dt->crafted_icmp, sizeof(dt->crafted_icmp), 0, (struct sockaddr*)&dt->address, sizeof(dt->address));
     if (r <= 0)
-        warning_error(C_G_RED"packet sending failure:"C_RES"\n");
+        warning_error(C_G_RED"packet sending failure"C_RES"\n");
     else if (r != sizeof(dt->crafted_icmp))
-        warning_error(C_G_RED"packet not entirely sent:"C_RES"\n");
+        warning_error(C_G_RED"packet not entirely sent"C_RES"\n");
     else
     {
         dt->end_stats.sent_nb++;
@@ -107,8 +107,8 @@ static void    send_icmp_and_receive_packet(t_data *dt)
 int    end_max_count(t_data *dt)
 {
     if (dt->options_params.count > 0 && dt->end_stats.sent_nb >= dt->options_params.count)
-        return 1;
-    return 0;
+        return (1);
+    return (0);
 }
 
 int     end_timeout(t_data *dt)
@@ -120,9 +120,9 @@ int     end_timeout(t_data *dt)
         if (gettimeofday(&curr_tv, &dt->tz) != 0)
             exit_error_close(dt->socket, "ping: cannot retrieve time\n");
         if ((curr_tv.tv_sec - dt->init_tv.tv_sec) >= dt->options_params.w_timeout)
-            return 1;
+            return (1);
     }
-    return 0;
+    return (0);
 }
 
 void ping_sequence(t_data *dt)
