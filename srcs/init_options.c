@@ -98,13 +98,40 @@ static int hex_pos(char a)
     return (-1);
 }
 
+char    *pad_param(t_data *dt)
+{
+    char    *param;
+    int     param_len = ft_cap(ft_strlen(get_option(dt->act_options, 'p')->param), PATTERN_LEN);
+
+    if (param_len % 2 != 0)
+    {
+        param_len++;
+        param = ft_strndup(get_option(dt->act_options, 'p')->param, param_len);
+        if (param == NULL)
+            exit_error("ping: malloc failure.\n");
+        if (param_len >= 2)
+        {
+            param[param_len - 1] = param[param_len - 2];
+            param[param_len - 2] = '0';
+            param[param_len] = '\0';
+        }
+    }
+    else
+    {
+        param = ft_strndup(get_option(dt->act_options, 'p')->param, param_len);
+        if (param == NULL)
+            exit_error("ping: malloc failure.\n");
+    }
+    return (param);
+}
+
 void   option_p(t_data *dt)
 {
     if (is_activated_option(dt->act_options, 'p'))
     {
-        int param_len = ft_cap(ft_strlen(get_option(dt->act_options, 'p')->param), 16);
+        char *param = pad_param(dt);
+        int param_len = ft_cap(ft_strlen(param), PATTERN_LEN);
 
-        char *param = ft_strndup(get_option(dt->act_options, 'p')->param, param_len);
         if (ft_ishex(param, param_len) == 0)
             exit_error("ping: error in pattern near %s\n", param);
         for (int i = 0; i < ICMP_DATA_LEN * 2; i += 2)

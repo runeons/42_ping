@@ -42,6 +42,7 @@ static void    handle_reply(t_data *dt, struct msghdr *msgh)
     dt->one_seq.bytes = sizeof(*msgh) + ICMP_HEADER_LEN;
     if (dt->one_seq.final_packet.icmp->type == ICMP_ECHO_REPLY)
     {
+        save_time(dt);
         display_ping_OK(dt);
         dt->end_stats.recv_nb++;
     }
@@ -73,7 +74,6 @@ static void    receive_packet(t_data *dt)
             same_id = is_same_id(dt);
             if (same_id == 0)
                 continue; // don't handle this reply if not the same id - wait for another reply
-            save_time(dt);
             handle_reply(dt, &msgh);
             break; // send new request after handle_reply when same id as request
         }
@@ -134,6 +134,6 @@ void ping_sequence(t_data *dt)
     }
     craft_icmp(dt);
     debug_crafted_icmp(&dt->crafted_icmp);
-    usleep(dt->options_params.seq_interval_us);
     send_icmp_and_receive_packet(dt);
+    usleep(dt->options_params.seq_interval_us);
 }

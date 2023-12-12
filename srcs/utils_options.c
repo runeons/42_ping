@@ -197,6 +197,8 @@ t_parsed_cmd   parse_options(int ac, char **av)
                 if (++i == ac)
                     exit_error("ping: option '%s' requires an argument\nTry 'ping --help' or 'ping --usage' for more information.\n", res->name);
                 res->param = ft_strdup(av[i]);
+                if (res->param == NULL)
+                    exit_error("ping: malloc failure.\n");
             }
             ft_lst_add_node_back(&act_options, ft_lst_create_node(res));
         }

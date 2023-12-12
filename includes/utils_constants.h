@@ -16,6 +16,7 @@
 # define TTL_VALUE              64
 # define SEQUENCE_INTERVAL_S    1
 # define STR_BUFFER_LEN         512
+# define PATTERN_LEN            32
 
 # define IP_TOTAL_LEN           84
 # define IP_HEADER_LEN          20
