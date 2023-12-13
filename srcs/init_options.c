@@ -129,11 +129,12 @@ void   option_p(t_data *dt)
 {
     if (is_activated_option(dt->act_options, 'p'))
     {
+        if (ft_ishex(get_option(dt->act_options, 'p')->param, ft_cap(ft_strlen(get_option(dt->act_options, 'p')->param), PATTERN_LEN)) == 0)
+            exit_error("ping: error in pattern near %s\n", get_option(dt->act_options, 'p')->param);
+
         char *param = pad_param(dt);
         int param_len = ft_cap(ft_strlen(param), PATTERN_LEN);
 
-        if (ft_ishex(param, param_len) == 0)
-            exit_error("ping: error in pattern near %s\n", param);
         for (int i = 0; i < ICMP_DATA_LEN * 2; i += 2)
             dt->options_params.p_payload[i / 2] = (hex_pos(param[i % param_len]) << 4) | hex_pos(param[(i + 1) % param_len]);
     }

@@ -53,7 +53,10 @@ static void    handle_reply(t_data *dt, struct msghdr *msgh)
         else if (dt->one_seq.final_packet.icmp->type == ICMP_ERR_TIME_EXCEEDED)
             display_ping_error(dt, "Time to live exceeded");
         else
-            warning_error(C_G_BLUE"Packet type %d"C_RES"\n", dt->one_seq.final_packet.icmp->type);
+        {
+            if (VERBOSE == 1)
+                warning_error(C_G_BLUE"Packet type %d"C_RES"\n", dt->one_seq.final_packet.icmp->type);
+        }
     }
     debug_packet(&(dt->one_seq.final_packet));
 }
@@ -96,7 +99,7 @@ static void    send_icmp_and_receive_packet(t_data *dt)
     if (r <= 0)
         warning_error(C_G_RED"packet sending failure"C_RES"\n");
     else if (r != sizeof(dt->crafted_icmp))
-        warning_error(C_G_RED"packet not entirely sent"C_RES"\n");
+        warning_error(C_G_RED"packet not completely sent"C_RES"\n");
     else
     {
         dt->end_stats.sent_nb++;
